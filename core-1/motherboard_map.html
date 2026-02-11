@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motherboard Visual Map - CompTIA A+</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        /* Legend */
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        .legend-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid #333;
+        }
+        
+        .legend-text {
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        /* Motherboard Container */
+        .mobo-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        /* SVG Motherboard */
+        .motherboard-svg {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        /* Interactive labels */
+        .component-label {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .component-label:hover {
+            transform: scale(1.05);
+        }
+        
+        .component-label text {
+            pointer-events: none;
+        }
+        
+        /* Info Panel */
+        .info-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-top: 20px;
+        }
+        
+        .info-panel h2 {
+            color: #2196F3;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        .component-details {
+            display: none;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 5px solid #2196F3;
+        }
+        
+        .component-details.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .component-details h3 {
+            color: #F44336;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+        
+        .component-details ul {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        
+        .component-details li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        
+        .quick-tip {
+            background: #E3F2FD;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .quick-tip strong {
+            color: #1976D2;
+        }
+        
+        /* Instructions */
+        .instructions {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .legend {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗺️ MOTHERBOARD VISUAL MAP</h1>
+            <div class="subtitle">Interactive Study Guide - Click on Components</div>
+        </header>
+        
+        <div class="instructions">
+            👆 <strong>CLICK ON ANY COLORED COMPONENT</strong> to see detailed information below the motherboard
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FF5722;"></div>
+                <div class="legend-text">Power - Critical</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4CAF50;"></div>
+                <div class="legend-text">Storage</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #2196F3;"></div>
+                <div class="legend-text">CPU & RAM</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #9C27B0;"></div>
+                <div class="legend-text">Expansion Slots</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FF9800;"></div>
+                <div class="legend-text">Front Panel Headers</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #00BCD4;"></div>
+                <div class="legend-text">I/O & Rear Ports</div>
+            </div>
+        </div>
+        
+        <!-- Motherboard SVG -->
+        <div class="mobo-container">
+            <svg class="motherboard-svg" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+                <!-- Base Motherboard PCB -->
+                <rect x="50" y="50" width="900" height="700" fill="#1a3a1a" stroke="#0a1a0a" stroke-width="2" rx="10"/>
+                
+                <!-- Mounting holes -->
+                <circle cx="80" cy="80" r="8" fill="#444" stroke="#222" stroke-width="2"/>
+                <circle cx="920" cy="80" r="8" fill="#444" stroke="#222" stroke-2"/>
+                <circle cx="80" cy="720" r="8" fill="#444" stroke="#222" stroke-width="2"/>
+                <circle cx="920" cy="720" r="8" fill="#444" stroke="#222" stroke-width="2"/>
+                
+                <!-- I/O Shield Area (Top) -->
+                <g id="io-shield" class="component-label" onclick="showInfo('io-shield')">
+                    <rect x="650" y="60" width="280" height="80" fill="#00BCD4" stroke="#0097A7" stroke-width="3" rx="5"/>
+                    <text x="790" y="95" text-anchor="middle" fill="white" font-size="16" font-weight="bold">I/O SHIELD</text>
+                    <text x="790" y="115" text-anchor="middle" fill="white" font-size="12">(Rear Ports)</text>
+                </g>
+                
+                <!-- 24-Pin ATX Power -->
+                <g id="atx-24pin" class="component-label" onclick="showInfo('atx-24pin')">
+                    <rect x="850" y="350" width="80" height="120" fill="#FF5722" stroke="#D84315" stroke-width="3" rx="5"/>
+                    <text x="890" y="405" text-anchor="middle" fill="white" font-size="18" font-weight="bold">24</text>
+                    <text x="890" y="425" text-anchor="middle" fill="white" font-size="14" font-weight="bold">PIN</text>
+                    <text x="890" y="445" text-anchor="middle" fill="white" font-size="12">ATX</text>
+                </g>
+                
+                <!-- 8-Pin EPS (CPU Power) -->
+                <g id="eps-cpu" class="component-label" onclick="showInfo('eps-cpu')">
+                    <rect x="100" y="70" width="60" height="60" fill="#FF5722" stroke="#D84315" stroke-width="3" rx="5"/>
+                    <text x="130" y="95" text-anchor="middle" fill="white" font-size="14" font-weight="bold">8-PIN</text>
+                    <text x="130" y="115" text-anchor="middle" fill="white" font-size="11">EPS</text>
+                </g>
+                
+                <!-- CPU Socket -->
+                <g id="cpu-socket" class="component-label" onclick="showInfo('cpu-socket')">
+                    <rect x="180" y="150" width="150" height="150" fill="#2196F3" stroke="#1565C0" stroke-width="4" rx="5"/>
+                    <circle cx="255" cy="225" r="50" fill="none" stroke="white" stroke-width="3"/>
+                    <text x="255" y="215" text-anchor="middle" fill="white" font-size="18" font-weight="bold">CPU</text>
+                    <text x="255" y="240" text-anchor="middle" fill="white" font-size="14">SOCKET</text>
+                </g>
+                
+                <!-- RAM Slots (4 slots) -->
+                <g id="ram-slots" class="component-label" onclick="showInfo('ram-slots')">
+                    <rect x="380" y="160" width="30" height="200" fill="#2196F3" stroke="#1565C0" stroke-width="3" rx="3"/>
+                    <rect x="420" y="160" width="30" height="200" fill="#2196F3" stroke="#1565C0" stroke-width="3" rx="3"/>
+                    <rect x="460" y="160" width="30" height="200" fill="#2196F3" stroke="#1565C0" stroke-width="3" rx="3"/>
+                    <rect x="500" y="160" width="30" height="200" fill="#2196F3" stroke="#1565C0" stroke-width="3" rx="3"/>
+                    <text x="455" y="145" text-anchor="middle" fill="white" font-size="14" font-weight="bold">RAM SLOTS</text>
+                    <text x="395" y="385" text-anchor="middle" fill="#FFD700" font-size="12" font-weight="bold">2</text>
+                    <text x="435" y="385" text-anchor="middle" fill="white" font-size="12">1</text>
+                    <text x="475" y="385" text-anchor="middle" fill="#FFD700" font-size="12" font-weight="bold">4</text>
+                    <text x="515" y="385" text-anchor="middle" fill="white" font-size="12">3</text>
+                </g>
+                
+                <!-- M.2 Slots -->
+                <g id="m2-slot1" class="component-label" onclick="showInfo('m2-slots')">
+                    <rect x="380" y="410" width="120" height="25" fill="#4CAF50" stroke="#2E7D32" stroke-width="3" rx="3"/>
+                    <text x="440" y="427" text-anchor="middle" fill="white" font-size="12" font-weight="bold">M.2 SLOT 1</text>
+                </g>
+                
+                <g id="m2-slot2" class="component-label" onclick="showInfo('m2-slots')">
+                    <rect x="580" y="580" width="120" height="25" fill="#4CAF50" stroke="#2E7D32" stroke-width="3" rx="3"/>
+                    <text x="640" y="597" text-anchor="middle" fill="white" font-size="12" font-weight="bold">M.2 SLOT 2</text>
+                </g>
+                
+                <!-- SATA Ports -->
+                <g id="sata-ports" class="component-label" onclick="showInfo('sata-ports')">
+                    <rect x="750" y="550" width="40" height="100" fill="#4CAF50" stroke="#2E7D32" stroke-width="3" rx="3"/>
+                    <rect x="800" y="550" width="40" height="100" fill="#4CAF50" stroke="#2E7D32" stroke-width="3" rx="3"/>
+                    <text x="820" y="540" text-anchor="middle" fill="white" font-size="14" font-weight="bold">SATA</text>
+                    <text x="765" y="670" text-anchor="middle" fill="white" font-size="11">0-3</text>
+                    <text x="815" y="670" text-anchor="middle" fill="white" font-size="11">4-5</text>
+                </g>
+                
+                <!-- PCIe x16 Slot (GPU) -->
+                <g id="pcie-x16-1" class="component-label" onclick="showInfo('pcie-x16')">
+                    <rect x="150" y="450" width="600" height="35" fill="#9C27B0" stroke="#6A1B9A" stroke-width="3" rx="3"/>
+                    <text x="450" y="472" text-anchor="middle" fill="white" font-size="14" font-weight="bold">PCIe x16 SLOT (GPU)</text>
+                </g>
+                
+                <!-- PCIe x16 Slot 2 -->
+                <g id="pcie-x16-2" class="component-label" onclick="showInfo('pcie-x16')">
+                    <rect x="150" y="620" width="600" height="35" fill="#9C27B0" stroke="#6A1B9A" stroke-width="3" rx="3"/>
+                    <text x="450" y="642" text-anchor="middle" fill="white" font-size="14" font-weight="bold">PCIe x16 SLOT 2</text>
+                </g>
+                
+                <!-- PCIe x1 Slots -->
+                <g id="pcie-x1" class="component-label" onclick="showInfo('pcie-x1')">
+                    <rect x="150" y="510" width="100" height="25" fill="#9C27B0" stroke="#6A1B9A" stroke-width="2" rx="3"/>
+                    <text x="200" y="527" text-anchor="middle" fill="white" font-size="11" font-weight="bold">PCIe x1</text>
+                    
+                    <rect x="150" y="560" width="100" height="25" fill="#9C27B0" stroke="#6A1B9A" stroke-width="2" rx="3"/>
+                    <text x="200" y="577" text-anchor="middle" fill="white" font-size="11" font-weight="bold">PCIe x1</text>
+                </g>
+                
+                <!-- Front Panel Headers -->
+                <g id="front-panel" class="component-label" onclick="showInfo('front-panel')">
+                    <rect x="120" y="680" width="120" height="50" fill="#FF9800" stroke="#E65100" stroke-width="3" rx="5"/>
+                    <text x="180" y="702" text-anchor="middle" fill="white" font-size="12" font-weight="bold">F_PANEL</text>
+                    <text x="180" y="720" text-anchor="middle" fill="white" font-size="10">(Power/Reset)</text>
+                </g>
+                
+                <!-- USB Headers -->
+                <g id="usb-headers" class="component-label" onclick="showInfo('usb-headers')">
+                    <rect x="260" y="680" width="100" height="50" fill="#FF9800" stroke="#E65100" stroke-width="3" rx="5"/>
+                    <text x="310" y="702" text-anchor="middle" fill="white" font-size="12" font-weight="bold">F_USB</text>
+                    <text x="310" y="720" text-anchor="middle" fill="white" font-size="10">(Front USB)</text>
+                </g>
+                
+                <!-- Audio Header -->
+                <g id="audio-header" class="component-label" onclick="showInfo('audio-header')">
+                    <rect x="380" y="680" width="100" height="50" fill="#FF9800" stroke="#E65100" stroke-width="3" rx="5"/>
+                    <text x="430" y="702" text-anchor="middle" fill="white" font-size="12" font-weight="bold">F_AUDIO</text>
+                    <text x="430" y="720" text-anchor="middle" fill="white" font-size="10">(HD Audio)</text>
+                </g>
+                
+                <!-- Fan Headers -->
+                <g id="fan-headers" class="component-label" onclick="showInfo('fan-headers')">
+                    <rect x="180" y="320" width="80" height="30" fill="#FF9800" stroke="#E65100" stroke-width="2" rx="3"/>
+                    <text x="220" y="340" text-anchor="middle" fill="white" font-size="11" font-weight="bold">CPU_FAN</text>
+                    
+                    <rect x="600" y="320" width="80" height="30" fill="#FF9800" stroke="#E65100" stroke-width="2" rx="3"/>
+                    <text x="640" y="340" text-anchor="middle" fill="white" font-size="11" font-weight="bold">SYS_FAN</text>
+                </g>
+                
+                <!-- Chipset -->
+                <g id="chipset" class="component-label" onclick="showInfo('chipset')">
+                    <rect x="550" y="420" width="100" height="80" fill="#37474F" stroke="#263238" stroke-width="3" rx="5"/>
+                    <text x="600" y="455" text-anchor="middle" fill="white" font-size="14" font-weight="bold">CHIPSET</text>
+                    <text x="600" y="475" text-anchor="middle" fill="#90CAF9" font-size="11">(Controller)</text>
+                </g>
+                
+                <!-- CMOS Battery -->
+                <circle cx="580" cy="680" r="25" fill="#C0C0C0" stroke="#808080" stroke-width="2"/>
+                <text x="580" y="685" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">CMOS</text>
+                
+                <!-- Labels with arrows pointing to components -->
+                <!-- 24-pin label -->
+                <line x1="890" y1="350" x2="890" y2="320" stroke="white" stroke-width="2" marker-end="url(#arrowhead)"/>
+                <text x="890" y="310" text-anchor="middle" fill="white" font-size="13" font-weight="bold">⚡ MAIN POWER</text>
+                
+                <!-- EPS label -->
+                <line x1="130" y1="70" x2="130" y2="50" stroke="white" stroke-width="2"/>
+                <text x="130" y="40" text-anchor="middle" fill="white" font-size="13" font-weight="bold">⚡ CPU POWER</text>
+                
+                <!-- Arrow marker definition -->
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="white"/>
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+        
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <h2>📋 Component Details</h2>
+            <p style="color: #666; font-size: 1.1em;">Click on any component on the motherboard above to see detailed information here.</p>
+            
+            <!-- 24-Pin ATX -->
+            <div id="info-atx-24pin" class="component-details">
+                <h3>⚡ 24-Pin ATX Power Connector</h3>
+                <ul>
+                    <li><strong>Location:</strong> Right edge of motherboard (largest power connector)</li>
+                    <li><strong>Purpose:</strong> Main power delivery to entire motherboard</li>
+                    <li><strong>Configuration:</strong> Usually 20+4 pin (can separate into 20-pin + 4-pin)</li>
+                    <li><strong>Critical:</strong> ALWAYS required - PC won't boot without it</li>
+                    <li><strong>Connection:</strong> From PSU directly to motherboard</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> This is the FIRST connector you should check if PC has no power. Make sure it's fully seated and clicks in place!
+                </div>
+            </div>
+            
+            <!-- 8-Pin EPS -->
+            <div id="info-eps-cpu" class="component-details">
+                <h3>⚡ 4/8-Pin EPS CPU Power</h3>
+                <ul>
+                    <li><strong>Location:</strong> Top-left corner, near CPU socket</li>
+                    <li><strong>Purpose:</strong> Dedicated power for CPU</li>
+                    <li><strong>Configuration:</strong> 4-pin, 4+4-pin (8-pin), or 8-pin</li>
+                    <li><strong>Critical:</strong> PC may power on but won't boot without this</li>
+                    <li><strong>Variants:</strong> Budget boards = 4-pin | Gaming/High-end = 8-pin or dual 8-pin</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> Don't confuse with PCIe power! EPS goes to the MOTHERBOARD near CPU, PCIe power goes to the GRAPHICS CARD.
+                </div>
+            </div>
+            
+            <!-- CPU Socket -->
+            <div id="info-cpu-socket" class="component-details">
+                <h3>🖥️ CPU Socket</h3>
+                <ul>
+                    <li><strong>Location:</strong> Upper-left area, near EPS power connector</li>
+                    <li><strong>Purpose:</strong> Houses the CPU (processor)</li>
+                    <li><strong>Intel Types:</strong> LGA 1151, LGA 1200, LGA 1700</li>
+                    <li><strong>AMD Types:</strong> AM4, AM5, TR4/sTRX4 (Threadripper)</li>
+                    <li><strong>Critical Rule:</strong> CPU MUST match socket type exactly!</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> LGA (Intel) = pins on motherboard | PGA (older AMD) = pins on CPU. Handle with extreme care!
+                </div>
+            </div>
+            
+            <!-- RAM Slots -->
+            <div id="info-ram-slots" class="component-details">
+                <h3>💾 RAM Slots (DIMM)</h3>
+                <ul>
+                    <li><strong>Location:</strong> Right of CPU socket (vertical slots)</li>
+                    <li><strong>Typical Count:</strong> 2 or 4 slots</li>
+                    <li><strong>Type:</strong> DDR4 or DDR5 (NOT interchangeable!)</li>
+                    <li><strong>Best Practice:</strong> For 2 sticks, use slots 2 & 4 (counting from CPU)</li>
+                    <li><strong>Dual Channel:</strong> Matching pairs in slots 2&4 or 1&3 for best performance</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> "Skip One, Use Two" - Install RAM in slots 2 & 4 first (usually color-coded). Check your manual for preferred slots!
+                </div>
+            </div>
+            
+            <!-- M.2 Slots -->
+            <div id="info-m2-slots" class="component-details">
+                <h3>💾 M.2 NVMe Slots</h3>
+                <ul>
+                    <li><strong>Location:</strong> Usually 2-3 slots scattered on board (one often near CPU, one near bottom)</li>
+                    <li><strong>Purpose:</strong> High-speed SSD storage (no cables needed!)</li>
+                    <li><strong>Types:</strong> M.2 NVMe (PCIe - FAST) or M.2 SATA (slower)</li>
+                    <li><strong>Installation:</strong> Insert at 30° angle, push down, secure with screw</li>
+                    <li><strong>Speed:</strong> PCIe Gen3 = ~3,500 MB/s | Gen4 = ~7,000 MB/s</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> M.2 drives get HOT! Many boards include heatsinks. Some M.2 slots share lanes with SATA ports - check manual!
+                </div>
+            </div>
+            
+            <!-- SATA Ports -->
+            <div id="info-sata-ports" class="component-details">
+                <h3>💾 SATA Ports</h3>
+                <ul>
+                    <li><strong>Location:</strong> Right edge or bottom-right (usually 4-6 ports)</li>
+                    <li><strong>Purpose:</strong> Connect SATA SSDs and HDDs</li>
+                    <li><strong>Speed:</strong> SATA III = 6 Gbps (600 MB/s max)</li>
+                    <li><strong>Remember:</strong> SATA drives need TWO cables (data + power)</li>
+                    <li><strong>Numbering:</strong> Usually labeled SATA0-5 or SATA1-6</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> SATA = 2 cables! Data cable (small L-shape) to motherboard + Power cable (wide L-shape) from PSU. If either is missing, drive won't work!
+                </div>
+            </div>
+            
+            <!-- PCIe x16 -->
+            <div id="info-pcie-x16" class="component-details">
+                <h3>🎮 PCIe x16 Slots (GPU Slots)</h3>
+                <ul>
+                    <li><strong>Location:</strong> Long horizontal slots below RAM area</li>
+                    <li><strong>Purpose:</strong> Graphics cards (primary use), high-speed expansion cards</li>
+                    <li><strong>Length:</strong> ~7 inches (longest slots on motherboard)</li>
+                    <li><strong>Best Slot:</strong> Top x16 slot usually has most lanes (x16 full speed)</li>
+                    <li><strong>Second Slot:</strong> May run at x8 or x4 speed (check manual)</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> Always use the TOP x16 slot for your main GPU! It has direct connection to CPU for best performance. High-end GPUs need 6/8-pin PCIe power cables!
+                </div>
+            </div>
+            
+            <!-- PCIe x1 -->
+            <div id="info-pcie-x1" class="component-details">
+                <h3>🔌 PCIe x1 Slots</h3>
+                <ul>
+                    <li><strong>Location:</strong> Short slots between x16 slots</li>
+                    <li><strong>Purpose:</strong> Sound cards, Wi-Fi cards, USB expansion, capture cards</li>
+                    <li><strong>Length:</strong> ~1 inch (very short)</li>
+                    <li><strong>Speed:</strong> PCIe 3.0 x1 = ~1 GB/s (enough for most add-on cards)</li>
+                    <li><strong>Compatibility:</strong> Can accept x1, smaller cards</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> These short slots are for adding functionality - Wi-Fi, better sound, more USB ports. NOT for graphics cards!
+                </div>
+            </div>
+            
+            <!-- Front Panel Headers -->
+            <div id="info-front-panel" class="component-details">
+                <h3>🔘 F_PANEL (Front Panel Connectors)</h3>
+                <ul>
+                    <li><strong>Location:</strong> Bottom-left corner (small pins)</li>
+                    <li><strong>Purpose:</strong> Connects case power button, reset button, LED lights</li>
+                    <li><strong>Connections:</strong> POWER SW, RESET SW, POWER LED+/-, HDD LED</li>
+                    <li><strong>Critical:</strong> PC won't turn on if power switch not connected!</li>
+                    <li><strong>Tricky:</strong> Small pins, often labeled, need careful connection</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> Check your motherboard manual for exact pin layout! POWER SW is the most critical - without it, your power button does nothing!
+                </div>
+            </div>
+            
+            <!-- USB Headers -->
+            <div id="info-usb-headers" class="component-details">
+                <h3>🔌 F_USB (Front USB Headers)</h3>
+                <ul>
+                    <li><strong>Location:</strong> Bottom edge (multiple headers)</li>
+                    <li><strong>Purpose:</strong> Connects case front panel USB ports to motherboard</li>
+                    <li><strong>Types:</strong> USB 2.0 (9-pin) and USB 3.0 (19/20-pin) headers</li>
+                    <li><strong>Critical:</strong> Front USB ports won't work without these!</li>
+                    <li><strong>Variants:</strong> USB 3.1/3.2 Gen 2 (USB-C) uses different header</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> If front panel USB doesn't work, check if cable is connected to motherboard header. USB 3.0 headers are keyed - can only go in one way!
+                </div>
+            </div>
+            
+            <!-- Audio Header -->
+            <div id="info-audio-header" class="component-details">
+                <h3>🎵 F_AUDIO (Front Audio Header)</h3>
+                <ul>
+                    <li><strong>Location:</strong> Bottom edge, near USB headers</li>
+                    <li><strong>Purpose:</strong> Connects case front panel headphone/mic jacks</li>
+                    <li><strong>Type:</strong> HD Audio (Intel standard) - 9-pin connector</li>
+                    <li><strong>Critical:</strong> Front audio jacks won't work without this</li>
+                    <li><strong>Alternative:</strong> AC'97 (older standard, rarely used now)</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> Modern boards use HD Audio standard. If front headphone jack doesn't work, check this connection first!
+                </div>
+            </div>
+            
+            <!-- Fan Headers -->
+            <div id="info-fan-headers" class="component-details">
+                <h3>🌀 Fan Headers</h3>
+                <ul>
+                    <li><strong>CPU_FAN Location:</strong> Near CPU socket (REQUIRED for CPU cooler)</li>
+                    <li><strong>SYS_FAN Location:</strong> Scattered around board (case fans)</li>
+                    <li><strong>Type:</strong> 3-pin (voltage control) or 4-pin PWM (speed control)</li>
+                    <li><strong>Critical:</strong> CPU_FAN MUST be connected or PC may not boot!</li>
+                    <li><strong>Count:</strong> 3-8 headers typical (1 CPU, rest for case fans)</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> ALWAYS connect CPU cooler to CPU_FAN header! Board monitors this and will warn/shut down if not detected. 4-pin PWM fans allow better speed control!
+                </div>
+            </div>
+            
+            <!-- Chipset -->
+            <div id="info-chipset" class="component-details">
+                <h3>🖥️ Chipset</h3>
+                <ul>
+                    <li><strong>Location:</strong> Center of board (usually has heatsink)</li>
+                    <li><strong>Purpose:</strong> Controller for I/O, SATA, USB, PCIe lanes</li>
+                    <li><strong>Determines:</strong> # of SATA, USB ports, PCIe lanes, RAM support</li>
+                    <li><strong>Examples:</strong> Intel Z790, B760 | AMD X670, B650</li>
+                    <li><strong>Tiers:</strong> Z/X = enthusiast | B = mainstream | H/A = budget</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> Chipset determines motherboard features! Z/X series support overclocking, B series don't. This affects CPU and RAM overclocking capability!
+                </div>
+            </div>
+            
+            <!-- I/O Shield -->
+            <div id="info-io-shield" class="component-details">
+                <h3>🔌 I/O Shield / Rear I/O Ports</h3>
+                <ul>
+                    <li><strong>Location:</strong> Back of motherboard (external ports)</li>
+                    <li><strong>Typical Ports:</strong> USB, Ethernet, Audio jacks, Video outputs (if CPU has iGPU)</li>
+                    <li><strong>USB Ports:</strong> Mix of USB 2.0 (black) and USB 3.0+ (blue/red/teal)</li>
+                    <li><strong>Network:</strong> RJ45 Ethernet (8-pin, usually with LEDs)</li>
+                    <li><strong>Video:</strong> HDMI, DisplayPort (only if CPU has integrated graphics)</li>
+                </ul>
+                <div class="quick-tip">
+                    <strong>💡 Quick Tip:</strong> Don't forget to install the I/O shield in the case FIRST before mounting motherboard! USB port colors: Black = USB 2.0, Blue = USB 3.0, Red/Teal = USB 3.1/3.2
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Reference Card -->
+        <div class="info-panel" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white;">⚡ CRITICAL CONNECTION CHECKLIST</h2>
+            <div style="font-size: 1.1em; line-height: 2;">
+                <strong>For PC to boot, you MUST have:</strong><br><br>
+                ✅ 24-pin ATX → Motherboard (main power)<br>
+                ✅ 4/8-pin EPS → Near CPU (CPU power)<br>
+                ✅ CPU installed in socket<br>
+                ✅ RAM in slots (preferably 2 & 4)<br>
+                ✅ CPU cooler connected to CPU_FAN header<br>
+                ✅ F_PANEL power switch connected<br>
+                ✅ Monitor cable connected (to GPU if present, otherwise motherboard)<br><br>
+                
+                <strong>For GPU:</strong><br>
+                ✅ Seated in top PCIe x16 slot<br>
+                ✅ 6/8-pin PCIe power connected (if GPU requires it)<br><br>
+                
+                <strong>For Storage:</strong><br>
+                ✅ M.2: Just insert and screw down (no cables!)<br>
+                ✅ SATA: Data cable to motherboard + Power cable from PSU
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showInfo(componentId) {
+            // Hide all details
+            const allDetails = document.querySelectorAll('.component-details');
+            allDetails.forEach(detail => {
+                detail.classList.remove('active');
+            });
+            
+            // Show selected component details
+            const selectedDetail = document.getElementById('info-' + componentId);
+            if (selectedDetail) {
+                selectedDetail.classList.add('active');
+                selectedDetail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        
+        // Add hover effects to SVG components
+        const labels = document.querySelectorAll('.component-label');
+        labels.forEach(label => {
+            label.addEventListener('mouseenter', function() {
+                this.style.opacity = '0.8';
+                this.style.cursor = 'pointer';
+            });
+            
+            label.addEventListener('mouseleave', function() {
+                this.style.opacity = '1';
+            });
+        });
+    </script>
+</body>
+</html>
