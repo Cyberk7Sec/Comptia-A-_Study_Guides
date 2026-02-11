@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompTIA Study Hub - Your Complete Certification Resource</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .tagline {
+            font-size: 1.5em;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Certification Cards Grid */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .cert-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cert-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        
+        .cert-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            transform: rotate(15deg);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .cert-badge.coming-soon {
+            background: #FF9800;
+        }
+        
+        .cert-card h2 {
+            font-size: 2em;
+            color: #2196F3;
+            margin-bottom: 15px;
+        }
+        
+        .cert-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1.05em;
+        }
+        
+        .resources-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .resources-list li {
+            margin: 12px 0;
+        }
+        
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .resource-link:hover {
+            background: #E3F2FD;
+            transform: translateX(10px);
+            border-left-color: #1976D2;
+        }
+        
+        .resource-icon {
+            font-size: 1.5em;
+            min-width: 30px;
+        }
+        
+        .resource-text {
+            font-weight: 600;
+        }
+        
+        .coming-soon-overlay {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        /* Features Section */
+        .features-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 50px;
+            opacity: 0.9;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .tagline {
+                font-size: 1.2em;
+            }
+            
+            .cert-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 CompTIA Study Hub</h1>
+            <div class="tagline">Your Complete Interactive Certification Resource</div>
+        </header>
+        
+        <!-- Stats Overview -->
+        <div class="stats-section">
+            <h2 style="text-align: center; color: #2196F3; font-size: 2em; margin-bottom: 10px;">📊 Study Materials Available</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Interactive Tools</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20+</span>
+                    <span class="stat-label">Flashcards</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Visual Learning</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Free Access</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Certification Cards -->
+        <div class="cert-grid">
+            <!-- A+ Core 1 -->
+            <div class="cert-card">
+                <div class="cert-badge">ACTIVE</div>
+                <h2>🖥️ A+ Core 1 (220-1101)</h2>
+                <p class="cert-description">
+                    Master hardware fundamentals, mobile devices, networking, and troubleshooting with interactive visual guides and flashcards.
+                </p>
+                <ul class="resources-list">
+                    <li>
+                        <a href="core-1/module-1-2-reference.html" class="resource-link">
+                            <span class="resource-icon">📚</span>
+                            <span class="resource-text">Module 1 & 2 Quick Reference</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="core-1/motherboard-map.html" class="resource-link">
+                            <span class="resource-icon">🗺️</span>
+                            <span class="resource-text">Interactive Motherboard Map</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="core-1/usb-flashcards.html" class="resource-link">
+                            <span class="resource-icon">🎯</span>
+                            <span class="resource-text">USB Master Flashcards</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- A+ Core 2 -->
+            <div class="cert-card">
+                <div class="cert-badge coming-soon">COMING SOON</div>
+                <h2>💻 A+ Core 2 (220-1102)</h2>
+                <p class="cert-description">
+                    Operating systems, security, software troubleshooting, and operational procedures for the modern IT professional.
+                </p>
+                <ul class="resources-list">
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">🪟</span>
+                            <span class="resource-text">Windows Command Reference</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">🔒</span>
+                            <span class="resource-text">Security Fundamentals Guide</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">🔧</span>
+                            <span class="resource-text">Troubleshooting Flowcharts</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Network+ -->
+            <div class="cert-card">
+                <div class="cert-badge coming-soon">COMING SOON</div>
+                <h2>🌐 Network+ (N10-008)</h2>
+                <p class="cert-description">
+                    Networking concepts, infrastructure, operations, security, and troubleshooting for network administrators.
+                </p>
+                <ul class="resources-list">
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">📡</span>
+                            <span class="resource-text">OSI Model Interactive Guide</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">🔌</span>
+                            <span class="resource-text">Port Numbers Reference</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">🛡️</span>
+                            <span class="resource-text">Network Security Basics</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Security+ -->
+            <div class="cert-card">
+                <div class="cert-badge coming-soon">COMING SOON</div>
+                <h2>🔐 Security+ (SY0-701)</h2>
+                <p class="cert-description">
+                    Security concepts, threats, vulnerabilities, risk management, and security architecture fundamentals.
+                </p>
+                <ul class="resources-list">
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">🎭</span>
+                            <span class="resource-text">Threat Actor Profiles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">🔑</span>
+                            <span class="resource-text">Cryptography Guide</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="resource-link coming-soon-overlay">
+                            <span class="resource-icon">📋</span>
+                            <span class="resource-text">Security Policies Flashcards</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2 style="text-align: center; color: #2196F3; font-size: 2em; margin-bottom: 10px;">✨ Why These Study Guides Work</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Visual Learning</div>
+                    <div class="feature-description">
+                        Color-coded diagrams, interactive maps, and visual mnemonics that stick in your memory.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">Memory Techniques</div>
+                    <div class="feature-description">
+                        Built-in mnemonics and memory tricks designed specifically for CompTIA exam content.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🖱️</div>
+                    <div class="feature-title">Interactive Practice</div>
+                    <div class="feature-description">
+                        Click, flip, and explore components to reinforce your understanding through engagement.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Mobile Friendly</div>
+                    <div class="feature-description">
+                        Study anywhere, anytime on any device. All guides are fully responsive.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Exam-Focused</div>
+                    <div class="feature-description">
+                        Content focused on high-priority exam topics with clear exam traps highlighted.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🆓</div>
+                    <div class="feature-title">100% Free</div>
+                    <div class="feature-description">
+                        No paywalls, no ads, no subscriptions. Just quality study materials for everyone.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p style="font-size: 1.2em; margin-bottom: 10px;">
+                <strong>🚀 Good luck on your certification journey!</strong>
+            </p>
+            <p style="opacity: 0.8;">
+                Built with 💙 for CompTIA students everywhere
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
