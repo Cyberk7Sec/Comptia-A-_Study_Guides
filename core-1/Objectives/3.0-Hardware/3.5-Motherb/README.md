@@ -1,6 +1,6 @@
 ## Related Study Tools
 
-- [Motherboard Study Guide](../../../Study-Tools/Study-Guide/Motherboard.md)
-- [Motherboard Flashcards](../../../Study-Tools/Flashcards/Motherboard.csv)
-- [Motherboard PBQs](../../../Study-Tools/PBQs/Motherboard.md)
-- [Motherboard Lab Notes](../../../Study-Tools/Labs/Motherboard-Labs.md)
+- [Motherboard Study GuideS](../../../Study-Tools/Study-GuideS/Motherb.md)
+- [Motherboard Flashcards](../../../Study-Tools/Flashcards/Motherb.csv)
+- [Motherboard PBQs](../../../Study-Tools/PBQs/Motherb.md)
+- [Motherboard Lab Notes](../../../Study-Tools/Labs/Motherb-Labs.md)
