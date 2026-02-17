@@ -1,6 +1,6 @@
 ## Related Study Tools
 
-- [Cable Types Study Guide](../../../Study-Tools/Study-Guides/Cable_Types.md)
-- [Cable Types Flashcards](../../../Study-Tools/Flashcards/Cable_Types.csv)
-- [Cable Types PBQs](../../../Study-Tools/PBQs/Cable_Types.md)
-- [Cable Labs](../../../Study-Tools/Labs/Cable-Labs.md)
+- [Cables Study Guide](../../../Study-Tools/Study-Guide/Cables.md)
+- [Cables Flashcards](../../../Study-Tools/Flashcards/Cables.csv)
+- [Cables PBQs](../../../Study-Tools/PBQs/Cables.md)
+- [Cables Lab Notes](../../../Study-Tools/Labs/Cables-Labs.md)
