@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPU Master Study Guide – CompTIA A+ Core 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --yellow: #FFD600;
+    --orange: #FF6B00;
+    --red: #FF2D55;
+    --pink: #FF47A3;
+    --blue: #00C6FF;
+    --green: #00FF9C;
+    --purple: #BF5FFF;
+    --teal: #00E5CC;
+    --text: #E8E8F0;
+    --muted: #888899;
+    /* CPU-specific semantic colors */
+    --alu-color: #FF6B00;
+    --cu-color: #00C6FF;
+    --reg-color: #FFD600;
+    --cache-color: #00FF9C;
+    --risc-color: #00E5CC;
+    --cisc-color: #FF47A3;
+    --intel-color: #0088FF;
+    --amd-color: #FF4500;
+    --arm-color: #00CC88;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* SCANLINE TEXTURE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,15,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #1e1e30;
+    padding: 0 2rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  nav::-webkit-scrollbar { height: 2px; }
+  nav::-webkit-scrollbar-thumb { background: var(--orange); }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    padding: 1rem 1.1rem;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  nav a:hover { color: var(--orange); border-bottom-color: var(--orange); }
+
+  /* HERO */
+  .hero {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 0%, rgba(255,107,0,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 0%, rgba(0,198,255,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--orange);
+    border: 1px solid rgba(255,107,0,0.3);
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    background: rgba(255,107,0,0.05);
+  }
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--orange), var(--yellow), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.05em;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    font-family: 'Space Mono', monospace;
+  }
+  .hero-chips {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+  }
+  .hero-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  /* SECTIONS */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, currentColor, transparent);
+    opacity: 0.25;
+  }
+  .section-title.orange { color: var(--orange); }
+  .section-title.blue   { color: var(--blue); }
+  .section-title.yellow { color: var(--yellow); }
+  .section-title.pink   { color: var(--pink); }
+  .section-title.green  { color: var(--green); }
+  .section-title.red    { color: var(--red); }
+  .section-title.teal   { color: var(--teal); }
+  .section-title.purple { color: var(--purple); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #2a2a3a, transparent);
+    margin: 0;
+  }
+
+  /* HIGHLIGHT COLORS */
+  .hl-y { color: var(--yellow); font-weight: 700; }
+  .hl-o { color: var(--orange); font-weight: 700; }
+  .hl-r { color: var(--red); font-weight: 700; }
+  .hl-p { color: var(--pink); font-weight: 700; }
+  .hl-b { color: var(--blue); font-weight: 700; }
+  .hl-g { color: var(--green); font-weight: 700; }
+  .hl-t { color: var(--teal); font-weight: 700; }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+  .tag.yellow  { background: rgba(255,214,0,0.15);   color: var(--yellow); }
+  .tag.orange  { background: rgba(255,107,0,0.15);   color: var(--orange); }
+  .tag.red     { background: rgba(255,45,85,0.15);   color: var(--red); }
+  .tag.pink    { background: rgba(255,71,163,0.15);  color: var(--pink); }
+  .tag.green   { background: rgba(0,255,156,0.15);   color: var(--green); }
+  .tag.blue    { background: rgba(0,198,255,0.15);   color: var(--blue); }
+  .tag.teal    { background: rgba(0,229,204,0.15);   color: var(--teal); }
+  .tag.purple  { background: rgba(191,95,255,0.15);  color: var(--purple); }
+
+  /* ══════════════════════════════════════
+     MEMO BOX
+  ══════════════════════════════════════ */
+  .memo-box {
+    background: linear-gradient(135deg, rgba(255,107,0,0.07), rgba(255,214,0,0.07));
+    border: 1px solid rgba(255,107,0,0.3);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.2rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .memo-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .memo-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.63rem;
+    color: var(--yellow);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.35rem;
+    font-weight: 700;
+  }
+  .memo-text { font-size: 0.92rem; color: var(--text); line-height: 1.6; }
+  .memo-text strong { color: var(--yellow); }
+
+  /* ══════════════════════════════════════
+     EXAM TRAP BOX
+  ══════════════════════════════════════ */
+  .trap-box {
+    background: rgba(255,45,85,0.05);
+    border: 1px solid rgba(255,45,85,0.35);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.2rem 0;
+  }
+  .trap-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.63rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  .trap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255,45,85,0.1);
+    font-size: 0.9rem;
+  }
+  .trap-item:last-child { border-bottom: none; }
+  .trap-item::before { content: '⚡'; flex-shrink: 0; }
+
+  /* ══════════════════════════════════════
+     TABLES
+  ══════════════════════════════════════ */
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  .styled-table th {
+    background: var(--surface2);
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid #2a2a3a;
+  }
+  .styled-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #161620;
+    background: var(--surface);
+  }
+  .styled-table tr:last-child td { border-bottom: none; }
+  .styled-table tr:hover td { background: var(--surface2); }
+
+  /* ══════════════════════════════════════
+     FADE-IN
+  ══════════════════════════════════════ */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ══════════════════════════════════
+     §1 — CPU INTERNAL BLOCK DIAGRAM
+  ══════════════════════════════════ */
+  .cpu-block-diagram {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .cpu-block-diagram::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(255,107,0,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Outer CPU die border */
+  .cpu-die {
+    border: 2px dashed rgba(255,107,0,0.35);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .cpu-die-label {
+    position: absolute;
+    top: -0.65rem;
+    left: 1.5rem;
+    background: var(--surface);
+    padding: 0 0.5rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.6rem;
+    color: var(--orange);
+    letter-spacing: 0.12em;
+  }
+
+  .die-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.75rem;
+  }
+
+  .die-block {
+    border-radius: 10px;
+    padding: 1rem 0.8rem;
+    text-align: center;
+    position: relative;
+    border: 1px solid;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .die-block:hover { transform: translateY(-3px); }
+
+  .die-block.alu  { background: rgba(255,107,0,0.07); border-color: var(--alu-color); box-shadow: 0 0 18px rgba(255,107,0,0.1); }
+  .die-block.cu   { background: rgba(0,198,255,0.07); border-color: var(--cu-color);  box-shadow: 0 0 18px rgba(0,198,255,0.1); }
+  .die-block.reg  { background: rgba(255,214,0,0.07); border-color: var(--reg-color); box-shadow: 0 0 18px rgba(255,214,0,0.1); }
+  .die-block.l1   { background: rgba(0,255,156,0.07); border-color: var(--cache-color); }
+  .die-block.l2   { background: rgba(0,255,156,0.05); border-color: rgba(0,255,156,0.5); }
+  .die-block.l3   { background: rgba(0,255,156,0.03); border-color: rgba(0,255,156,0.3); }
+
+  .die-block .block-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .die-block .block-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .die-block.alu  .block-name { color: var(--alu-color); }
+  .die-block.cu   .block-name { color: var(--cu-color); }
+  .die-block.reg  .block-name { color: var(--reg-color); }
+  .die-block.l1   .block-name, .die-block.l2 .block-name, .die-block.l3 .block-name { color: var(--cache-color); }
+
+  .die-block .block-full { font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; }
+  .die-block .block-desc { font-size: 0.78rem; color: var(--text); line-height: 1.4; }
+
+  /* bus line below die */
+  .bus-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+  .bus-rail {
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bus-rail::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%;
+    height: 100%;
+    background: rgba(255,255,255,0.5);
+    animation: bus-pulse 2.5s linear infinite;
+  }
+  @keyframes bus-pulse { to { left: 120%; } }
+
+  /* ══════════════════════════════════
+     §2 — INSTRUCTION CYCLE FLOW
+  ══════════════════════════════════ */
+  .cycle-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .cycle-step {
+    flex: 1;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    position: relative;
+    border-right: 1px solid #1a1a28;
+    transition: background 0.2s;
+  }
+  .cycle-step:last-child { border-right: none; }
+  .cycle-step:hover { background: var(--surface2); }
+
+  .cycle-step .step-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+  .cycle-step .step-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+  .cycle-step .step-detail {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .cycle-step .step-arrow {
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    background: var(--surface2);
+    border: 1px solid #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    z-index: 2;
+  }
+  .cycle-step:last-child .step-arrow { display: none; }
+
+  .step-fetch  .step-name { color: var(--blue); }
+  .step-decode .step-name { color: var(--yellow); }
+  .step-exec   .step-name { color: var(--orange); }
+  .step-write  .step-name { color: var(--green); }
+
+  .step-fetch  { border-top: 3px solid var(--blue); }
+  .step-decode { border-top: 3px solid var(--yellow); }
+  .step-exec   { border-top: 3px solid var(--orange); }
+  .step-write  { border-top: 3px solid var(--green); }
+
+  /* ══════════════════════════════════
+     §3 — RISC vs CISC
+  ══════════════════════════════════ */
+  .arch-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .arch-card {
+    border-radius: 14px;
+    padding: 1.8rem;
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+  }
+  .arch-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-size: 20px 20px;
+  }
+  .arch-card.risc {
+    background: rgba(0,229,204,0.05);
+    border-color: var(--risc-color);
+    box-shadow: 0 0 30px rgba(0,229,204,0.08);
+  }
+  .arch-card.risc::before {
+    background-image: radial-gradient(var(--risc-color) 1px, transparent 1px);
+  }
+  .arch-card.cisc {
+    background: rgba(255,71,163,0.05);
+    border-color: var(--cisc-color);
+    box-shadow: 0 0 30px rgba(255,71,163,0.08);
+  }
+  .arch-card.cisc::before {
+    background-image: radial-gradient(var(--cisc-color) 1px, transparent 1px);
+  }
+
+  .arch-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin-bottom: 0.2rem;
+  }
+  .arch-card.risc .arch-title { color: var(--risc-color); }
+  .arch-card.cisc .arch-title { color: var(--cisc-color); }
+
+  .arch-full { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 1rem; }
+
+  .arch-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.85rem;
+  }
+  .arch-row:last-child { border-bottom: none; }
+  .arch-row .ar-icon { font-size: 0.8rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+  /* vs divider */
+  .vs-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--muted);
+    min-width: 40px;
+    align-self: center;
+  }
+
+  /* arch 3-col layout */
+  .arch-compare-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  /* ══════════════════════════════════
+     §4 — MEMORY HIERARCHY PYRAMID
+  ══════════════════════════════════ */
+  .pyramid-wrapper {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .pyr-level {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 0.35rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+    cursor: default;
+  }
+  .pyr-level:hover { transform: translateX(6px); }
+
+  .pyr-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    opacity: 0.12;
+    border-radius: 8px;
+    transition: opacity 0.2s;
+  }
+  .pyr-level:hover .pyr-fill { opacity: 0.2; }
+
+  .pyr-rank {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 900;
+    min-width: 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .pyr-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+    min-width: 120px;
+  }
+  .pyr-details {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+  .pyr-speed {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 3px;
+  }
+  .speed-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ══════════════════════════════════
+     §5 — CORES & THREADS
+  ══════════════════════════════════ */
+  .core-thread-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .ct-box {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+  .ct-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  /* Core visual */
+  .cores-visual {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+  .core-unit {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    background: rgba(255,107,0,0.12);
+    border: 1px solid rgba(255,107,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  /* Thread visual */
+  .thread-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .thread-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .thread-core-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: rgba(0,198,255,0.1);
+    border: 1px solid rgba(0,198,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.55rem;
+    color: var(--blue);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .thread-units {
+    display: flex;
+    gap: 3px;
+  }
+  .thread-unit {
+    width: 28px;
+    height: 36px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    font-weight: 700;
+  }
+  .thread-unit.t1 { background: rgba(0,198,255,0.15); border: 1px solid rgba(0,198,255,0.4); color: var(--blue); }
+  .thread-unit.t2 { background: rgba(191,95,255,0.15); border: 1px solid rgba(191,95,255,0.4); color: var(--purple); }
+  .thread-arrow { color: var(--muted); font-size: 0.7rem; margin: 0 2px; }
+
+  /* ══════════════════════════════════
+     §6 — SOCKET TYPES
+  ══════════════════════════════════ */
+  .socket-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .socket-card {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 1.5rem;
+    border: 1px solid #222;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .socket-card.lga { border-color: rgba(0,136,255,0.35); }
+  .socket-card.pga { border-color: rgba(255,69,0,0.35); }
+
+  .socket-visual {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    margin: 1rem auto;
+    display: grid;
+    position: relative;
+  }
+
+  /* LGA — pins on board (dots in socket) */
+  .lga-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
+    padding: 6px;
+    background: rgba(0,136,255,0.08);
+    border: 2px solid rgba(0,136,255,0.35);
+    border-radius: 6px;
+  }
+  .lga-pin {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: rgba(0,136,255,0.5);
+    border: 1px solid rgba(0,136,255,0.8);
+  }
+
+  /* PGA — pins on CPU (dot array on chip) */
+  .pga-chip {
+    width: 100px;
+    height: 100px;
+    background: rgba(255,69,0,0.08);
+    border: 2px solid rgba(255,69,0,0.35);
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
+    padding: 6px;
+    margin: 1rem auto;
+  }
+  .pga-pin {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: rgba(255,200,100,0.7);
+    border: 1px solid rgba(255,180,50,0.9);
+  }
+
+  .socket-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 900;
+    margin-bottom: 0.2rem;
+  }
+  .socket-card.lga .socket-name { color: var(--intel-color); }
+  .socket-card.pga .socket-name { color: var(--amd-color); }
+
+  .socket-full { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .socket-where { font-size: 0.8rem; line-height: 1.5; }
+
+  .pin-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  /* ══════════════════════════════════
+     §7 — ARCHITECTURE COMPATIBILITY
+  ══════════════════════════════════ */
+  .compat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .compat-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.4rem;
+    border: 1px solid #222;
+    text-align: center;
+  }
+  .compat-card .cc-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .compat-card .cc-type { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .compat-rule {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    padding: 0.3rem 0;
+    text-align: left;
+    border-bottom: 1px solid #161620;
+  }
+  .compat-rule:last-child { border-bottom: none; }
+  .cr-icon { flex-shrink: 0; font-size: 0.9rem; }
+
+  /* ══════════════════════════════════
+     §8 — VIRTUALIZATION
+  ══════════════════════════════════ */
+  .virt-diagram {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  .virt-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .virt-layer {
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    border: 1px solid;
+    position: relative;
+  }
+  .virt-layer .vl-name { font-family: 'Orbitron', monospace; font-size: 0.75rem; font-weight: 700; }
+  .virt-layer .vl-detail { font-size: 0.68rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .vl-vm-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.4rem;
+  }
+  .vl-vm {
+    background: rgba(191,95,255,0.08);
+    border: 1px solid rgba(191,95,255,0.3);
+    border-radius: 8px;
+    padding: 0.6rem;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--purple);
+  }
+  .vl-hypervisor { background: rgba(255,214,0,0.07); border-color: rgba(255,214,0,0.3); }
+  .vl-hypervisor .vl-name { color: var(--yellow); }
+
+  .vl-cpu { background: rgba(255,107,0,0.07); border-color: rgba(255,107,0,0.3); }
+  .vl-cpu .vl-name { color: var(--orange); }
+
+  .virt-req {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .virt-req-item {
+    flex: 1;
+    min-width: 140px;
+    background: rgba(0,229,204,0.06);
+    border: 1px solid rgba(0,229,204,0.25);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    text-align: center;
+  }
+  .virt-req-item .vri-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .virt-req-item .vri-detail { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+
+  /* ══════════════════════════════════
+     §9 — CPU TYPES TABLE
+  ══════════════════════════════════ */
+
+  /* ══════════════════════════════════
+     §10 — TROUBLESHOOTING
+  ══════════════════════════════════ */
+  .trouble-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .trouble-card {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid #222;
+    overflow: hidden;
+  }
+  .trouble-header {
+    padding: 0.9rem 1rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tc-noboot .trouble-header  { background: rgba(255,45,85,0.08);   color: var(--red); }
+  .tc-os     .trouble-header  { background: rgba(0,198,255,0.08);   color: var(--blue); }
+  .tc-vm     .trouble-header  { background: rgba(191,95,255,0.08);  color: var(--purple); }
+  .tc-heat   .trouble-header  { background: rgba(255,107,0,0.08);   color: var(--orange); }
+
+  .trouble-body { padding: 1rem; font-size: 0.85rem; }
+  .trouble-cause { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.7rem; margin-bottom: 0.5rem; border-bottom: 1px solid #1e1e28; padding-bottom: 0.5rem; }
+  .trouble-fix { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.3rem 0; }
+  .trouble-fix::before { content: '→'; color: var(--green); flex-shrink: 0; }
+
+  /* ══════════════════════════════════
+     §11 — INSTALLATION CHECKLIST
+  ══════════════════════════════════ */
+  .install-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .install-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.4rem;
+    border-bottom: 1px solid #161622;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .install-step:last-child { border-bottom: none; }
+  .install-step:hover { background: var(--surface2); }
+
+  .is-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .is-content { flex: 1; }
+  .is-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.1rem; }
+  .is-detail { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+  .is-warn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  /* ══════════════════════════════════
+     QUICK REFERENCE CARDS
+  ══════════════════════════════════ */
+  .quick-ref {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .quick-card { background: var(--surface); border-radius: 12px; padding: 1.2rem; border: 1px solid #222; }
+  .quick-card .qc-title { font-family: 'Orbitron', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 0.8rem; letter-spacing: 0.06em; }
+  .quick-item { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid #161622; font-size: 0.85rem; }
+  .quick-item:last-child { border-bottom: none; }
+  .qi-key { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.72rem; }
+
+  /* ══════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════ */
+  @media (max-width: 768px) {
+    .die-grid { grid-template-columns: 1fr 1fr; }
+    .cycle-flow { flex-direction: column; }
+    .cycle-step { border-right: none; border-bottom: 1px solid #1a1a28; }
+    .arch-compare-row { grid-template-columns: 1fr; }
+    .arch-split { grid-template-columns: 1fr; }
+    .socket-compare { grid-template-columns: 1fr; }
+    .compat-grid { grid-template-columns: 1fr; }
+    .core-thread-diagram { grid-template-columns: 1fr; }
+    .trouble-grid { grid-template-columns: 1fr; }
+    .quick-ref { grid-template-columns: 1fr; }
+    .vl-vm-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#overview">OVERVIEW</a>
+  <a href="#internals">INTERNALS</a>
+  <a href="#cycle">INSTRUCTION CYCLE</a>
+  <a href="#architecture">RISC vs CISC</a>
+  <a href="#memory">MEMORY HIERARCHY</a>
+  <a href="#cores">CORES & THREADS</a>
+  <a href="#sockets">SOCKETS</a>
+  <a href="#compat">COMPATIBILITY</a>
+  <a href="#virt">VIRTUALIZATION</a>
+  <a href="#types">CPU TYPES</a>
+  <a href="#install">INSTALLATION</a>
+  <a href="#troubleshoot">TROUBLESHOOT</a>
+  <a href="#exam">EXAM TRAPS</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">COMPTIA A+ CORE 1 · VISUAL STUDY GUIDE</div>
+  <h1>CPU MASTER GUIDE</h1>
+  <p>Architecture · Instruction Cycle · Sockets · Compatibility · Virtualization</p>
+  <div class="hero-chips">
+    <div class="hero-chip" style="border-color:rgba(255,107,0,0.4);color:var(--orange);background:rgba(255,107,0,0.06);">ALU · CU · REGISTERS</div>
+    <div class="hero-chip" style="border-color:rgba(0,198,255,0.4);color:var(--blue);background:rgba(0,198,255,0.06);">RISC · CISC · x86 · ARM</div>
+    <div class="hero-chip" style="border-color:rgba(255,214,0,0.4);color:var(--yellow);background:rgba(255,214,0,0.06);">LGA · PGA · SOCKETS</div>
+    <div class="hero-chip" style="border-color:rgba(0,229,204,0.4);color:var(--teal);background:rgba(0,229,204,0.06);">VT-x · AMD-V · SLAT</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     §1 — OVERVIEW CONCEPT DIAGRAM
+═══════════════════════════════════ -->
+<div class="section" id="overview">
+  <div class="section-title orange">01 / CPU OVERVIEW — WHAT IT IS & WHY IT MATTERS</div>
+
+  <div style="background:var(--surface); border:1px solid #222; border-radius:16px; padding:2rem;" class="fade-in">
+    <div style="text-align:center; margin-bottom:1.8rem;">
+      <div style="display:inline-block; background:rgba(255,107,0,0.08); border:2px solid rgba(255,107,0,0.4); border-radius:12px; padding:1rem 2.5rem; font-family:'Orbitron',monospace; font-size:1.1rem; font-weight:700; color:var(--orange); box-shadow:0 0 30px rgba(255,107,0,0.15);">
+        ⚡ CPU — CENTRAL PROCESSING UNIT
+        <div style="font-size:0.6rem; color:var(--muted); font-family:'Space Mono',monospace; margin-top:0.3rem; letter-spacing:0.1em;">"THE BRAIN OF THE COMPUTER"</div>
+      </div>
+    </div>
+
+    <!-- What CPU determines -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem;">
+      <div style="background:rgba(0,198,255,0.06); border:1px solid rgba(0,198,255,0.2); border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.4rem;">💾</div>
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--blue); font-weight:700; margin-bottom:0.3rem;">OS SUPPORT</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted);">32-bit / 64-bit / ARM determines which OS can run</div>
+      </div>
+      <div style="background:rgba(0,255,156,0.06); border:1px solid rgba(0,255,156,0.2); border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.4rem;">🧮</div>
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--green); font-weight:700; margin-bottom:0.3rem;">MAX RAM</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted);">32-bit = 4GB hard cap. 64-bit = up to 256TB</div>
+      </div>
+      <div style="background:rgba(255,214,0,0.06); border:1px solid rgba(255,214,0,0.2); border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.4rem;">🔌</div>
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--yellow); font-weight:700; margin-bottom:0.3rem;">MOTHERBOARD</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted);">Socket type locks CPU to specific boards</div>
+      </div>
+      <div style="background:rgba(191,95,255,0.06); border:1px solid rgba(191,95,255,0.2); border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.4rem;">🖥️</div>
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--purple); font-weight:700; margin-bottom:0.3rem;">VIRTUALIZATION</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted);">VT-x / AMD-V required for VMs</div>
+      </div>
+      <div style="background:rgba(0,229,204,0.06); border:1px solid rgba(0,229,204,0.2); border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.4rem;">⚡</div>
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--teal); font-weight:700; margin-bottom:0.3rem;">POWER EFFICIENCY</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted);">RISC/ARM uses less power than CISC/x86</div>
+      </div>
+      <div style="background:rgba(255,71,163,0.06); border:1px solid rgba(255,71,163,0.2); border-radius:10px; padding:1rem; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:0.4rem;">🧩</div>
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--pink); font-weight:700; margin-bottom:0.3rem;">SOFTWARE COMPAT</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted);">ARM apps need recompile. x86 needs emulation on ARM</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">⚡</div>
+    <div>
+      <div class="memo-label">MASTER LOCK — "CPU = ARCHITECTURE DECIDES EVERYTHING"</div>
+      <div class="memo-text">
+        Every exam question about CPU compatibility traces back to one thing: <strong>architecture</strong>.<br>
+        32-bit vs 64-bit → RAM limit. x86 vs ARM → software compat. LGA vs PGA → what board it fits. Know the architecture = know all the answers.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §2 — CPU INTERNALS BLOCK DIAGRAM
+═══════════════════════════════════ -->
+<div class="section" id="internals">
+  <div class="section-title orange">02 / CPU INTERNAL STRUCTURE — BLOCK DIAGRAM</div>
+
+  <div class="cpu-block-diagram fade-in">
+    <div class="cpu-die">
+      <div class="cpu-die-label">CPU DIE — INSIDE THE CHIP</div>
+      <div class="die-grid">
+
+        <!-- ALU -->
+        <div class="die-block alu">
+          <div class="block-icon">🔢</div>
+          <div class="block-name">ALU</div>
+          <div class="block-full">Arithmetic Logic Unit</div>
+          <div class="block-desc">
+            Performs <span class="hl-o">math</span> (+ − × ÷)<br>
+            and <span class="hl-o">logic</span> (AND, OR, NOT)<br>
+            <span style="color:var(--muted);font-size:0.72rem;">The calculator of the CPU</span>
+          </div>
+        </div>
+
+        <!-- CU -->
+        <div class="die-block cu">
+          <div class="block-icon">🎛️</div>
+          <div class="block-name">CU</div>
+          <div class="block-full">Control Unit</div>
+          <div class="block-desc">
+            <span class="hl-b">Directs all operations</span><br>
+            Controls Fetch → Decode → Execute<br>
+            <span style="color:var(--muted);font-size:0.72rem;">The traffic cop of the CPU</span>
+          </div>
+        </div>
+
+        <!-- REGISTERS -->
+        <div class="die-block reg">
+          <div class="block-icon">⚡</div>
+          <div class="block-name">REGISTERS</div>
+          <div class="block-full">CPU Registers</div>
+          <div class="block-desc">
+            <span class="hl-y">Fastest memory in the system</span><br>
+            Tiny, temporary storage<br>
+            <span style="color:var(--muted);font-size:0.72rem;">Lives inside the CPU core</span>
+          </div>
+        </div>
+
+        <!-- L1 -->
+        <div class="die-block l1">
+          <div class="block-icon">🟢</div>
+          <div class="block-name">L1 CACHE</div>
+          <div class="block-full">Level 1 Cache</div>
+          <div class="block-desc">
+            Fastest cache · per core<br>
+            32–128 KB<br>
+            <span style="color:var(--muted);font-size:0.72rem;">Checked first, always</span>
+          </div>
+        </div>
+
+        <!-- L2 -->
+        <div class="die-block l2">
+          <div class="block-icon">🟢</div>
+          <div class="block-name">L2 CACHE</div>
+          <div class="block-full">Level 2 Cache</div>
+          <div class="block-desc">
+            Near CPU core<br>
+            256 KB – 2 MB<br>
+            <span style="color:var(--muted);font-size:0.72rem;">Checked second</span>
+          </div>
+        </div>
+
+        <!-- L3 -->
+        <div class="die-block l3">
+          <div class="block-icon">🟢</div>
+          <div class="block-name">L3 CACHE</div>
+          <div class="block-full">Level 3 Cache</div>
+          <div class="block-desc">
+            <span class="hl-g">Shared across ALL cores</span><br>
+            4 – 64 MB<br>
+            <span style="color:var(--muted);font-size:0.72rem;">Largest on-chip cache</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BUS LINE -->
+    <div class="bus-line">
+      <div class="bus-rail"></div>
+      <span>SYSTEM BUS → RAM → STORAGE</span>
+      <div class="bus-rail"></div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🏗️</div>
+    <div>
+      <div class="memo-label">BLOCK LOCK — "ACE + 3 CACHES"</div>
+      <div class="memo-text">
+        CPU = <strong>A</strong>LU + <strong>C</strong>U + r<strong>E</strong>gisters + L1/L2/L3 cache.<br>
+        ALU <em>calculates</em>. CU <em>controls</em>. Registers <em>hold the current value</em>. Caches <em>remember what you just used</em>.<br>
+        <span class="hl-y">Exam: "fastest memory in the system" = Registers, NOT cache.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §3 — INSTRUCTION CYCLE
+═══════════════════════════════════ -->
+<div class="section" id="cycle">
+  <div class="section-title blue">03 / INSTRUCTION CYCLE — FETCH → DECODE → EXECUTE → WRITE</div>
+
+  <div class="cycle-flow fade-in">
+    <div class="cycle-step step-fetch">
+      <div class="step-num">STEP 01</div>
+      <div class="step-name">FETCH</div>
+      <div class="step-detail">
+        CU retrieves the<br>next instruction<br>from RAM or cache<br>
+        <br>
+        <span style="color:var(--blue);">Program Counter<br>points to address</span>
+      </div>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="cycle-step step-decode">
+      <div class="step-num">STEP 02</div>
+      <div class="step-name">DECODE</div>
+      <div class="step-detail">
+        CU translates the<br>instruction into<br>signals the ALU<br>can understand<br>
+        <br>
+        <span style="color:var(--yellow);">What operation?<br>What data?</span>
+      </div>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="cycle-step step-exec">
+      <div class="step-num">STEP 03</div>
+      <div class="step-name">EXECUTE</div>
+      <div class="step-detail">
+        ALU or FPU<br>performs the<br>actual operation<br>
+        <br>
+        <span style="color:var(--orange);">Math, logic,<br>memory move</span>
+      </div>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="cycle-step step-write">
+      <div class="step-num">STEP 04</div>
+      <div class="step-name">WRITE-BACK</div>
+      <div class="step-detail">
+        Result stored in<br>register, cache,<br>or RAM<br>
+        <br>
+        <span style="color:var(--green);">Output saved,<br>cycle repeats</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Who does what -->
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem; margin-top:1rem;" class="fade-in">
+    <div style="background:rgba(0,198,255,0.06); border:1px solid rgba(0,198,255,0.2); border-radius:8px; padding:0.8rem; text-align:center;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.62rem; color:var(--muted);">WHO DOES IT</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.8rem; color:var(--blue); font-weight:700; margin-top:0.3rem;">CONTROL UNIT</div>
+    </div>
+    <div style="background:rgba(255,214,0,0.06); border:1px solid rgba(255,214,0,0.2); border-radius:8px; padding:0.8rem; text-align:center;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.62rem; color:var(--muted);">WHO DOES IT</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.8rem; color:var(--yellow); font-weight:700; margin-top:0.3rem;">CONTROL UNIT</div>
+    </div>
+    <div style="background:rgba(255,107,0,0.06); border:1px solid rgba(255,107,0,0.2); border-radius:8px; padding:0.8rem; text-align:center;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.62rem; color:var(--muted);">WHO DOES IT</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.8rem; color:var(--orange); font-weight:700; margin-top:0.3rem;">ALU / FPU</div>
+    </div>
+    <div style="background:rgba(0,255,156,0.06); border:1px solid rgba(0,255,156,0.2); border-radius:8px; padding:0.8rem; text-align:center;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.62rem; color:var(--muted);">WHERE IT GOES</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.8rem; color:var(--green); font-weight:700; margin-top:0.3rem;">REG / CACHE / RAM</div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🔄</div>
+    <div>
+      <div class="memo-label">SEQUENCE LOCK — "FRED EATS WAFFLES"</div>
+      <div class="memo-text">
+        <strong>F</strong>etch · <strong>D</strong>ecode · <strong>E</strong>xecute · <strong>W</strong>rite-back → <strong>"For Dinner, Eat Waffles"</strong><br>
+        CU handles Fetch and Decode. ALU handles Execute. Result goes to Registers/Cache/RAM during Write-back.<br>
+        <span class="hl-y">Exam: "Which unit directs the instruction cycle?" → Control Unit, not ALU.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §4 — RISC vs CISC
+═══════════════════════════════════ -->
+<div class="section" id="architecture">
+  <div class="section-title teal">04 / CPU ARCHITECTURE — RISC vs CISC</div>
+
+  <div class="arch-compare-row fade-in">
+    <div class="arch-card risc">
+      <div class="arch-title">RISC</div>
+      <div class="arch-full">REDUCED INSTRUCTION SET COMPUTING</div>
+      <div class="arch-row"><div class="ar-icon">✅</div>Small, simple instructions</div>
+      <div class="arch-row"><div class="ar-icon">⚡</div>~1 clock cycle per instruction</div>
+      <div class="arch-row"><div class="ar-icon">🔋</div><span class="hl-t">Power efficient</span> — runs cool</div>
+      <div class="arch-row"><div class="ar-icon">📱</div>Used in ARM processors</div>
+      <div class="arch-row"><div class="ar-icon">📦</div>Needs more instructions to do complex tasks</div>
+      <div class="arch-row"><div class="ar-icon">🎯</div>Mobile, tablets, IoT, Apple Silicon</div>
+    </div>
+
+    <div class="vs-divider">VS</div>
+
+    <div class="arch-card cisc">
+      <div class="arch-title">CISC</div>
+      <div class="arch-full">COMPLEX INSTRUCTION SET COMPUTING</div>
+      <div class="arch-row"><div class="ar-icon">✅</div>Large, complex instructions</div>
+      <div class="arch-row"><div class="ar-icon">⚡</div>Multiple steps in ONE instruction</div>
+      <div class="arch-row"><div class="ar-icon">🔥</div>Higher power draw — runs hotter</div>
+      <div class="arch-row"><div class="ar-icon">🖥️</div>Used in x86/x64 processors</div>
+      <div class="arch-row"><div class="ar-icon">📦</div>Fewer instructions needed for complex tasks</div>
+      <div class="arch-row"><div class="ar-icon">🎯</div>Desktops, laptops, servers</div>
+    </div>
+  </div>
+
+  <!-- Combined architecture table -->
+  <div style="margin-top:1.5rem;" class="fade-in">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>ARCHITECTURE</th>
+          <th>TYPE</th>
+          <th>BIT WIDTH</th>
+          <th>MAX RAM</th>
+          <th>USED IN</th>
+          <th>KEY ADVANTAGE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag pink">x86</span></td>
+          <td>CISC</td>
+          <td><span class="hl-r">32-bit</span></td>
+          <td><span class="hl-r">4 GB hard cap</span></td>
+          <td>Older PCs</td>
+          <td>Wide compatibility</td>
+        </tr>
+        <tr>
+          <td><span class="tag pink">x64 (x86-64)</span></td>
+          <td>CISC</td>
+          <td><span class="hl-g">64-bit</span></td>
+          <td><span class="hl-g">&gt;4 GB (256 TB)</span></td>
+          <td>Modern PCs/servers</td>
+          <td>High performance</td>
+        </tr>
+        <tr>
+          <td><span class="tag teal">ARM</span></td>
+          <td>RISC</td>
+          <td>32 or 64-bit</td>
+          <td>Varies by impl.</td>
+          <td>Mobile, SoC, Apple M-series</td>
+          <td><span class="hl-t">Power efficient</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🧱</div>
+    <div>
+      <div class="memo-label">CONTRAST LOCK — "RISC RUNS ON BATTERIES, CISC RUNS ON OUTLETS"</div>
+      <div class="memo-text">
+        RISC = simple bricks. Many bricks, but each is cheap. <strong>Used in everything battery-powered.</strong><br>
+        CISC = multi-tool. One instruction does more, but costs more power. <strong>Used in everything plugged in.</strong><br>
+        <span class="hl-y">ARM = RISC. x86/x64 = CISC. The exam loves this pairing.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="trap-box">
+    <div class="trap-label">🚨 EXAM TRAPS — ARCHITECTURE COMPATIBILITY</div>
+    <div class="trap-item"><span class="hl-r">32-bit CPU cannot run a 64-bit OS</span> — period, no workaround</div>
+    <div class="trap-item"><span class="hl-g">64-bit CPU CAN run 32-bit software</span> — backward compatible</div>
+    <div class="trap-item"><span class="hl-o">ARM software must be compiled for ARM</span> — it's not just an emulation setting</div>
+    <div class="trap-item"><span class="hl-y">x86 apps on ARM require emulation layer</span> — performance penalty, not all apps supported</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §5 — MEMORY HIERARCHY
+═══════════════════════════════════ -->
+<div class="section" id="memory">
+  <div class="section-title yellow">05 / MEMORY HIERARCHY — SPEED vs CAPACITY</div>
+
+  <div class="pyramid-wrapper fade-in">
+
+    <div style="text-align:center; font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); margin-bottom:1rem; letter-spacing:0.05em;">
+      ← FASTER · SMALLER · MORE EXPENSIVE &nbsp;|&nbsp; SLOWER · LARGER · CHEAPER →
+    </div>
+
+    <!-- Registers -->
+    <div class="pyr-level" style="border-left:4px solid var(--yellow);">
+      <div class="pyr-fill" style="background:var(--yellow); width:100%;"></div>
+      <div class="pyr-rank" style="color:var(--yellow);">①</div>
+      <div class="pyr-name" style="color:var(--yellow);">REGISTERS</div>
+      <div class="pyr-details">Inside CPU core · bits · fastest possible · holds current operation value</div>
+      <div class="pyr-speed">
+        <div class="speed-dot" style="background:var(--yellow);"></div>
+        <div class="speed-dot" style="background:var(--yellow);"></div>
+        <div class="speed-dot" style="background:var(--yellow);"></div>
+        <div class="speed-dot" style="background:var(--yellow);"></div>
+        <div class="speed-dot" style="background:var(--yellow);"></div>
+      </div>
+    </div>
+
+    <!-- L1 -->
+    <div class="pyr-level" style="border-left:4px solid var(--cache-color);">
+      <div class="pyr-fill" style="background:var(--cache-color); width:88%;"></div>
+      <div class="pyr-rank" style="color:var(--cache-color);">②</div>
+      <div class="pyr-name" style="color:var(--cache-color);">L1 CACHE</div>
+      <div class="pyr-details">Inside each CPU core · 32–128 KB · ~1–4 cycles</div>
+      <div class="pyr-speed">
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+      </div>
+    </div>
+
+    <!-- L2 -->
+    <div class="pyr-level" style="border-left:4px solid var(--cache-color);">
+      <div class="pyr-fill" style="background:var(--cache-color); width:74%;"></div>
+      <div class="pyr-rank" style="color:var(--cache-color);">③</div>
+      <div class="pyr-name" style="color:var(--cache-color);">L2 CACHE</div>
+      <div class="pyr-details">Near each CPU core · 256 KB – 2 MB · ~4–12 cycles</div>
+      <div class="pyr-speed">
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+      </div>
+    </div>
+
+    <!-- L3 -->
+    <div class="pyr-level" style="border-left:4px solid var(--cache-color);">
+      <div class="pyr-fill" style="background:var(--cache-color); width:60%;"></div>
+      <div class="pyr-rank" style="color:var(--cache-color);">④</div>
+      <div class="pyr-name" style="color:var(--cache-color);">L3 CACHE</div>
+      <div class="pyr-details">Shared across ALL cores · 4–64 MB · ~30–40 cycles</div>
+      <div class="pyr-speed">
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:var(--cache-color);"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; font-family:'Space Mono',monospace; font-size:0.62rem; color:#333; padding:0.3rem 0; letter-spacing:0.08em;">─── ─── CPU BOUNDARY ─── ───</div>
+
+    <!-- RAM -->
+    <div class="pyr-level" style="border-left:4px solid var(--blue);">
+      <div class="pyr-fill" style="background:var(--blue); width:45%;"></div>
+      <div class="pyr-rank" style="color:var(--blue);">⑤</div>
+      <div class="pyr-name" style="color:var(--blue);">RAM</div>
+      <div class="pyr-details">DDR SDRAM on motherboard · GB · ~50–100 ns</div>
+      <div class="pyr-speed">
+        <div class="speed-dot" style="background:var(--blue);"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+      </div>
+    </div>
+
+    <!-- SSD -->
+    <div class="pyr-level" style="border-left:4px solid var(--red); opacity:0.7;">
+      <div class="pyr-fill" style="background:var(--red); width:20%;"></div>
+      <div class="pyr-rank" style="color:var(--red);">⑥</div>
+      <div class="pyr-name" style="color:var(--red);">STORAGE</div>
+      <div class="pyr-details">SSD / HDD · GB–TB · slowest — persistent storage</div>
+      <div class="pyr-speed">
+        <div class="speed-dot" style="background:#333;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+        <div class="speed-dot" style="background:#222;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">📐</div>
+    <div>
+      <div class="memo-label">RULE LOCK — "CLOSER TO CPU = FASTER, SMALLER, PRICIER"</div>
+      <div class="memo-text">
+        Every single level follows the same rule: move one step further from the CPU → slower, bigger, cheaper.<br>
+        <span class="hl-y">Exam trap: "fastest memory in the system" = Registers (not L1 cache).</span><br>
+        Registers live <em>inside</em> the CPU core. L1 cache is fast but still a separate structure.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §6 — CORES & THREADS
+═══════════════════════════════════ -->
+<div class="section" id="cores">
+  <div class="section-title pink">06 / CORES & THREADS — PARALLEL PROCESSING</div>
+
+  <div class="core-thread-diagram fade-in">
+
+    <!-- CORES -->
+    <div class="ct-box">
+      <div class="ct-title" style="color:var(--orange);">⬛ CORES (PHYSICAL)</div>
+      <div class="cores-visual">
+        <div class="core-unit">C1</div>
+        <div class="core-unit">C2</div>
+        <div class="core-unit">C3</div>
+        <div class="core-unit">C4</div>
+        <div class="core-unit">C5</div>
+        <div class="core-unit">C6</div>
+        <div class="core-unit">C7</div>
+        <div class="core-unit">C8</div>
+      </div>
+      <div style="font-size:0.85rem; line-height:1.6;">
+        Each core = <span class="hl-o">independent mini-processor</span><br>
+        Can run a completely separate task<br>
+        <br>
+        <span style="font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--muted);">
+          4C = quad-core<br>
+          8C = octa-core<br>
+          8C/16T = 8 cores, 16 threads
+        </span>
+      </div>
+    </div>
+
+    <!-- THREADS -->
+    <div class="ct-box">
+      <div class="ct-title" style="color:var(--blue);">🧵 THREADS (LOGICAL)</div>
+      <div class="thread-visual">
+        <div class="thread-row">
+          <div class="thread-core-box">C1</div>
+          <div class="thread-arrow">→</div>
+          <div class="thread-units">
+            <div class="thread-unit t1">T1</div>
+            <div class="thread-unit t2">T2</div>
+          </div>
+        </div>
+        <div class="thread-row">
+          <div class="thread-core-box">C2</div>
+          <div class="thread-arrow">→</div>
+          <div class="thread-units">
+            <div class="thread-unit t1">T3</div>
+            <div class="thread-unit t2">T4</div>
+          </div>
+        </div>
+        <div class="thread-row">
+          <div class="thread-core-box">C3</div>
+          <div class="thread-arrow">→</div>
+          <div class="thread-units">
+            <div class="thread-unit t1">T5</div>
+            <div class="thread-unit t2">T6</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:0.85rem; line-height:1.6; margin-top:0.8rem;">
+        1 core handles <span class="hl-b">2 threads simultaneously</span><br>
+        Intel = <span class="hl-b">Hyper-Threading</span><br>
+        AMD = <span class="hl-b">SMT</span> (Simultaneous Multi-Threading)
+      </div>
+    </div>
+
+  </div>
+
+  <!-- What threads are used for -->
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem; margin-top:1rem;" class="fade-in">
+    <div style="background:var(--surface); border:1px solid #222; border-radius:10px; padding:1rem; text-align:center;">
+      <div style="font-size:1.3rem; margin-bottom:0.3rem;">🎮</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.65rem; color:var(--yellow); font-weight:700;">GAMING</div>
+      <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">High core speed + threads</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid #222; border-radius:10px; padding:1rem; text-align:center;">
+      <div style="font-size:1.3rem; margin-bottom:0.3rem;">🎬</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.65rem; color:var(--orange); font-weight:700;">RENDERING</div>
+      <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">More cores = faster render</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid #222; border-radius:10px; padding:1rem; text-align:center;">
+      <div style="font-size:1.3rem; margin-bottom:0.3rem;">🖥️</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.65rem; color:var(--purple); font-weight:700;">VIRTUAL MACHINES</div>
+      <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">Each VM needs dedicated threads</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid #222; border-radius:10px; padding:1rem; text-align:center;">
+      <div style="font-size:1.3rem; margin-bottom:0.3rem;">⚡</div>
+      <div style="font-family:'Orbitron',monospace; font-size:0.65rem; color:var(--blue); font-weight:700;">MULTITASKING</div>
+      <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">More threads = smoother juggling</div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🏭</div>
+    <div>
+      <div class="memo-label">VISUAL LOCK — "CORES = WORKERS, THREADS = TASKS PER WORKER"</div>
+      <div class="memo-text">
+        A factory with 8 workers (cores), each handling 2 jobs at once (Hyper-Threading) = <strong>16 tasks simultaneously</strong>.<br>
+        That's 8C/16T. <span class="hl-y">Exam format: always CORES/THREADS.</span><br>
+        <span class="hl-o">Intel calls it Hyper-Threading. AMD calls it SMT. Same concept, different brand name.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §7 — CPU SOCKET TYPES
+═══════════════════════════════════ -->
+<div class="section" id="sockets">
+  <div class="section-title yellow">07 / CPU SOCKET TYPES — LGA vs PGA</div>
+
+  <div class="socket-compare fade-in">
+
+    <!-- LGA -->
+    <div class="socket-card lga">
+      <div class="socket-name">LGA</div>
+      <div class="socket-full">LAND GRID ARRAY</div>
+      <div class="pin-label">PINS ON THE MOTHERBOARD SOCKET</div>
+      <div class="lga-grid">
+        <!-- 100 dots for pins in socket -->
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+        <div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div><div class="lga-pin"></div>
+      </div>
+      <div class="socket-where" style="margin-top:0.8rem;">
+        <span class="tag blue">Intel CPUs</span> &nbsp; <span class="tag blue">AMD AM5</span><br><br>
+        CPU has flat pads (lands).<br>
+        Pins are in the <span class="hl-b">motherboard socket</span>.<br>
+        Bent pins = motherboard damage.
+      </div>
+    </div>
+
+    <!-- PGA -->
+    <div class="socket-card pga">
+      <div class="socket-name">PGA</div>
+      <div class="socket-full">PIN GRID ARRAY</div>
+      <div class="pin-label">PINS ON THE CPU ITSELF</div>
+      <div class="pga-chip">
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+        <div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div><div class="pga-pin"></div>
+      </div>
+      <div class="socket-where">
+        <span class="tag orange">AMD AM4 (older)</span><br><br>
+        CPU has physical pins.<br>
+        Socket has holes.<br>
+        Bent pins = <span class="hl-r">CPU damage</span> — more fragile.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">📌</div>
+    <div>
+      <div class="memo-label">CONTRAST LOCK — "LGA: PINS STAY HOME. PGA: PINS TRAVEL."</div>
+      <div class="memo-text">
+        <strong>LGA</strong> — pins are in the motherboard socket. CPU has flat contacts. Bent pin = board damage (more expensive to fix).<br>
+        <strong>PGA</strong> — pins are on the CPU. Socket has holes. Bent pin = CPU damage (cheaper to fix).<br>
+        <span class="hl-y">Intel = LGA always. AMD went LGA with AM5 — older AM4 was PGA.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Installation checklist moved here -->
+  <div style="margin-top:1.5rem;" class="fade-in">
+    <div class="section-title yellow" style="font-size:0.95rem; margin-bottom:1rem;">INSTALLATION RULES</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div style="background:rgba(0,255,156,0.05); border:1px solid rgba(0,255,156,0.2); border-radius:10px; padding:1rem;">
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--green); margin-bottom:0.7rem;">✅ DO</div>
+        <div style="font-size:0.85rem; line-height:1.9; font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--muted);">
+          Align the triangle (Pin 1 marker)<br>
+          Use the ZIF (Zero Insertion Force) lever<br>
+          Apply pea-sized thermal paste<br>
+          Ground yourself before touching CPU<br>
+          Verify socket compatibility first
+        </div>
+      </div>
+      <div style="background:rgba(255,45,85,0.05); border:1px solid rgba(255,45,85,0.2); border-radius:10px; padding:1rem;">
+        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--red); margin-bottom:0.7rem;">❌ NEVER</div>
+        <div style="font-size:0.85rem; line-height:1.9; font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--muted);">
+          Force the CPU into the socket<br>
+          Touch the pins or contact pads<br>
+          Skip thermal paste<br>
+          Install without grounding yourself<br>
+          Use the wrong socket type
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §8 — COMPATIBILITY
+═══════════════════════════════════ -->
+<div class="section" id="compat">
+  <div class="section-title blue">08 / ARCHITECTURE COMPATIBILITY RULES</div>
+
+  <div class="compat-grid fade-in">
+
+    <div class="compat-card" style="border-color:rgba(255,71,163,0.3);">
+      <div class="cc-name" style="color:var(--pink);">x86 (32-BIT)</div>
+      <div class="cc-type">CISC · LEGACY</div>
+      <div class="compat-rule"><div class="cr-icon">✅</div> Runs 32-bit OS</div>
+      <div class="compat-rule"><div class="cr-icon">✅</div> Runs 32-bit software</div>
+      <div class="compat-rule"><div class="cr-icon">❌</div> <span class="hl-r">Cannot run 64-bit OS</span></div>
+      <div class="compat-rule"><div class="cr-icon">❌</div> Max 4 GB RAM — hard cap</div>
+    </div>
+
+    <div class="compat-card" style="border-color:rgba(255,71,163,0.5);">
+      <div class="cc-name" style="color:var(--pink);">x64 (64-BIT)</div>
+      <div class="cc-type">CISC · CURRENT STANDARD</div>
+      <div class="compat-rule"><div class="cr-icon">✅</div> Runs 64-bit OS</div>
+      <div class="compat-rule"><div class="cr-icon">✅</div> <span class="hl-g">Runs 32-bit software</span> (backward)</div>
+      <div class="compat-rule"><div class="cr-icon">✅</div> Supports &gt;4 GB RAM</div>
+      <div class="compat-rule"><div class="cr-icon">⚠️</div> Cannot run 16-bit DOS apps natively</div>
+    </div>
+
+    <div class="compat-card" style="border-color:rgba(0,229,204,0.4);">
+      <div class="cc-name" style="color:var(--teal);">ARM</div>
+      <div class="cc-type">RISC · MOBILE / MODERN</div>
+      <div class="compat-rule"><div class="cr-icon">✅</div> Runs ARM-compiled software natively</div>
+      <div class="compat-rule"><div class="cr-icon">⚠️</div> x86 apps need <span class="hl-o">emulation layer</span></div>
+      <div class="compat-rule"><div class="cr-icon">❌</div> x86 apps not always compatible</div>
+      <div class="compat-rule"><div class="cr-icon">✅</div> Power efficient — mobile, Apple M-series</div>
+    </div>
+
+  </div>
+
+  <div class="trap-box" style="margin-top:1.5rem;">
+    <div class="trap-label">🚨 EXAM TRAPS — COMPATIBILITY</div>
+    <div class="trap-item"><span class="hl-r">32-bit OS on 64-bit CPU</span> = works, but wastes the CPU's capability (still limited to 4 GB RAM)</div>
+    <div class="trap-item"><span class="hl-y">64-bit OS on 32-bit CPU</span> = IMPOSSIBLE — exam will test this direction</div>
+    <div class="trap-item"><span class="hl-o">ARM app on x86</span> = won't run without recompile. x86 app on ARM = needs emulation, may not work</div>
+    <div class="trap-item"><span class="hl-b">Same socket ≠ same CPU support</span> — a Z690 board (LGA1700) won't accept every LGA1700 CPU</div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🔢</div>
+    <div>
+      <div class="memo-label">RULE LOCK — "HIGHER ALWAYS RUNS LOWER. NEVER THE REVERSE."</div>
+      <div class="memo-text">
+        64-bit CPU → can run both 32-bit and 64-bit software. <strong>Higher always supports lower.</strong><br>
+        32-bit CPU → can only run 32-bit software. <span class="hl-r">Lower cannot run higher.</span><br>
+        ARM architecture → completely separate family. Can't run x86 code natively regardless of bit width.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §9 — VIRTUALIZATION
+═══════════════════════════════════ -->
+<div class="section" id="virt">
+  <div class="section-title purple">09 / VIRTUALIZATION — VT-x, AMD-V, SLAT</div>
+
+  <div class="virt-diagram fade-in">
+    <div class="virt-layers">
+
+      <!-- VMs -->
+      <div class="vl-vm-row">
+        <div class="vl-vm">VM 1<br><span style="font-size:0.6rem;opacity:0.7;">Windows 11</span></div>
+        <div class="vl-vm">VM 2<br><span style="font-size:0.6rem;opacity:0.7;">Ubuntu Linux</span></div>
+        <div class="vl-vm">VM 3<br><span style="font-size:0.6rem;opacity:0.7;">macOS VM</span></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.8rem;padding:0.3rem 0;">↕ managed by ↕</div>
+
+      <!-- Hypervisor -->
+      <div class="virt-layer vl-hypervisor">
+        <div class="vl-name">HYPERVISOR</div>
+        <div class="vl-detail">Type 1 (bare-metal: VMware ESXi, Hyper-V) · Type 2 (hosted: VirtualBox, VMware Workstation)</div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.8rem;padding:0.3rem 0;">↕ requires ↕</div>
+
+      <!-- CPU -->
+      <div class="virt-layer vl-cpu">
+        <div class="vl-name">CPU WITH VIRTUALIZATION SUPPORT</div>
+        <div class="vl-detail">Hardware virtualization extensions must be enabled in BIOS/UEFI</div>
+      </div>
+
+    </div>
+
+    <!-- Requirements -->
+    <div class="virt-req">
+      <div class="virt-req-item">
+        <div class="vri-name">VT-x</div>
+        <div class="vri-detail">Intel's virtualization extension. Must be enabled in BIOS.</div>
+      </div>
+      <div class="virt-req-item">
+        <div class="vri-name">AMD-V</div>
+        <div class="vri-detail">AMD's equivalent to VT-x. Same requirement.</div>
+      </div>
+      <div class="virt-req-item">
+        <div class="vri-name">SLAT</div>
+        <div class="vri-detail">Second Level Address Translation (EPT on Intel, RVI on AMD). Improves VM memory performance.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🖥️</div>
+    <div>
+      <div class="memo-label">CONDITION LOCK — "NO VT-x / AMD-V = NO VMs. PERIOD."</div>
+      <div class="memo-text">
+        Symptom on exam: <strong>"VM performance is poor"</strong> or <strong>"hypervisor won't start"</strong> → check BIOS for VT-x or AMD-V first.<br>
+        <span class="hl-y">SLAT is the next layer</span> — enables efficient memory management for multiple VMs running simultaneously.<br>
+        <span class="hl-o">Intel calls it EPT. AMD calls it RVI.</span> Both mean SLAT on the exam.
+      </div>
+    </div>
+  </div>
+
+  <div class="trap-box">
+    <div class="trap-label">🚨 EXAM TRAP — VIRTUALIZATION</div>
+    <div class="trap-item"><span class="hl-r">VT-x/AMD-V can be disabled in BIOS</span> — CPU supports it but it's off by default on some systems</div>
+    <div class="trap-item"><span class="hl-y">Poor VM performance ≠ bad RAM</span> — check virtualization extensions first</div>
+    <div class="trap-item"><span class="hl-o">SLAT is separate from VT-x/AMD-V</span> — you need both for optimal VM performance</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §10 — CPU USE CASE TYPES
+═══════════════════════════════════ -->
+<div class="section" id="types">
+  <div class="section-title green">10 / CPU BY USE CASE — DESKTOP vs WORKSTATION vs SERVER vs MOBILE</div>
+
+  <div class="fade-in">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>USE CASE</th>
+          <th>CPU EXAMPLES</th>
+          <th>CORE FOCUS</th>
+          <th>KEY FEATURE</th>
+          <th>ECC RAM?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag blue">Desktop</span></td>
+          <td>Intel i3/i5/i7/i9, AMD Ryzen 3/5/7/9</td>
+          <td>General use, gaming</td>
+          <td>Performance per dollar</td>
+          <td><span class="hl-r">No</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag orange">Workstation</span></td>
+          <td>Intel Xeon W, AMD Threadripper</td>
+          <td>Video editing, 3D, CAD</td>
+          <td>High core count + PCIe lanes</td>
+          <td><span class="hl-g">Yes</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag red">Server</span></td>
+          <td>Intel Xeon Scalable, AMD EPYC</td>
+          <td>Reliability, uptime 24/7</td>
+          <td>ECC RAM, multi-socket, RAS</td>
+          <td><span class="hl-g">Required</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag green">Mobile</span></td>
+          <td>ARM (Qualcomm, Apple M), Mobile i5/i7</td>
+          <td>Battery life, thin form factor</td>
+          <td>Low TDP, integrated everything</td>
+          <td><span class="hl-r">No</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🎯</div>
+    <div>
+      <div class="memo-label">CATEGORY LOCK — "SERVERS NEED ECC. WORKSTATIONS WANT IT. DESKTOPS DON'T CARE."</div>
+      <div class="memo-text">
+        If the exam shows Xeon or EPYC → think <strong>server/workstation</strong> → think ECC RAM + reliability.<br>
+        If it shows Core i-series or Ryzen → think <strong>desktop/consumer</strong> → no ECC, no multi-socket.<br>
+        <span class="hl-y">Threadripper is workstation-class, not desktop.</span> Don't confuse it with Ryzen.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §11 — TROUBLESHOOTING
+═══════════════════════════════════ -->
+<div class="section" id="troubleshoot">
+  <div class="section-title red">11 / TROUBLESHOOTING CPU ISSUES</div>
+
+  <div class="trouble-grid fade-in">
+
+    <div class="trouble-card tc-noboot">
+      <div class="trouble-header">💥 WON'T BOOT AFTER CPU INSTALL</div>
+      <div class="trouble-body">
+        <div class="trouble-cause">POSSIBLE CAUSES:</div>
+        <div class="trouble-fix">Bent/damaged pins in socket</div>
+        <div class="trouble-fix">Wrong socket type (CPU doesn't fit board)</div>
+        <div class="trouble-fix">CPU not fully seated</div>
+        <div class="trouble-fix">No thermal paste applied</div>
+        <div class="trouble-cause" style="margin-top:0.5rem;">FIXES:</div>
+        <div class="trouble-fix">Inspect pins under good lighting</div>
+        <div class="trouble-fix">Verify CPU socket compatibility</div>
+        <div class="trouble-fix">Reseat CPU, use ZIF lever properly</div>
+      </div>
+    </div>
+
+    <div class="trouble-card tc-os">
+      <div class="trouble-header">💾 CAN'T INSTALL OS</div>
+      <div class="trouble-body">
+        <div class="trouble-cause">POSSIBLE CAUSES:</div>
+        <div class="trouble-fix">32-bit CPU + 64-bit OS installer</div>
+        <div class="trouble-fix">ARM CPU + x86 installer</div>
+        <div class="trouble-fix">Boot mode mismatch (UEFI vs Legacy)</div>
+        <div class="trouble-cause" style="margin-top:0.5rem;">FIXES:</div>
+        <div class="trouble-fix">Match OS bitness to CPU architecture</div>
+        <div class="trouble-fix">Use ARM-specific OS image for ARM CPU</div>
+        <div class="trouble-fix">Check BIOS boot mode setting</div>
+      </div>
+    </div>
+
+    <div class="trouble-card tc-vm">
+      <div class="trouble-header">🖥️ POOR VM PERFORMANCE / WON'T START</div>
+      <div class="trouble-body">
+        <div class="trouble-cause">POSSIBLE CAUSES:</div>
+        <div class="trouble-fix">VT-x or AMD-V disabled in BIOS</div>
+        <div class="trouble-fix">SLAT not supported/enabled</div>
+        <div class="trouble-fix">Insufficient RAM or cores assigned</div>
+        <div class="trouble-cause" style="margin-top:0.5rem;">FIXES:</div>
+        <div class="trouble-fix">Enable VT-x/AMD-V in BIOS/UEFI</div>
+        <div class="trouble-fix">Check CPU spec sheet for SLAT support</div>
+        <div class="trouble-fix">Increase VM resource allocation</div>
+      </div>
+    </div>
+
+    <div class="trouble-card tc-heat">
+      <div class="trouble-header">🌡️ OVERHEATING / THERMAL SHUTDOWN</div>
+      <div class="trouble-body">
+        <div class="trouble-cause">POSSIBLE CAUSES:</div>
+        <div class="trouble-fix">No thermal paste between CPU and cooler</div>
+        <div class="trouble-fix">Cooler fan not spinning / disconnected</div>
+        <div class="trouble-fix">Cooler not firmly seated</div>
+        <div class="trouble-fix">Case airflow blocked</div>
+        <div class="trouble-cause" style="margin-top:0.5rem;">FIXES:</div>
+        <div class="trouble-fix">Apply pea-sized thermal paste, reseat cooler</div>
+        <div class="trouble-fix">Check fan connector on motherboard</div>
+        <div class="trouble-fix">Verify cooler locking tabs are engaged</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🔧</div>
+    <div>
+      <div class="memo-label">DECISION LOCK — READ THE SYMPTOM, KNOW THE CAUSE</div>
+      <div class="memo-text">
+        <span class="hl-r">Won't POST at all after install</span> → bent pins or not seated<br>
+        <span class="hl-b">Boots but OS install fails</span> → 32/64-bit mismatch or ARM/x86 mismatch<br>
+        <span class="hl-p">Hypervisor won't start</span> → VT-x or AMD-V disabled in BIOS<br>
+        <span class="hl-o">Shuts off during load / runs hot</span> → thermal paste missing or cooler unseated
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     §12 — EXAM TRAPS + QUICK REF
+═══════════════════════════════════ -->
+<div class="section" id="exam">
+  <div class="section-title yellow">12 / EXAM TRAPS + QUICK REFERENCE</div>
+
+  <div class="trap-box fade-in">
+    <div class="trap-label">🚨 ALL CRITICAL EXAM TRAPS — CPU</div>
+    <div class="trap-item"><span class="hl-r">Fastest memory in the system = Registers</span> — NOT L1 cache. Registers are inside the CPU core.</div>
+    <div class="trap-item"><span class="hl-y">32-bit CPU cannot run a 64-bit OS</span> — but 64-bit CPU CAN run 32-bit software</div>
+    <div class="trap-item"><span class="hl-o">RISC = ARM = power efficient</span> — CISC = x86/x64 = higher performance, higher power</div>
+    <div class="trap-item"><span class="hl-b">Intel = LGA · AMD older = PGA · AMD AM5 = LGA</span> — AMD moved to LGA with AM5</div>
+    <div class="trap-item"><span class="hl-p">VT-x = Intel virtualization · AMD-V = AMD virtualization</span> — different names, same concept</div>
+    <div class="trap-item"><span class="hl-r">VT-x/AMD-V can be DISABLED in BIOS even if CPU supports it</span> — always check BIOS first</div>
+    <div class="trap-item"><span class="hl-y">SLAT = EPT (Intel) = RVI (AMD)</span> — needed for optimal VM memory performance</div>
+    <div class="trap-item"><span class="hl-o">8C/16T = 8 physical cores, 16 logical threads</span> — Intel calls it Hyper-Threading, AMD calls it SMT</div>
+    <div class="trap-item"><span class="hl-g">Xeon/EPYC = server/workstation with ECC</span> — consumer Core/Ryzen does NOT support ECC</div>
+    <div class="trap-item"><span class="hl-b">ARM app on x86 CPU won't run</span> — needs recompile. x86 app on ARM needs emulation, may fail.</div>
+    <div class="trap-item"><span class="hl-r">CU controls the instruction cycle</span> — ALU does the math. Don't swap them on the exam.</div>
+    <div class="trap-item"><span class="hl-y">Thermal paste missing = overheating = thermal shutdown</span> — CPU protects itself by throttling/shutting off</div>
+  </div>
+
+  <!-- QUICK REFERENCE -->
+  <div class="quick-ref" style="margin-top:2rem;" class="fade-in">
+    <div class="quick-card">
+      <div class="qc-title">CPU INTERNAL COMPONENTS</div>
+      <div class="quick-item"><div class="qi-key">ALU</div><div>Arithmetic Logic Unit — does math & logic</div></div>
+      <div class="quick-item"><div class="qi-key">CU</div><div>Control Unit — directs instruction cycle</div></div>
+      <div class="quick-item"><div class="qi-key">Registers</div><div class="hl-y">Fastest memory in system</div></div>
+      <div class="quick-item"><div class="qi-key">L1 Cache</div><div>Per-core, 32–128 KB, fastest cache</div></div>
+      <div class="quick-item"><div class="qi-key">L2 Cache</div><div>Per-core, 256 KB – 2 MB</div></div>
+      <div class="quick-item"><div class="qi-key">L3 Cache</div><div class="hl-g">Shared across ALL cores, 4–64 MB</div></div>
+    </div>
+
+    <div class="quick-card">
+      <div class="qc-title">INSTRUCTION CYCLE</div>
+      <div class="quick-item"><div class="qi-key">Step 1</div><div class="hl-b">FETCH — CU gets instruction from cache/RAM</div></div>
+      <div class="quick-item"><div class="qi-key">Step 2</div><div class="hl-y">DECODE — CU translates to ALU signals</div></div>
+      <div class="quick-item"><div class="qi-key">Step 3</div><div class="hl-o">EXECUTE — ALU/FPU does the operation</div></div>
+      <div class="quick-item"><div class="qi-key">Step 4</div><div class="hl-g">WRITE-BACK — result stored in reg/cache/RAM</div></div>
+      <div class="quick-item"><div class="qi-key">Mnemonic</div><div><span class="hl-y">"For Dinner, Eat Waffles"</span></div></div>
+    </div>
+
+    <div class="quick-card">
+      <div class="qc-title">SOCKET TYPES</div>
+      <div class="quick-item"><div class="qi-key">LGA</div><div>Pins on board · Intel always · AMD AM5</div></div>
+      <div class="quick-item"><div class="qi-key">PGA</div><div>Pins on CPU · AMD AM4 (older)</div></div>
+      <div class="quick-item"><div class="qi-key">ZIF</div><div>Zero Insertion Force lever — never force</div></div>
+      <div class="quick-item"><div class="qi-key">Thermal paste</div><div class="hl-y">Pea-sized, center of CPU IHS</div></div>
+      <div class="quick-item"><div class="qi-key">Pin 1</div><div>Triangle marker — must align</div></div>
+      <div class="quick-item"><div class="qi-key">Bent pin</div><div class="hl-r">LGA = board damage · PGA = CPU damage</div></div>
+    </div>
+
+    <div class="quick-card">
+      <div class="qc-title">VIRTUALIZATION</div>
+      <div class="quick-item"><div class="qi-key">VT-x</div><div>Intel hardware virtualization</div></div>
+      <div class="quick-item"><div class="qi-key">AMD-V</div><div>AMD hardware virtualization</div></div>
+      <div class="quick-item"><div class="qi-key">SLAT</div><div>Second Level Address Translation</div></div>
+      <div class="quick-item"><div class="qi-key">EPT</div><div class="hl-b">Intel's SLAT implementation</div></div>
+      <div class="quick-item"><div class="qi-key">RVI</div><div class="hl-o">AMD's SLAT implementation</div></div>
+      <div class="quick-item"><div class="qi-key">Enable where?</div><div class="hl-y">BIOS/UEFI — disabled by default sometimes</div></div>
+    </div>
+  </div>
+
+  <!-- MASTER MEMO -->
+  <div class="memo-box" style="margin-top:2rem; background:linear-gradient(135deg,rgba(255,107,0,0.08),rgba(0,198,255,0.08)); border-color:rgba(255,107,0,0.4);">
+    <div class="memo-icon">🎯</div>
+    <div>
+      <div class="memo-label" style="color:var(--orange);">MASTER CHEAT — 6 CPU FACTS THE EXAM WILL TEST</div>
+      <div class="memo-text">
+        <span class="hl-r">①</span> Fastest memory = <strong>Registers</strong> (not cache, not RAM)<br>
+        <span class="hl-y">②</span> CU controls the cycle. ALU executes it. <strong>Never swap them.</strong><br>
+        <span class="hl-o">③</span> 32-bit → 4GB RAM cap, no 64-bit OS. 64-bit → backward compatible with 32-bit software.<br>
+        <span class="hl-p">④</span> Intel = LGA. AMD older = PGA. AMD AM5 = LGA. <strong>AMD moved to LGA.</strong><br>
+        <span class="hl-b">⑤</span> VM won't start → check VT-x/AMD-V in BIOS <strong>first</strong>.<br>
+        <span class="hl-g">⑥</span> Xeon/EPYC = ECC RAM required. Core i / Ryzen = <strong>no ECC support.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; padding:2rem 0; font-family:'Space Mono',monospace; font-size:0.68rem; color:var(--muted);">
+    CompTIA A+ Core 1 · CPU Master Guide · Visual Edition
+  </div>
+</div>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav active state
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('nav a');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => { l.style.color = ''; l.style.borderBottomColor = ''; });
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) { active.style.color = 'var(--orange)'; active.style.borderBottomColor = 'var(--orange)'; }
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
