@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAM Flashcards – CompTIA A+ Core 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07070f;
+    --surface: #0f0f1a;
+    --surface2: #161625;
+    --surface3: #1e1e30;
+    --yellow: #FFD600;
+    --orange: #FF6B00;
+    --red: #FF2D55;
+    --pink: #FF47A3;
+    --blue: #00C6FF;
+    --green: #00FF9C;
+    --purple: #BF5FFF;
+    --text: #E8E8F5;
+    --muted: #777799;
+    --border: #1f1f35;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── BACKGROUND GRID ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,214,0,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,214,0,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(7,7,15,0.9);
+    backdrop-filter: blur(12px);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 900;
+    background: linear-gradient(120deg, var(--yellow), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.08em;
+  }
+
+  .logo span {
+    display: block;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    background: none;
+    -webkit-text-fill-color: var(--muted);
+    color: var(--muted);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  /* ─── CATEGORY FILTER ─── */
+  .filter-bar {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 1rem auto 0;
+    padding-bottom: 0.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.35rem 0.9rem;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .filter-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+  .filter-btn.active { background: var(--yellow); color: #000; border-color: var(--yellow); font-weight: 700; }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 0 0;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+  }
+
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .stat-label { color: var(--muted); }
+
+  .stat.total .stat-num { color: var(--text); }
+  .stat.correct .stat-num { color: var(--green); }
+  .stat.wrong .stat-num { color: var(--red); }
+  .stat.remaining .stat-num { color: var(--yellow); }
+
+  /* progress bar */
+  .progress-track {
+    flex: 1;
+    min-width: 150px;
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--yellow), var(--orange));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ─── MAIN AREA ─── */
+  main {
+    position: relative;
+    z-index: 10;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ─── CARD ARENA ─── */
+  .card-arena {
+    perspective: 1200px;
+    margin: 0 auto 1.5rem;
+    max-width: 700px;
+    height: 340px;
+  }
+
+  .card-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+
+  .card-wrapper.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  /* FRONT */
+  .card-front-face {
+    background: var(--surface);
+  }
+
+  .card-front-face::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% -20%, rgba(255,214,0,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* BACK */
+  .card-back-face {
+    background: var(--surface2);
+    transform: rotateY(180deg);
+  }
+
+  .card-back-face::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(0,255,156,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* card glow — changes per category */
+  .card-wrapper[data-cat="Speed Order"] .card-front-face { box-shadow: 0 0 40px rgba(0,198,255,0.1), inset 0 0 0 1px rgba(0,198,255,0.15); }
+  .card-wrapper[data-cat="DDR SDRAM"] .card-front-face, .card-wrapper[data-cat="DDR Formula"] .card-front-face { box-shadow: 0 0 40px rgba(255,214,0,0.08), inset 0 0 0 1px rgba(255,214,0,0.12); }
+  .card-wrapper[data-cat="CAS Latency"] .card-front-face { box-shadow: 0 0 40px rgba(255,71,163,0.1), inset 0 0 0 1px rgba(255,71,163,0.15); }
+  .card-wrapper[data-cat="DDR Generations"] .card-front-face { box-shadow: 0 0 40px rgba(255,107,0,0.1), inset 0 0 0 1px rgba(255,107,0,0.12); }
+  .card-wrapper[data-cat="Memory Channels"] .card-front-face { box-shadow: 0 0 40px rgba(191,95,255,0.1), inset 0 0 0 1px rgba(191,95,255,0.15); }
+  .card-wrapper[data-cat="Virtual Memory"] .card-front-face { box-shadow: 0 0 40px rgba(255,107,0,0.12), inset 0 0 0 1px rgba(255,107,0,0.15); }
+  .card-wrapper[data-cat="ECC RAM"] .card-front-face { box-shadow: 0 0 40px rgba(255,47,85,0.1), inset 0 0 0 1px rgba(255,47,85,0.15); }
+  .card-wrapper[data-cat="Troubleshooting"] .card-front-face { box-shadow: 0 0 40px rgba(255,214,0,0.08), inset 0 0 0 1px rgba(255,214,0,0.1); }
+  .card-wrapper[data-cat="Exam Traps"] .card-front-face { box-shadow: 0 0 40px rgba(255,45,85,0.15), inset 0 0 0 1px rgba(255,45,85,0.2); }
+
+  .card-category-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  .card-number {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+  }
+
+  .card-question {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.1rem, 3vw, 1.45rem);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.45;
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+  }
+
+  .flip-hint {
+    position: absolute;
+    bottom: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    animation: pulse-hint 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-hint {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+  }
+
+  /* BACK FACE CONTENT */
+  .card-answer {
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    color: var(--green);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+  }
+
+  .card-answer b, .card-answer strong { color: var(--yellow); font-weight: 700; }
+
+  .card-trap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255,45,85,0.08);
+    border-top: 1px solid rgba(255,45,85,0.25);
+    padding: 0.7rem 1.5rem;
+    font-size: 0.78rem;
+    color: var(--orange);
+    font-family: 'Space Mono', monospace;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  .card-trap::before {
+    content: '⚡ TRAP: ';
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* ─── RESULT BUTTONS ─── */
+  .result-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+
+  .result-buttons.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .btn-result {
+    flex: 1;
+    max-width: 200px;
+    padding: 0.85rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-wrong {
+    background: rgba(255,45,85,0.1);
+    border: 1px solid rgba(255,45,85,0.5);
+    color: var(--red);
+  }
+
+  .btn-wrong:hover { background: rgba(255,45,85,0.25); transform: translateY(-2px); }
+
+  .btn-correct {
+    background: rgba(0,255,156,0.1);
+    border: 1px solid rgba(0,255,156,0.5);
+    color: var(--green);
+  }
+
+  .btn-correct:hover { background: rgba(0,255,156,0.25); transform: translateY(-2px); }
+
+  /* ─── NAV BUTTONS ─── */
+  .nav-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    max-width: 700px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .btn-nav {
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-nav:hover { border-color: var(--yellow); color: var(--yellow); }
+
+  .btn-nav.primary {
+    background: var(--yellow);
+    color: #000;
+    border-color: var(--yellow);
+    font-weight: 700;
+  }
+
+  .btn-nav.primary:hover { background: var(--orange); border-color: var(--orange); }
+
+  /* ─── CARD GRID (review mode) ─── */
+  .section-divider {
+    max-width: 700px;
+    margin: 2.5rem auto 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.6rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .mini-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mini-card:hover { border-color: var(--yellow); transform: translateY(-2px); }
+  .mini-card.done-correct { border-color: rgba(0,255,156,0.4); background: rgba(0,255,156,0.04); }
+  .mini-card.done-wrong { border-color: rgba(255,45,85,0.4); background: rgba(255,45,85,0.04); }
+  .mini-card.current { border-color: var(--yellow); background: rgba(255,214,0,0.05); }
+
+  .mini-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--muted);
+  }
+
+  .mini-card.done-correct .mini-dot { background: var(--green); }
+  .mini-card.done-wrong .mini-dot { background: var(--red); }
+  .mini-card.current .mini-dot { background: var(--yellow); }
+
+  .mini-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* ─── COMPLETE SCREEN ─── */
+  .complete-screen {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+    animation: fadeInUp 0.5s ease;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .complete-screen.visible { display: block; }
+
+  .complete-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(120deg, var(--yellow), var(--orange), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .score-display {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin: 1rem 0 2rem;
+  }
+
+  .score-big {
+    font-family: 'Orbitron', monospace;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--green);
+  }
+
+  .score-total {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.5rem;
+    color: var(--muted);
+  }
+
+  .score-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--yellow);
+    margin-left: 1rem;
+  }
+
+  .complete-msg {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  /* ─── CATEGORY COLOR MAPPING ─── */
+  [data-cat="Speed Order"] .card-category-badge { background: rgba(0,198,255,0.15); color: var(--blue); }
+  [data-cat="Address Space"] .card-category-badge { background: rgba(191,95,255,0.15); color: var(--purple); }
+  [data-cat="DDR SDRAM"] .card-category-badge, [data-cat="DDR Formula"] .card-category-badge { background: rgba(255,214,0,0.15); color: var(--yellow); }
+  [data-cat="CAS Latency"] .card-category-badge { background: rgba(255,71,163,0.15); color: var(--pink); }
+  [data-cat="DDR Generations"] .card-category-badge { background: rgba(255,107,0,0.15); color: var(--orange); }
+  [data-cat="Memory Channels"] .card-category-badge { background: rgba(191,95,255,0.15); color: var(--purple); }
+  [data-cat="Virtual Memory"] .card-category-badge { background: rgba(255,107,0,0.15); color: var(--orange); }
+  [data-cat="ECC RAM"] .card-category-badge { background: rgba(255,45,85,0.15); color: var(--red); }
+  [data-cat="Form Factors"] .card-category-badge { background: rgba(0,198,255,0.15); color: var(--blue); }
+  [data-cat="Cache Memory"] .card-category-badge { background: rgba(0,198,255,0.15); color: var(--blue); }
+  [data-cat="Troubleshooting"] .card-category-badge { background: rgba(255,214,0,0.15); color: var(--yellow); }
+  [data-cat="Exam Traps"] .card-category-badge { background: rgba(255,45,85,0.15); color: var(--red); }
+
+  /* ─── KEYBOARD HINT ─── */
+  .keyboard-hints {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .key-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+  }
+
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface2);
+    font-size: 0.6rem;
+    min-width: 22px;
+    color: var(--text);
+  }
+
+  /* ─── MODE SWITCHER ─── */
+  .mode-switch {
+    display: flex;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .mode-btn {
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mode-btn.active { background: var(--surface3); color: var(--text); border-color: var(--yellow); }
+
+  @media (max-width: 600px) {
+    .card-arena { height: 300px; }
+    .card-face { padding: 1.8rem 1.2rem; }
+    .card-question { font-size: 1rem; }
+    .card-answer { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo">
+      RAM FLASHCARDS
+      <span>COMPTIA A+ CORE 1 · 48 CARDS</span>
+    </div>
+    <div class="mode-switch">
+      <button class="mode-btn active" id="modeStudy" onclick="setMode('study')">STUDY</button>
+      <button class="mode-btn" id="modeWrong" onclick="setMode('wrong')">WRONG ONLY</button>
+      <button class="mode-btn" id="modeShuffle" onclick="shuffleDeck()">SHUFFLE</button>
+    </div>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" onclick="filterCategory('All', this)">ALL</button>
+    <button class="filter-btn" onclick="filterCategory('Speed Order', this)">SPEED ORDER</button>
+    <button class="filter-btn" onclick="filterCategory('DDR SDRAM', this)">DDR SDRAM</button>
+    <button class="filter-btn" onclick="filterCategory('DDR Generations', this)">GENERATIONS</button>
+    <button class="filter-btn" onclick="filterCategory('CAS Latency', this)">CAS LATENCY</button>
+    <button class="filter-btn" onclick="filterCategory('Memory Channels', this)">CHANNELS</button>
+    <button class="filter-btn" onclick="filterCategory('Virtual Memory', this)">VIRTUAL MEM</button>
+    <button class="filter-btn" onclick="filterCategory('ECC RAM', this)">ECC RAM</button>
+    <button class="filter-btn" onclick="filterCategory('Form Factors', this)">DIMM/SODIMM</button>
+    <button class="filter-btn" onclick="filterCategory('Troubleshooting', this)">TROUBLESHOOT</button>
+    <button class="filter-btn" onclick="filterCategory('Exam Traps', this)">EXAM TRAPS</button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat total">
+      <div class="stat-num" id="statTotal">48</div>
+      <div class="stat-label">total</div>
+    </div>
+    <div class="stat remaining">
+      <div class="stat-num" id="statRemaining">48</div>
+      <div class="stat-label">remaining</div>
+    </div>
+    <div class="stat correct">
+      <div class="stat-num" id="statCorrect">0</div>
+      <div class="stat-label">correct</div>
+    </div>
+    <div class="stat wrong">
+      <div class="stat-num" id="statWrong">0</div>
+      <div class="stat-label">wrong</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- CARD ARENA -->
+  <div id="studyArea">
+    <div class="card-arena">
+      <div class="card-wrapper" id="cardWrapper" onclick="flipCard()">
+        <!-- FRONT -->
+        <div class="card-face card-front-face">
+          <div class="card-category-badge" id="cardCat">Category</div>
+          <div class="card-number" id="cardNum">1 / 48</div>
+          <div class="card-question" id="cardQuestion">Loading...</div>
+          <div class="flip-hint">↓ click to reveal answer ↓</div>
+        </div>
+        <!-- BACK -->
+        <div class="card-face card-back-face">
+          <div class="card-category-badge" id="cardCatBack">Category</div>
+          <div class="card-number" id="cardNumBack">1 / 48</div>
+          <div class="card-answer" id="cardAnswer">Answer</div>
+          <div class="card-trap" id="cardTrap" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT BUTTONS -->
+    <div class="result-buttons" id="resultButtons">
+      <button class="btn-result btn-wrong" onclick="markCard(false)">✗ &nbsp;MISSED IT</button>
+      <button class="btn-result btn-correct" onclick="markCard(true)">✓ &nbsp;GOT IT</button>
+    </div>
+
+    <!-- NAV -->
+    <div class="nav-buttons">
+      <button class="btn-nav" onclick="prevCard()">← PREV</button>
+      <button class="btn-nav" onclick="flipCard()">FLIP CARD</button>
+      <button class="btn-nav" onclick="nextCard()">NEXT →</button>
+      <button class="btn-nav primary" onclick="resetDeck()">↺ RESTART</button>
+    </div>
+
+    <!-- KEYBOARD HINTS -->
+    <div class="keyboard-hints">
+      <div class="key-hint"><div class="key">SPACE</div> flip</div>
+      <div class="key-hint"><div class="key">→</div> next</div>
+      <div class="key-hint"><div class="key">←</div> prev</div>
+      <div class="key-hint"><div class="key">1</div> missed</div>
+      <div class="key-hint"><div class="key">2</div> got it</div>
+    </div>
+
+    <!-- MINI GRID -->
+    <div class="section-divider">ALL CARDS</div>
+    <div class="mini-grid" id="miniGrid"></div>
+  </div>
+
+  <!-- COMPLETE SCREEN -->
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-title">DECK COMPLETE</div>
+    <div class="score-display">
+      <div class="score-big" id="finalCorrect">0</div>
+      <div class="score-total" id="finalTotal">/48</div>
+      <div class="score-pct" id="finalPct">0%</div>
+    </div>
+    <div class="complete-msg" id="completeMsg">Keep studying!</div>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <button class="btn-nav primary" onclick="resetDeck()">↺ RESTART ALL</button>
+      <button class="btn-nav" onclick="setMode('wrong')">REVIEW WRONG ONLY</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const ALL_CARDS = [
+  // ── SPEED ORDER ──
+  { q: "What is the speed order of memory types from fastest to slowest?", a: "Cache → RAM → Virtual Memory → Storage<br><b>\"COPS RUN VERY SLOW\"</b>", cat: "Speed Order", trap: "Each step is 10–1000× slower than the one before it" },
+  { q: "Which memory type is the fastest and where is it located?", a: "Cache — located <b>inside the CPU itself</b>. L1 is fastest, then L2, then L3.", cat: "Speed Order", trap: "" },
+  // ── ADDRESS SPACE ──
+  { q: "What is the practical max RAM for a 32-bit CPU?", a: "<b>4 GB</b> — hard ceiling, no exceptions, no workarounds.", cat: "Address Space", trap: "A 64-bit CPU can address up to 256 TB — these are NOT the same question" },
+  { q: "What is the practical max RAM for a 64-bit CPU?", a: "<b>Up to 256 TB</b> (theoretical). Real systems are limited by the motherboard.", cat: "Address Space", trap: "" },
+  // ── DDR SDRAM ──
+  { q: "What does DDR stand for and what does it mean?", a: "<b>Double Data Rate</b> — transfers data on BOTH the rising AND falling edge of each clock pulse = 2 transfers per cycle.", cat: "DDR SDRAM", trap: "Normal (SDR) RAM does only 1 transfer per clock. DDR does 2." },
+  { q: "What does the D in DRAM mean and why does it matter?", a: "<b>Dynamic</b> — uses capacitors that leak charge and must be refreshed thousands of times per second. Charge=1, No charge=0.", cat: "DDR SDRAM", trap: "" },
+  { q: "What does Synchronous mean in SDRAM?", a: "<b>Synchronous</b> — RAM is timed precisely to the CPU clock. CPU says 'now' → RAM responds in perfect sync.", cat: "DDR SDRAM", trap: "" },
+  { q: "What does each letter in DDR SDRAM stand for?", a: "<b>D</b>ouble <b>D</b>ata <b>R</b>ate · <b>S</b>ynchronous · <b>D</b>ynamic · <b>R</b>andom <b>A</b>ccess <b>M</b>emory", cat: "DDR SDRAM", trap: "" },
+  // ── DDR FORMULA ──
+  { q: "If RAM runs at 100 MHz, what is its transfer rate in MT/s?", a: "<b>200 MT/s</b> — DDR transfers on both clock edges, so 100 MHz × 2 = 200 MT/s.", cat: "DDR Formula", trap: "" },
+  { q: "What is the formula to convert MT/s to MB/s (bandwidth)?", a: "<b>Transfer Rate (MB/s) = MT/s × 8</b><br>Example: 200 MT/s × 8 = <b>1,600 MB/s</b>", cat: "DDR Formula", trap: "This formula appears directly on the exam. Memorize it cold." },
+  { q: "Why is DDR-200 called PC-1600?", a: "PC rating = bandwidth in MB/s. 200 MT/s × 8 bytes = <b>1,600 MB/s</b> → PC-1600.", cat: "DDR Formula", trap: "DDR-400 = PC-3200. DDR-3200 = PC-25600. Always multiply by 8." },
+  // ── CAS LATENCY ──
+  { q: "What is CAS Latency (CL)?", a: "<b>Column Access Strobe</b> — the number of clock cycles RAM waits before sending data after a request. <b>Lower = faster.</b>", cat: "CAS Latency", trap: "" },
+  { q: "Is CL14 faster or slower than CL16?", a: "<b>CL14 is faster</b> — fewer clock cycles of delay.", cat: "CAS Latency", trap: "CAS can ONLY be compared within the SAME DDR generation at the SAME speed. CL14 DDR4 vs CL16 DDR5 — the DDR5 is still faster overall." },
+  { q: "When is CAS latency a valid comparison?", a: "ONLY when both sticks are the <b>same DDR generation</b> AND running at the <b>same speed (MT/s)</b>.", cat: "CAS Latency", trap: "Cross-generation CAS comparison is meaningless and a common exam trap." },
+  // ── DDR GENERATIONS ──
+  { q: "What are the voltages for DDR3, DDR4, and DDR5?", a: "DDR3 = <b>1.5V</b> · DDR4 = <b>1.2V</b> · DDR5 = <b>1.1V</b>", cat: "DDR Generations", trap: "Each generation drops voltage. Never goes backward." },
+  { q: "What are the max capacities per DIMM for DDR3, DDR4, DDR5?", a: "DDR3 = <b>16 GB</b> · DDR4 = <b>32 GB</b> · DDR5 = <b>128 GB+</b>", cat: "DDR Generations", trap: "" },
+  { q: "What is the key new architectural feature in DDR5?", a: "DDR5 has <b>two independent 32-bit sub-channels per DIMM</b> vs DDR4's single 64-bit channel. Better for multi-core CPUs.", cat: "DDR Generations", trap: "DDR5 also has on-die error detection — but this is NOT full ECC." },
+  { q: "Can you install a DDR4 stick in a DDR5 slot?", a: "<b>No — physically impossible.</b> Each DDR generation has a different notch position. The stick will not go in.", cat: "DDR Generations", trap: "This isn't a compatibility setting — it's a physical key. Slot physically prevents it." },
+  // ── MEMORY CHANNELS ──
+  { q: "What is the bus width for single, dual, triple, and quad channel?", a: "Single = <b>64-bit</b> · Dual = <b>128-bit</b> · Triple = <b>192-bit</b> · Quad = <b>256-bit</b>", cat: "Memory Channels", trap: "" },
+  { q: "Which slots enable dual channel on a standard 4-slot board?", a: "<b>A1 + B1</b> (matching colored slots). NOT A1+A2 — that's still single channel.", cat: "Memory Channels", trap: "Color-coded slots tell you the pairs. Check your motherboard manual." },
+  { q: "What happens when you install two RAM sticks with different speeds?", a: "Both run at the <b>slowest stick's speed</b>. No exceptions.", cat: "Memory Channels", trap: "" },
+  { q: "What is Flex Mode?", a: "Unequal sticks (e.g. 2GB + 6GB): the <b>matched 2GB runs dual-channel</b>, remaining 4GB runs single-channel.", cat: "Memory Channels", trap: "" },
+  { q: "What 3 conditions must be met for dual channel to work?", a: "1. <b>CPU supports dual channel</b><br>2. <b>Motherboard supports it</b><br>3. <b>RAM installed in correct paired slots</b>", cat: "Memory Channels", trap: "" },
+  // ── VIRTUAL MEMORY ──
+  { q: "What is virtual memory?", a: "OS uses <b>SSD/HDD space as overflow RAM</b> when physical RAM is full. Much slower than real RAM.", cat: "Virtual Memory", trap: "" },
+  { q: "What is a page and how large is it?", a: "A <b>4 KB block</b> of data moved between RAM and the page file on disk.", cat: "Virtual Memory", trap: "" },
+  { q: "What is thrashing and what causes it?", a: "<b>Thrashing</b> = system constantly swaps pages in/out of virtual memory, doing almost no useful work.<br>Cause: not enough physical RAM.", cat: "Virtual Memory", trap: "Disk at 100% + frozen = thrashing. This is a RAM question, not a disk question." },
+  { q: "What is the correct fix for a thrashing system?", a: "<b>Add more physical RAM.</b> Increasing the page file does NOT fix thrashing.", cat: "Virtual Memory", trap: "'Increase virtual memory size' sounds right but is WRONG on the exam." },
+  { q: "What are the exact exam symptoms that describe thrashing?", a: "Disk activity constantly on · System extremely slow · Programs freezing · High RAM usage in Task Manager.", cat: "Virtual Memory", trap: "" },
+  // ── ECC RAM ──
+  { q: "What does ECC stand for and what does it do?", a: "<b>Error Correction Code</b> — adds 8 extra bits to detect AND correct single-bit memory errors automatically.", cat: "ECC RAM", trap: "" },
+  { q: "How wide is the ECC RAM data bus vs standard RAM?", a: "Standard = <b>64-bit</b>. ECC = <b>72-bit</b> (64 data + 8 ECC bits).", cat: "ECC RAM", trap: "" },
+  { q: "What happens when ECC detects an uncorrectable multi-bit error?", a: "The system <b>halts immediately</b> (graceful shutdown) to prevent data corruption from spreading.", cat: "ECC RAM", trap: "" },
+  { q: "What two components must support ECC for it to work?", a: "Both the <b>CPU</b> AND the <b>motherboard</b> must explicitly support ECC.", cat: "ECC RAM", trap: "Consumer CPUs (Core i5/i7) generally don't support ECC. Xeon and EPYC do." },
+  { q: "Can you mix UDIMM and RDIMM in the same system?", a: "<b>No — system will not boot.</b> Incompatible designs.", cat: "ECC RAM", trap: "Absolute rule. No exceptions." },
+  { q: "Can you mix ECC and non-ECC RAM?", a: "<b>No — system will not boot.</b> Bus widths are incompatible (72-bit vs 64-bit).", cat: "ECC RAM", trap: "" },
+  { q: "Does DDR5's on-die error detection count as ECC?", a: "<b>No.</b> DDR5 can DETECT errors on-die but cannot correct them. Full ECC requires additional hardware.", cat: "ECC RAM", trap: "High-probability exam trap. Detection ≠ Correction." },
+  { q: "What does RDIMM (Registered DIMM) mean?", a: "Has a <b>register (buffer) chip</b> between the memory controller and RAM chips. Reduces electrical load for servers with many DIMMs.", cat: "ECC RAM", trap: "RDIMM and UDIMM cannot be mixed. Ever." },
+  // ── FORM FACTORS ──
+  { q: "What is the physical size difference between DIMM and SO-DIMM?", a: "DIMM = <b>5.25 inches</b> (desktop). SO-DIMM = <b>2.66 inches</b> (laptop).", cat: "Form Factors", trap: "" },
+  { q: "At what angle is a SO-DIMM inserted?", a: "<b>45 degrees</b>, then pressed flat until the retention clips snap closed.", cat: "Form Factors", trap: "Inserting straight down from the start = wrong technique, can damage the slot." },
+  { q: "What is the purpose of the notch on a RAM stick?", a: "Physical key that <b>prevents wrong DDR generation from being installed</b>. Each generation has a unique notch position.", cat: "Form Factors", trap: "" },
+  { q: "What does ESD stand for and why does it matter for RAM?", a: "<b>Electrostatic Discharge</b> — static electricity can destroy RAM chips instantly and silently.", cat: "Form Factors", trap: "" },
+  { q: "What 3 precautions prevent ESD damage when handling RAM?", a: "1. <b>Anti-static wrist strap</b> connected to chassis<br>2. <b>Avoid carpet</b> (generates static)<br>3. <b>Hold by edges</b>, not chips or gold contacts", cat: "Form Factors", trap: "" },
+  // ── CACHE ──
+  { q: "What are the 3 levels of cache and where is each located?", a: "L1 = <b>inside each CPU core</b> (fastest, ~32–128 KB)<br>L2 = <b>near each core</b> (~256 KB–2 MB)<br>L3 = <b>shared across all cores</b> (~4–64 MB)", cat: "Cache Memory", trap: "" },
+  { q: "Is cache memory volatile or non-volatile?", a: "<b>Volatile</b> — all contents lost when power is removed, same as RAM.", cat: "Cache Memory", trap: "" },
+  { q: "What happens on a cache miss?", a: "CPU checks <b>L1 → L2 → L3 → RAM → Virtual Memory</b> in order. Each step is dramatically slower.", cat: "Cache Memory", trap: "" },
+  // ── TROUBLESHOOTING ──
+  { q: "PC won't POST after installing RAM. First step?", a: "<b>Reseat the RAM</b> — remove and firmly reinsert until clips click. Then test one stick at a time.", cat: "Troubleshooting", trap: "" },
+  { q: "What tool diagnoses faulty RAM?", a: "<b>MemTest86</b> — boots from USB, runs read/write tests across all RAM, reports errors per module.", cat: "Troubleshooting", trap: "" },
+  { q: "System has random BSODs with no clear cause. Possible RAM issues?", a: "Faulty RAM stick · Mixed speeds (throttling) · Overclocking instability.<br>→ Run <b>MemTest86</b>, reset BIOS, test sticks individually.", cat: "Troubleshooting", trap: "" },
+  { q: "You install 16 GB but the system only shows 8 GB. What do you check?", a: "1. RAM fully seated? 2. OS 32-bit (4 GB cap)? 3. One stick faulty? 4. Motherboard supports 16 GB total?", cat: "Troubleshooting", trap: "32-bit Windows caps at 4 GB regardless of installed RAM." },
+  // ── EXAM TRAPS ──
+  { q: "Data bus vs address bus — what's the difference?", a: "<b>Data bus</b> = how much data moves per cycle (e.g. 64-bit single channel).<br><b>Address bus</b> = how much memory CPU can address (32-bit = 4 GB max).", cat: "Exam Traps", trap: "These are completely different buses — do not confuse them." },
+  { q: "Exam question: 'disk light always on, system frozen' — what type of problem is this?", a: "This is a <b>RAM problem</b> (thrashing) — not a disk failure. The fix is adding more RAM.", cat: "Exam Traps", trap: "Don't fall for 'replace the hard drive'. Disk is busy because RAM is full." },
+];
+
+let deck = [];
+let currentIndex = 0;
+let isFlipped = false;
+let results = {}; // cardIndex -> true/false
+let activeCategory = 'All';
+let mode = 'study';
+
+function initDeck() {
+  if (mode === 'wrong') {
+    deck = ALL_CARDS.filter((_, i) => results[i] === false);
+    if (deck.length === 0) { deck = [...ALL_CARDS]; }
+  } else {
+    deck = activeCategory === 'All'
+      ? [...ALL_CARDS]
+      : ALL_CARDS.filter(c => c.cat === activeCategory || (activeCategory === 'DDR SDRAM' && c.cat === 'DDR Formula') || (activeCategory === 'Address Space' && c.cat === 'Address Space'));
+  }
+  currentIndex = 0;
+  results = {};
+  renderCard();
+  renderMiniGrid();
+  updateStats();
+  document.getElementById('completeScreen').classList.remove('visible');
+  document.getElementById('studyArea').style.display = 'block';
+}
+
+function renderCard() {
+  if (deck.length === 0) return;
+  const card = deck[currentIndex];
+  const wrapper = document.getElementById('cardWrapper');
+
+  // Reset flip
+  isFlipped = false;
+  wrapper.classList.remove('flipped');
+  document.getElementById('resultButtons').classList.remove('visible');
+
+  // Set category attribute for styling
+  wrapper.setAttribute('data-cat', card.cat);
+
+  // Front
+  document.getElementById('cardCat').textContent = card.cat;
+  document.getElementById('cardQuestion').textContent = card.q;
+  document.getElementById('cardNum').textContent = `${currentIndex + 1} / ${deck.length}`;
+
+  // Back
+  document.getElementById('cardCatBack').textContent = card.cat;
+  document.getElementById('cardAnswer').innerHTML = card.a;
+  document.getElementById('cardNumBack').textContent = `${currentIndex + 1} / ${deck.length}`;
+
+  const trapEl = document.getElementById('cardTrap');
+  if (card.trap) {
+    trapEl.style.display = 'block';
+    trapEl.textContent = card.trap;
+    trapEl.style.display = '';
+    trapEl.innerHTML = '';
+    const before = document.createElement('span');
+    before.style.cssText = 'color: var(--red); font-weight: 700;';
+    before.textContent = '⚡ TRAP: ';
+    trapEl.appendChild(before);
+    trapEl.appendChild(document.createTextNode(card.trap));
+    trapEl.style.display = 'block';
+  } else {
+    trapEl.style.display = 'none';
+  }
+
+  // Highlight current in mini grid
+  document.querySelectorAll('.mini-card').forEach((el, i) => {
+    el.classList.remove('current');
+    if (i === currentIndex) el.classList.add('current');
+  });
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('cardWrapper').classList.toggle('flipped', isFlipped);
+  document.getElementById('resultButtons').classList.toggle('visible', isFlipped);
+}
+
+function markCard(correct) {
+  results[currentIndex] = correct;
+  updateStats();
+  renderMiniGrid();
+  nextCard();
+}
+
+function nextCard() {
+  if (currentIndex < deck.length - 1) {
+    currentIndex++;
+    renderCard();
+  } else {
+    showComplete();
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderCard();
+  }
+}
+
+function showComplete() {
+  const total = deck.length;
+  const correct = Object.values(results).filter(Boolean).length;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  document.getElementById('finalCorrect').textContent = correct;
+  document.getElementById('finalTotal').textContent = `/${total}`;
+  document.getElementById('finalPct').textContent = `${pct}%`;
+
+  let msg = '';
+  if (pct === 100) msg = 'Perfect score. You know this cold. ✓';
+  else if (pct >= 80) msg = 'Strong performance. Review the missed cards once more.';
+  else if (pct >= 60) msg = 'Getting there. Focus on your wrong answers.';
+  else msg = 'Keep going — use WRONG ONLY mode to drill the hard ones.';
+  document.getElementById('completeMsg').textContent = msg;
+
+  document.getElementById('studyArea').style.display = 'none';
+  document.getElementById('completeScreen').classList.add('visible');
+}
+
+function updateStats() {
+  const correct = Object.values(results).filter(Boolean).length;
+  const wrong = Object.values(results).filter(v => v === false).length;
+  const done = correct + wrong;
+  const remaining = deck.length - done;
+  const pct = deck.length > 0 ? (done / deck.length) * 100 : 0;
+
+  document.getElementById('statTotal').textContent = deck.length;
+  document.getElementById('statRemaining').textContent = remaining;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function renderMiniGrid() {
+  const grid = document.getElementById('miniGrid');
+  grid.innerHTML = '';
+  deck.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'mini-card';
+    if (results[i] === true) div.classList.add('done-correct');
+    if (results[i] === false) div.classList.add('done-wrong');
+    if (i === currentIndex) div.classList.add('current');
+    div.innerHTML = `<div class="mini-dot"></div><div class="mini-text">${card.q}</div>`;
+    div.onclick = () => { currentIndex = i; renderCard(); };
+    grid.appendChild(div);
+  });
+}
+
+function filterCategory(cat, btn) {
+  activeCategory = cat;
+  mode = 'study';
+  document.getElementById('modeStudy').classList.add('active');
+  document.getElementById('modeWrong').classList.remove('active');
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  initDeck();
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('modeStudy').classList.toggle('active', m === 'study');
+  document.getElementById('modeWrong').classList.toggle('active', m === 'wrong');
+  if (m === 'study') {
+    document.getElementById('completeScreen').classList.remove('visible');
+    document.getElementById('studyArea').style.display = 'block';
+  }
+  initDeck();
+}
+
+function shuffleDeck() {
+  deck = deck.sort(() => Math.random() - 0.5);
+  currentIndex = 0;
+  results = {};
+  renderCard();
+  renderMiniGrid();
+  updateStats();
+  document.getElementById('completeScreen').classList.remove('visible');
+  document.getElementById('studyArea').style.display = 'block';
+}
+
+function resetDeck() {
+  results = {};
+  initDeck();
+}
+
+// KEYBOARD SHORTCUTS
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+  if (e.code === 'ArrowRight') nextCard();
+  if (e.code === 'ArrowLeft') prevCard();
+  if (e.key === '1' && isFlipped) markCard(false);
+  if (e.key === '2' && isFlipped) markCard(true);
+});
+
+// INIT
+initDeck();
+</script>
+</body>
+</html>
