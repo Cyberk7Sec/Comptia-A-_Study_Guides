@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAID Study Guide - CompTIA A+</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:20px;line-height:1.6;}
+.container{max-width:1500px;margin:0 auto;background:white;border-radius:25px;padding:40px;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+h1{text-align:center;color:#2c3e50;font-size:2.8em;margin-bottom:5px;}
+.subtitle{text-align:center;font-size:1.2em;color:#667eea;margin-bottom:15px;font-weight:600;}
+
+/* Concept Banner */
+.concept-banner{background:linear-gradient(135deg,#2c3e50 0%,#3498db 100%);color:white;padding:25px 30px;border-radius:20px;margin-bottom:35px;}
+.concept-banner h2{font-size:1.5em;margin-bottom:12px;}
+.concept-banner p{font-size:1.05em;line-height:1.8;}
+.concept-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:15px;}
+.concept-item{background:rgba(255,255,255,0.12);padding:12px 15px;border-radius:10px;font-size:0.95em;}
+
+/* RAID Cards */
+.raid-card{border-radius:22px;margin-bottom:45px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,0.15);}
+.raid-header{padding:22px 30px;display:flex;align-items:center;gap:20px;}
+.raid-badge{width:75px;height:75px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:900;color:white;flex-shrink:0;border:3px solid rgba(255,255,255,0.4);}
+.raid-title h2{font-size:1.8em;font-weight:700;color:white;margin-bottom:3px;}
+.raid-title p{font-size:1.05em;color:rgba(255,255,255,0.85);}
+.raid-body{padding:30px;background:white;}
+.raid-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;}
+
+/* Colors per RAID */
+.r0 .raid-header{background:linear-gradient(135deg,#c0392b,#e74c3c);}
+.r1 .raid-header{background:linear-gradient(135deg,#1a5276,#2980b9);}
+.r5 .raid-header{background:linear-gradient(135deg,#1e8449,#27ae60);}
+.r6 .raid-header{background:linear-gradient(135deg,#0e6655,#17a589);}
+.r10 .raid-header{background:linear-gradient(135deg,#6c3483,#9b59b6);}
+
+/* Diagram Panels */
+.diagram-panel{background:#f4f6f8;border-radius:15px;padding:25px;text-align:center;}
+.diagram-panel h4{color:#555;font-size:1em;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+.ref-image{width:100%;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,0.12);margin-top:15px;}
+.img-label{font-size:0.85em;color:#777;margin-top:8px;font-style:italic;}
+
+/* Info Panel */
+.info-panel{display:flex;flex-direction:column;gap:14px;}
+.stat-row{display:flex;align-items:center;gap:12px;}
+.stat-label{background:#667eea;color:white;padding:6px 14px;border-radius:20px;font-size:0.88em;font-weight:600;white-space:nowrap;min-width:130px;text-align:center;}
+.stat-val{font-size:0.98em;color:#2c3e50;}
+.stat-val.good{color:#1e8449;font-weight:700;}
+.stat-val.bad{color:#c0392b;font-weight:700;}
+
+/* Memory Box */
+.memory-box{background:linear-gradient(135deg,#ffeaa7,#fdcb6e);padding:18px 20px;border-radius:12px;border-left:6px solid #f39c12;margin-top:5px;}
+.memory-box .title{font-size:1.1em;font-weight:700;color:#2c3e50;margin-bottom:8px;}
+.memory-box .text{font-size:1em;font-weight:600;color:#2c3e50;line-height:1.7;}
+
+/* Alerts */
+.alert{padding:14px 18px;border-radius:10px;border-left:5px solid;display:flex;align-items:flex-start;gap:12px;margin-top:5px;font-size:0.95em;}
+.alert.danger{background:#f8d7da;border-color:#dc3545;color:#721c24;}
+.alert.success{background:#d4edda;border-color:#28a745;color:#155724;}
+.alert.info{background:#d1ecf1;border-color:#0dcaf0;color:#055160;}
+.alert.warning{background:#fff3cd;border-color:#ff9800;color:#856404;}
+
+/* Lecture note box */
+.lecture-box{background:#eef2ff;border:2px solid #c5cef9;border-radius:12px;padding:18px 20px;margin-top:15px;}
+.lecture-box .ltitle{font-size:0.9em;font-weight:700;color:#667eea;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;}
+.lecture-box p{font-size:0.95em;color:#2c3e50;line-height:1.7;}
+
+/* Quick Ref Table */
+.section{background:#f8f9fa;padding:30px;border-radius:20px;margin-bottom:25px;}
+.section-title{font-size:1.9em;color:#764ba2;margin-bottom:20px;font-weight:700;border-bottom:4px solid #667eea;padding-bottom:10px;}
+table{width:100%;border-collapse:collapse;margin:15px 0;background:white;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+th{background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:14px;text-align:left;font-weight:600;}
+td{padding:12px 15px;border-bottom:1px solid #e0e0e0;}
+tr:nth-child(even){background:#f9f9f9;}
+.tag{display:inline-block;padding:4px 12px;border-radius:12px;font-size:0.88em;font-weight:700;}
+.tag.r0c{background:#fde8e8;color:#c0392b;}
+.tag.r1c{background:#d6eaf8;color:#1a5276;}
+.tag.r5c{background:#d5f5e3;color:#1e8449;}
+.tag.r6c{background:#d1f2eb;color:#0e6655;}
+.tag.r10c{background:#e8daef;color:#6c3483;}
+
+/* Categories */
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px;}
+.cat-card{border-radius:14px;padding:22px;color:white;}
+.cat-card.fail{background:linear-gradient(135deg,#e67e22,#d35400);}
+.cat-card.fault{background:linear-gradient(135deg,#2980b9,#1a5276);}
+.cat-card.disaster{background:linear-gradient(135deg,#8e44ad,#6c3483);}
+.cat-card h3{font-size:1.2em;margin-bottom:12px;}
+.cat-card ul{margin-left:18px;}
+.cat-card li{margin:6px 0;font-size:0.95em;}
+
+/* Final Lock */
+.final-lock{background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:35px;border-radius:20px;margin-top:30px;}
+.final-lock h2{text-align:center;margin-bottom:25px;font-size:2em;}
+.lock-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
+.lock-card{background:rgba(255,255,255,0.15);padding:20px;border-radius:14px;text-align:center;backdrop-filter:blur(10px);}
+.lock-card .lvl{font-size:2em;font-weight:900;margin-bottom:8px;}
+.lock-card .hook{font-size:0.95em;font-weight:600;line-height:1.6;}
+
+@media(max-width:900px){.raid-grid{grid-template-columns:1fr;}.categories{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>💾 RAID Study Guide</h1>
+<div class="subtitle">CompTIA A+ Core 1 — Redundant Array of Independent Disks</div>
+
+<!-- What is RAID -->
+<div class="concept-banner">
+  <h2>What is RAID?</h2>
+  <p><strong>RAID</strong> = <strong>R</strong>edundant <strong>A</strong>rray of <strong>I</strong>ndependent <strong>D</strong>isks &nbsp;|&nbsp; Combines multiple physical disks into one logical drive the OS sees as a single volume.</p>
+  <div class="concept-list">
+    <div class="concept-item">⚡ <strong>RAID 0</strong> — Pure speed, no safety</div>
+    <div class="concept-item">🪞 <strong>RAID 1</strong> — Pure mirror, full copy</div>
+    <div class="concept-item">🔺 <strong>RAID 5</strong> — Speed + parity (1 disk can fail)</div>
+    <div class="concept-item">🛡️ <strong>RAID 6</strong> — Speed + double parity (2 disks can fail)</div>
+    <div class="concept-item">🏆 <strong>RAID 10</strong> — Mirror pairs + striped = best of both</div>
+    <div class="concept-item">🔧 <strong>Hardware vs Software</strong> — Controller card or OS-based</div>
+  </div>
+</div>
+
+<!-- ==================== RAID 0 ==================== -->
+<div class="raid-card r0">
+  <div class="raid-header">
+    <div class="raid-badge">0</div>
+    <div class="raid-title">
+      <h2>RAID 0 — Striping</h2>
+      <p>Data split across disks. Maximum speed. Zero fault tolerance.</p>
+    </div>
+  </div>
+  <div class="raid-body">
+    <div class="raid-grid">
+
+      <!-- Custom SVG Diagram -->
+      <div class="diagram-panel">
+        <h4>📊 How It Works</h4>
+        <svg viewBox="0 0 420 320" style="width:100%;max-width:420px;">
+          <!-- File label -->
+          <rect x="150" y="8" width="120" height="34" rx="8" fill="#c0392b"/>
+          <text x="210" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="white">FILE: A B C D E F</text>
+
+          <!-- Arrow down -->
+          <line x1="210" y1="42" x2="210" y2="72" stroke="#888" stroke-width="2" marker-end="url(#arr)"/>
+
+          <!-- Stripe label -->
+          <text x="210" y="68" text-anchor="middle" font-size="11" fill="#e74c3c" font-weight="bold">STRIPED</text>
+
+          <!-- Disk 1 -->
+          <rect x="30" y="80" width="150" height="200" rx="12" fill="white" stroke="#c0392b" stroke-width="3"/>
+          <text x="105" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">💽 Disk 1</text>
+          <rect x="45" y="92" width="120" height="40" rx="7" fill="#e74c3c"/>
+          <text x="105" y="117" text-anchor="middle" font-size="16" font-weight="bold" fill="white">A (odd)</text>
+          <rect x="45" y="137" width="120" height="40" rx="7" fill="#e74c3c" opacity="0.75"/>
+          <text x="105" y="162" text-anchor="middle" font-size="16" font-weight="bold" fill="white">C (odd)</text>
+          <rect x="45" y="182" width="120" height="40" rx="7" fill="#e74c3c" opacity="0.5"/>
+          <text x="105" y="207" text-anchor="middle" font-size="16" font-weight="bold" fill="white">E (odd)</text>
+          <text x="105" y="268" text-anchor="middle" font-size="12" fill="#777">800 MB</text>
+
+          <!-- Middle arrows -->
+          <text x="210" y="185" text-anchor="middle" font-size="28" fill="#e67e22">⟷</text>
+          <text x="210" y="202" text-anchor="middle" font-size="10" fill="#888">alternates</text>
+
+          <!-- Disk 2 -->
+          <rect x="240" y="80" width="150" height="200" rx="12" fill="white" stroke="#e74c3c" stroke-width="3"/>
+          <text x="315" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#e74c3c">💽 Disk 2</text>
+          <rect x="255" y="92" width="120" height="40" rx="7" fill="#e67e22"/>
+          <text x="315" y="117" text-anchor="middle" font-size="16" font-weight="bold" fill="white">B (even)</text>
+          <rect x="255" y="137" width="120" height="40" rx="7" fill="#e67e22" opacity="0.75"/>
+          <text x="315" y="162" text-anchor="middle" font-size="16" font-weight="bold" fill="white">D (even)</text>
+          <rect x="255" y="182" width="120" height="40" rx="7" fill="#e67e22" opacity="0.5"/>
+          <text x="315" y="207" text-anchor="middle" font-size="16" font-weight="bold" fill="white">F (even)</text>
+          <text x="315" y="268" text-anchor="middle" font-size="12" fill="#777">800 MB</text>
+
+          <!-- OS sees -->
+          <rect x="130" y="298" width="160" height="18" rx="5" fill="#2c3e50"/>
+          <text x="210" y="311" text-anchor="middle" font-size="11" fill="white" font-weight="bold">OS sees: 1 drive = 1600 MB ✓</text>
+
+          <!-- No redundancy badge -->
+          <circle cx="210" cy="250" r="18" fill="#c0392b"/>
+          <text x="210" y="245" text-anchor="middle" font-size="10" font-weight="bold" fill="white">NO</text>
+          <text x="210" y="257" text-anchor="middle" font-size="10" font-weight="bold" fill="white">SAFE</text>
+
+          <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#888"/></marker></defs>
+        </svg>
+
+        <!-- Reference image -->
+        
+        
+      </div>
+
+      <!-- Info Panel -->
+      <div class="info-panel">
+        <div class="stat-row"><span class="stat-label">Keyword</span><span class="stat-val"><strong>STRIPING</strong> — data split across drives</span></div>
+        <div class="stat-row"><span class="stat-label">Min Drives</span><span class="stat-val">2</span></div>
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-val good">⚡ Fastest — both disks work simultaneously</span></div>
+        <div class="stat-row"><span class="stat-label">Fault Tolerance</span><span class="stat-val bad">❌ ZERO — 1 drive fails = ALL data lost</span></div>
+        <div class="stat-row"><span class="stat-label">Usable Space</span><span class="stat-val good">100% — 2× 800MB = 1600MB usable</span></div>
+        <div class="stat-row"><span class="stat-label">Use Case</span><span class="stat-val">Video editing, gaming, temp/cache storage</span></div>
+
+        <div class="lecture-box">
+          <div class="ltitle">🎓 From the Lecture</div>
+          <p>"Think of striping like a <strong>peppermint candy</strong> — odd pieces on one stick, even on the other, swirling together. Fast to read, but if one stick breaks, you lose the whole candy."</p>
+        </div>
+
+        <div class="alert danger">
+          <span>🚨</span><span><strong>Exam Trap:</strong> RAID 0 is called "Redundant Array" but has ZERO redundancy. One disk dies = everything gone.</span>
+        </div>
+
+        <div class="memory-box">
+          <div class="title">🧠 Memory Hook</div>
+          <div class="text">
+            RAID <strong>0</strong> = <strong>0</strong> protection<br>
+            <strong>"Zero safety, zero backup"</strong><br>
+            🍭 Peppermint stripe — fast but fragile
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RAID 1 ==================== -->
+<div class="raid-card r1">
+  <div class="raid-header">
+    <div class="raid-badge">1</div>
+    <div class="raid-title">
+      <h2>RAID 1 — Mirroring</h2>
+      <p>Exact copy on every drive. Built-in backup. Safest basic RAID.</p>
+    </div>
+  </div>
+  <div class="raid-body">
+    <div class="raid-grid">
+
+      <div class="diagram-panel">
+        <h4>📊 How It Works</h4>
+        <svg viewBox="0 0 420 300" style="width:100%;max-width:420px;">
+          <!-- Write label -->
+          <rect x="145" y="5" width="130" height="32" rx="8" fill="#1a5276"/>
+          <text x="210" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Write: A B C D</text>
+
+          <!-- Disk 1 -->
+          <rect x="20" y="50" width="155" height="200" rx="12" fill="white" stroke="#2980b9" stroke-width="3"/>
+          <text x="98" y="46" text-anchor="middle" font-size="13" font-weight="bold" fill="#2980b9">💽 Disk 1 (Primary)</text>
+          <rect x="33" y="62" width="129" height="38" rx="7" fill="#2980b9"/>
+          <text x="98" y="86" text-anchor="middle" font-size="15" font-weight="bold" fill="white">A</text>
+          <rect x="33" y="105" width="129" height="38" rx="7" fill="#2980b9" opacity="0.8"/>
+          <text x="98" y="129" text-anchor="middle" font-size="15" font-weight="bold" fill="white">B</text>
+          <rect x="33" y="148" width="129" height="38" rx="7" fill="#2980b9" opacity="0.6"/>
+          <text x="98" y="172" text-anchor="middle" font-size="15" font-weight="bold" fill="white">C</text>
+          <rect x="33" y="191" width="129" height="38" rx="7" fill="#2980b9" opacity="0.4"/>
+          <text x="98" y="215" text-anchor="middle" font-size="15" font-weight="bold" fill="white">D</text>
+          <text x="98" y="262" text-anchor="middle" font-size="12" fill="#777">800 MB</text>
+
+          <!-- COPY arrow -->
+          <text x="210" y="155" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a5276">COPY ⟹</text>
+          <text x="210" y="172" text-anchor="middle" font-size="10" fill="#888">simultaneous</text>
+          <rect x="175" y="110" width="70" height="22" rx="6" fill="#1a5276"/>
+          <text x="210" y="126" text-anchor="middle" font-size="11" fill="white" font-weight="bold">MIRROR</text>
+
+          <!-- Disk 2 -->
+          <rect x="245" y="50" width="155" height="200" rx="12" fill="white" stroke="#2980b9" stroke-width="3" stroke-dasharray="7,4"/>
+          <text x="323" y="46" text-anchor="middle" font-size="13" font-weight="bold" fill="#2980b9">🪞 Disk 2 (Mirror)</text>
+          <rect x="258" y="62" width="129" height="38" rx="7" fill="#2980b9"/>
+          <text x="323" y="86" text-anchor="middle" font-size="15" font-weight="bold" fill="white">A</text>
+          <rect x="258" y="105" width="129" height="38" rx="7" fill="#2980b9" opacity="0.8"/>
+          <text x="323" y="129" text-anchor="middle" font-size="15" font-weight="bold" fill="white">B</text>
+          <rect x="258" y="148" width="129" height="38" rx="7" fill="#2980b9" opacity="0.6"/>
+          <text x="323" y="172" text-anchor="middle" font-size="15" font-weight="bold" fill="white">C</text>
+          <rect x="258" y="191" width="129" height="38" rx="7" fill="#2980b9" opacity="0.4"/>
+          <text x="323" y="215" text-anchor="middle" font-size="15" font-weight="bold" fill="white">D</text>
+          <text x="323" y="262" text-anchor="middle" font-size="12" fill="#777">800 MB</text>
+
+          <!-- OS sees -->
+          <rect x="130" y="278" width="160" height="18" rx="5" fill="#2c3e50"/>
+          <text x="210" y="291" text-anchor="middle" font-size="11" fill="white" font-weight="bold">OS sees: 1 drive = 800 MB only</text>
+        </svg>
+
+        
+        
+      </div>
+
+      <div class="info-panel">
+        <div class="stat-row"><span class="stat-label">Keyword</span><span class="stat-val"><strong>MIRRORING</strong> — identical copy always</span></div>
+        <div class="stat-row"><span class="stat-label">Min Drives</span><span class="stat-val">2</span></div>
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-val">Read = fast (either disk). Write = slightly slower</span></div>
+        <div class="stat-row"><span class="stat-label">Fault Tolerance</span><span class="stat-val good">✅ Full — entire disk can fail, data survives</span></div>
+        <div class="stat-row"><span class="stat-label">Usable Space</span><span class="stat-val bad">50% — 2× 800MB = only 800MB usable</span></div>
+        <div class="stat-row"><span class="stat-label">Use Case</span><span class="stat-val">OS drive, critical data, small business</span></div>
+
+        <div class="lecture-box">
+          <div class="ltitle">🎓 From the Lecture</div>
+          <p>"Every single thing on disk zero is also on disk one. Delete everything on disk one? Still works on disk zero. <strong>Full redundancy</strong> — but you pay the price in space."</p>
+        </div>
+
+        <div class="alert success">
+          <span>✅</span><span>Best for <strong>OS drives</strong>. Fast rebuild after failure. Replace the dead disk → it auto-copies from the good one.</span>
+        </div>
+
+        <div class="memory-box">
+          <div class="title">🧠 Memory Hook</div>
+          <div class="text">
+            RAID <strong>1</strong> = <strong>1</strong> mirror image<br>
+            <strong>"Mirror on the wall 🪞 — same exact reflection"</strong><br>
+            Loses 50% space. Gains 100% safety.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RAID 5 ==================== -->
+<div class="raid-card r5">
+  <div class="raid-header">
+    <div class="raid-badge">5</div>
+    <div class="raid-title">
+      <h2>RAID 5 — Striping with Parity</h2>
+      <p>Speed + redundancy. The sweet spot. Most common in servers.</p>
+    </div>
+  </div>
+  <div class="raid-body">
+    <div class="raid-grid">
+
+      <div class="diagram-panel">
+        <h4>📊 How It Works — Parity Rotates!</h4>
+        <svg viewBox="0 0 420 340" style="width:100%;max-width:420px;">
+          <!-- Legend -->
+          <rect x="10" y="5" width="14" height="14" rx="3" fill="#27ae60"/>
+          <text x="28" y="17" font-size="11" fill="#333">Data</text>
+          <rect x="80" y="5" width="14" height="14" rx="3" fill="#f39c12"/>
+          <text x="98" y="17" font-size="11" fill="#333">Parity (P)</text>
+          <text x="180" y="17" font-size="11" fill="#555">P rotates between disks each row</text>
+
+          <!-- Disk headers -->
+          <text x="75" y="38" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">💽 Disk 1</text>
+          <text x="210" y="38" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">💽 Disk 2</text>
+          <text x="345" y="38" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">💽 Disk 3</text>
+
+          <!-- Disk outlines -->
+          <rect x="25" y="44" width="100" height="250" rx="10" fill="white" stroke="#27ae60" stroke-width="2.5"/>
+          <rect x="160" y="44" width="100" height="250" rx="10" fill="white" stroke="#27ae60" stroke-width="2.5"/>
+          <rect x="295" y="44" width="100" height="250" rx="10" fill="white" stroke="#27ae60" stroke-width="2.5"/>
+
+          <!-- Row A: P on Disk 3 -->
+          <rect x="33" y="52" width="84" height="35" rx="6" fill="#27ae60" opacity="0.9"/>
+          <text x="75" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="white">A1</text>
+          <rect x="168" y="52" width="84" height="35" rx="6" fill="#27ae60" opacity="0.9"/>
+          <text x="210" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="white">A2</text>
+          <rect x="303" y="52" width="84" height="35" rx="6" fill="#f39c12"/>
+          <text x="345" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Ap ←</text>
+
+          <!-- Row B: P on Disk 2 -->
+          <rect x="33" y="93" width="84" height="35" rx="6" fill="#27ae60" opacity="0.75"/>
+          <text x="75" y="115" text-anchor="middle" font-size="13" font-weight="bold" fill="white">B1</text>
+          <rect x="168" y="93" width="84" height="35" rx="6" fill="#f39c12"/>
+          <text x="210" y="115" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Bp ←</text>
+          <rect x="303" y="93" width="84" height="35" rx="6" fill="#27ae60" opacity="0.75"/>
+          <text x="345" y="115" text-anchor="middle" font-size="13" font-weight="bold" fill="white">B2</text>
+
+          <!-- Row C: P on Disk 1 -->
+          <rect x="33" y="134" width="84" height="35" rx="6" fill="#f39c12"/>
+          <text x="75" y="156" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Cp ←</text>
+          <rect x="168" y="134" width="84" height="35" rx="6" fill="#27ae60" opacity="0.6"/>
+          <text x="210" y="156" text-anchor="middle" font-size="13" font-weight="bold" fill="white">C1</text>
+          <rect x="303" y="134" width="84" height="35" rx="6" fill="#27ae60" opacity="0.6"/>
+          <text x="345" y="156" text-anchor="middle" font-size="13" font-weight="bold" fill="white">C2</text>
+
+          <!-- Row D -->
+          <rect x="33" y="175" width="84" height="35" rx="6" fill="#27ae60" opacity="0.5"/>
+          <text x="75" y="197" text-anchor="middle" font-size="13" font-weight="bold" fill="white">D1</text>
+          <rect x="168" y="175" width="84" height="35" rx="6" fill="#27ae60" opacity="0.5"/>
+          <text x="210" y="197" text-anchor="middle" font-size="13" font-weight="bold" fill="white">D2</text>
+          <rect x="303" y="175" width="84" height="35" rx="6" fill="#f39c12" opacity="0.8"/>
+          <text x="345" y="197" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Dp ←</text>
+
+          <!-- Parity explanation -->
+          <rect x="20" y="308" width="380" height="26" rx="8" fill="#1e8449"/>
+          <text x="210" y="325" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Lose 1 disk? Parity rebuilds it. Min 3 drives. Lose ⅓ space to parity.</text>
+        </svg>
+
+        
+        
+      </div>
+
+      <div class="info-panel">
+        <div class="stat-row"><span class="stat-label">Keyword</span><span class="stat-val"><strong>PARITY</strong> — math-based recovery, rotates across disks</span></div>
+        <div class="stat-row"><span class="stat-label">Min Drives</span><span class="stat-val">3 (can use more)</span></div>
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-val good">⚡ Excellent read / Good write</span></div>
+        <div class="stat-row"><span class="stat-label">Fault Tolerance</span><span class="stat-val good">✅ 1 drive can fail — parity rebuilds it</span></div>
+        <div class="stat-row"><span class="stat-label">Usable Space</span><span class="stat-val">Total minus 1 drive (parity). 3×80GB = 160GB usable</span></div>
+        <div class="stat-row"><span class="stat-label">Use Case</span><span class="stat-val">File servers, NAS, small businesses — most common!</span></div>
+
+        <div class="lecture-box">
+          <div class="ltitle">🎓 The Parity Math Trick</div>
+          <p><strong>2 + 3 = 5</strong><br>Remove any one number — you can still find it!<br>
+          "? + 3 = 5" → answer is 2<br>
+          "2 + ? = 5" → answer is 3<br>
+          That's parity. The missing data is always recoverable.</p>
+        </div>
+
+        <div class="alert warning">
+          <span>⚠️</span><span>If <strong>2 or more disks fail</strong> simultaneously in RAID 5, the entire array fails. RAID 6 solves this.</span>
+        </div>
+
+        <div class="memory-box">
+          <div class="title">🧠 Memory Hook</div>
+          <div class="text">
+            RAID <strong>5</strong> = "<strong>Five is Alive</strong>" 🔺<br>
+            Minimum <strong>3</strong> drives — triangle has 3 sides<br>
+            <strong>P rotates</strong> = parity is shared, not dedicated
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RAID 6 ==================== -->
+<div class="raid-card r6">
+  <div class="raid-header">
+    <div class="raid-badge">6</div>
+    <div class="raid-title">
+      <h2>RAID 6 — Striping with Double Parity</h2>
+      <p>RAID 5 + one more parity block. Survives TWO simultaneous failures.</p>
+    </div>
+  </div>
+  <div class="raid-body">
+    <div class="raid-grid">
+
+      <div class="diagram-panel">
+        <h4>📊 Two Parity Blocks Per Row</h4>
+        <svg viewBox="0 0 420 300" style="width:100%;max-width:420px;">
+          <!-- Legend -->
+          <rect x="10" y="5" width="12" height="12" rx="2" fill="#17a589"/>
+          <text x="26" y="15" font-size="10" fill="#333">Data</text>
+          <rect x="75" y="5" width="12" height="12" rx="2" fill="#f39c12"/>
+          <text x="91" y="15" font-size="10" fill="#333">Parity 1 (P)</text>
+          <rect x="170" y="5" width="12" height="12" rx="2" fill="#e74c3c"/>
+          <text x="186" y="15" font-size="10" fill="#333">Parity 2 (Q)</text>
+          <text x="260" y="15" font-size="10" fill="#555" font-weight="bold">= 2 shields per row!</text>
+
+          <!-- 4 disk labels -->
+          <text x="55" y="36" text-anchor="middle" font-size="11" font-weight="bold" fill="#0e6655">D1</text>
+          <text x="155" y="36" text-anchor="middle" font-size="11" font-weight="bold" fill="#0e6655">D2</text>
+          <text x="255" y="36" text-anchor="middle" font-size="11" font-weight="bold" fill="#0e6655">D3</text>
+          <text x="355" y="36" text-anchor="middle" font-size="11" font-weight="bold" fill="#0e6655">D4</text>
+
+          <!-- 4 disk outlines -->
+          <rect x="15" y="42" width="80" height="225" rx="9" fill="white" stroke="#17a589" stroke-width="2.5"/>
+          <rect x="115" y="42" width="80" height="225" rx="9" fill="white" stroke="#17a589" stroke-width="2.5"/>
+          <rect x="215" y="42" width="80" height="225" rx="9" fill="white" stroke="#17a589" stroke-width="2.5"/>
+          <rect x="315" y="42" width="80" height="225" rx="9" fill="white" stroke="#17a589" stroke-width="2.5"/>
+
+          <!-- Row 1: P+Q on D3,D4 -->
+          <rect x="23" y="50" width="64" height="30" rx="5" fill="#17a589" opacity="0.9"/>
+          <text x="55" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="white">A1</text>
+          <rect x="123" y="50" width="64" height="30" rx="5" fill="#17a589" opacity="0.9"/>
+          <text x="155" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="white">A2</text>
+          <rect x="223" y="50" width="64" height="30" rx="5" fill="#f39c12"/>
+          <text x="255" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="white">P</text>
+          <rect x="323" y="50" width="64" height="30" rx="5" fill="#e74c3c"/>
+          <text x="355" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Q</text>
+
+          <!-- Row 2: P on D2, Q on D3 -->
+          <rect x="23" y="86" width="64" height="30" rx="5" fill="#17a589" opacity="0.75"/>
+          <text x="55" y="105" text-anchor="middle" font-size="12" font-weight="bold" fill="white">B1</text>
+          <rect x="123" y="86" width="64" height="30" rx="5" fill="#f39c12"/>
+          <text x="155" y="105" text-anchor="middle" font-size="12" font-weight="bold" fill="white">P</text>
+          <rect x="223" y="86" width="64" height="30" rx="5" fill="#e74c3c"/>
+          <text x="255" y="105" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Q</text>
+          <rect x="323" y="86" width="64" height="30" rx="5" fill="#17a589" opacity="0.75"/>
+          <text x="355" y="105" text-anchor="middle" font-size="12" font-weight="bold" fill="white">B2</text>
+
+          <!-- Row 3: P on D1, Q on D2 -->
+          <rect x="23" y="122" width="64" height="30" rx="5" fill="#f39c12"/>
+          <text x="55" y="141" text-anchor="middle" font-size="12" font-weight="bold" fill="white">P</text>
+          <rect x="123" y="122" width="64" height="30" rx="5" fill="#e74c3c"/>
+          <text x="155" y="141" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Q</text>
+          <rect x="223" y="122" width="64" height="30" rx="5" fill="#17a589" opacity="0.6"/>
+          <text x="255" y="141" text-anchor="middle" font-size="12" font-weight="bold" fill="white">C1</text>
+          <rect x="323" y="122" width="64" height="30" rx="5" fill="#17a589" opacity="0.6"/>
+          <text x="355" y="141" text-anchor="middle" font-size="12" font-weight="bold" fill="white">C2</text>
+
+          <!-- Row 4 -->
+          <rect x="23" y="158" width="64" height="30" rx="5" fill="#e74c3c" opacity="0.8"/>
+          <text x="55" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Q</text>
+          <rect x="123" y="158" width="64" height="30" rx="5" fill="#17a589" opacity="0.5"/>
+          <text x="155" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="white">D1</text>
+          <rect x="223" y="158" width="64" height="30" rx="5" fill="#17a589" opacity="0.5"/>
+          <text x="255" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="white">D2</text>
+          <rect x="323" y="158" width="64" height="30" rx="5" fill="#f39c12" opacity="0.8"/>
+          <text x="355" y="177" text-anchor="middle" font-size="12" font-weight="bold" fill="white">P</text>
+
+          <!-- Summary bar -->
+          <rect x="15" y="278" width="390" height="24" rx="8" fill="#0e6655"/>
+          <text x="210" y="294" text-anchor="middle" font-size="11" fill="white" font-weight="bold">4 disks min | Lose 2 of 4 TB to parity | 2 drives can fail ✅✅</text>
+        </svg>
+      </div>
+
+      <div class="info-panel">
+        <div class="stat-row"><span class="stat-label">Keyword</span><span class="stat-val"><strong>DOUBLE PARITY</strong> — P and Q, both rotate</span></div>
+        <div class="stat-row"><span class="stat-label">Min Drives</span><span class="stat-val">4</span></div>
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-val">Good read / Slower write (calculates 2 parities)</span></div>
+        <div class="stat-row"><span class="stat-label">Fault Tolerance</span><span class="stat-val good">✅✅ TWO drives can fail simultaneously</span></div>
+        <div class="stat-row"><span class="stat-label">Usable Space</span><span class="stat-val bad">Total minus 2 drives. 4×1TB = 2TB usable</span></div>
+        <div class="stat-row"><span class="stat-label">Use Case</span><span class="stat-val">Enterprise, large arrays, critical archives</span></div>
+
+        <div class="lecture-box">
+          <div class="ltitle">🎓 From the Lecture</div>
+          <p>"RAID 6 is <strong>five plus one</strong>. Everything true about RAID 5 is also true about RAID 6, <strong>except</strong> we add a second parity block. Now I can lose <strong>two</strong> disks and keep operating."</p>
+        </div>
+
+        <div class="alert success">
+          <span>🛡️</span><span>Best for <strong>large disk arrays</strong> where failure probability is higher. Longer rebuild times than RAID 5.</span>
+        </div>
+
+        <div class="memory-box">
+          <div class="title">🧠 Memory Hook</div>
+          <div class="text">
+            RAID <strong>6</strong> = RAID 5 + <strong>1 extra parity</strong><br>
+            <strong>"Double shield 🛡️🛡️ — two can fall"</strong><br>
+            6 = 5 + 1 | Min 4 drives (square has 4 sides)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RAID 10 ==================== -->
+<div class="raid-card r10">
+  <div class="raid-header">
+    <div class="raid-badge">10</div>
+    <div class="raid-title">
+      <h2>RAID 10 — Stripe of Mirrors (RAID 1+0)</h2>
+      <p>Two mirrored pairs, striped together. Speed AND redundancy.</p>
+    </div>
+  </div>
+  <div class="raid-body">
+    <div class="raid-grid">
+
+      <div class="diagram-panel">
+        <h4>📊 Mirror first → then Stripe across</h4>
+        <svg viewBox="0 0 430 350" style="width:100%;max-width:430px;">
+          <!-- Stripe arrow top -->
+          <rect x="60" y="5" width="310" height="22" rx="8" fill="#8e44ad"/>
+          <text x="215" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="white">⟵ RAID 0 STRIPE ACROSS BOTH PAIRS ⟶</text>
+
+          <!-- Pair 1 box -->
+          <rect x="15" y="32" width="190" height="270" rx="14" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-dasharray="8,4"/>
+          <text x="110" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#8e44ad">🪞 Mirror Pair 1 (RAID 1)</text>
+
+          <!-- Disk 1 -->
+          <rect x="25" y="58" width="80" height="210" rx="10" fill="white" stroke="#9b59b6" stroke-width="2.5"/>
+          <text x="65" y="54" text-anchor="middle" font-size="11" font-weight="bold" fill="#9b59b6">Disk 1</text>
+          <rect x="33" y="66" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.95"/>
+          <text x="65" y="87" text-anchor="middle" font-size="13" font-weight="bold" fill="white">A</text>
+          <rect x="33" y="103" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.75"/>
+          <text x="65" y="124" text-anchor="middle" font-size="13" font-weight="bold" fill="white">B</text>
+          <rect x="33" y="140" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.55"/>
+          <text x="65" y="161" text-anchor="middle" font-size="13" font-weight="bold" fill="white">C</text>
+          <rect x="33" y="177" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.35"/>
+          <text x="65" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="white">D</text>
+
+          <!-- Mirror arrow -->
+          <text x="110" y="170" text-anchor="middle" font-size="22" fill="#9b59b6">⟹</text>
+          <text x="110" y="188" text-anchor="middle" font-size="10" fill="#888">copy</text>
+
+          <!-- Disk 2 (mirror) -->
+          <rect x="120" y="58" width="80" height="210" rx="10" fill="white" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="160" y="54" text-anchor="middle" font-size="11" font-weight="bold" fill="#9b59b6">Disk 2 🪞</text>
+          <rect x="128" y="66" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.95"/>
+          <text x="160" y="87" text-anchor="middle" font-size="13" font-weight="bold" fill="white">A</text>
+          <rect x="128" y="103" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.75"/>
+          <text x="160" y="124" text-anchor="middle" font-size="13" font-weight="bold" fill="white">B</text>
+          <rect x="128" y="140" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.55"/>
+          <text x="160" y="161" text-anchor="middle" font-size="13" font-weight="bold" fill="white">C</text>
+          <rect x="128" y="177" width="64" height="32" rx="6" fill="#9b59b6" opacity="0.35"/>
+          <text x="160" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="white">D</text>
+
+          <!-- Pair 2 box -->
+          <rect x="225" y="32" width="190" height="270" rx="14" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-dasharray="8,4"/>
+          <text x="320" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#8e44ad">🪞 Mirror Pair 2 (RAID 1)</text>
+
+          <!-- Disk 3 -->
+          <rect x="235" y="58" width="80" height="210" rx="10" fill="white" stroke="#9b59b6" stroke-width="2.5"/>
+          <text x="275" y="54" text-anchor="middle" font-size="11" font-weight="bold" fill="#9b59b6">Disk 3</text>
+          <rect x="243" y="66" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.95"/>
+          <text x="275" y="87" text-anchor="middle" font-size="13" font-weight="bold" fill="white">E</text>
+          <rect x="243" y="103" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.75"/>
+          <text x="275" y="124" text-anchor="middle" font-size="13" font-weight="bold" fill="white">F</text>
+          <rect x="243" y="140" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.55"/>
+          <text x="275" y="161" text-anchor="middle" font-size="13" font-weight="bold" fill="white">G</text>
+          <rect x="243" y="177" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.35"/>
+          <text x="275" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="white">H</text>
+
+          <!-- Mirror arrow 2 -->
+          <text x="320" y="170" text-anchor="middle" font-size="22" fill="#9b59b6">⟹</text>
+          <text x="320" y="188" text-anchor="middle" font-size="10" fill="#888">copy</text>
+
+          <!-- Disk 4 (mirror) -->
+          <rect x="330" y="58" width="80" height="210" rx="10" fill="white" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="370" y="54" text-anchor="middle" font-size="11" font-weight="bold" fill="#9b59b6">Disk 4 🪞</text>
+          <rect x="338" y="66" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.95"/>
+          <text x="370" y="87" text-anchor="middle" font-size="13" font-weight="bold" fill="white">E</text>
+          <rect x="338" y="103" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.75"/>
+          <text x="370" y="124" text-anchor="middle" font-size="13" font-weight="bold" fill="white">F</text>
+          <rect x="338" y="140" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.55"/>
+          <text x="370" y="161" text-anchor="middle" font-size="13" font-weight="bold" fill="white">G</text>
+          <rect x="338" y="177" width="64" height="32" rx="6" fill="#7d3c98" opacity="0.35"/>
+          <text x="370" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="white">H</text>
+
+          <!-- Failure note -->
+          <rect x="15" y="278" width="190" height="22" rx="7" fill="#1e8449"/>
+          <text x="110" y="293" text-anchor="middle" font-size="10" fill="white" font-weight="bold">Lose 1 disk here → still alive ✅</text>
+          <rect x="225" y="278" width="190" height="22" rx="7" fill="#1e8449"/>
+          <text x="320" y="293" text-anchor="middle" font-size="10" fill="white" font-weight="bold">Lose 1 disk here → still alive ✅</text>
+
+          <!-- OS sees -->
+          <rect x="100" y="312" width="230" height="22" rx="8" fill="#2c3e50"/>
+          <text x="215" y="327" text-anchor="middle" font-size="11" fill="white" font-weight="bold">OS sees: 1 drive = 50% of total capacity</text>
+        </svg>
+
+        
+        
+      </div>
+
+      <div class="info-panel">
+        <div class="stat-row"><span class="stat-label">Keyword</span><span class="stat-val"><strong>RAID of RAIDs</strong> — RAID 1 inside RAID 0</span></div>
+        <div class="stat-row"><span class="stat-label">Min Drives</span><span class="stat-val">4 (always even number)</span></div>
+        <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-val good">⚡⚡ Excellent — striping gives read/write boost</span></div>
+        <div class="stat-row"><span class="stat-label">Fault Tolerance</span><span class="stat-val good">✅ 1 disk per mirror pair can fail</span></div>
+        <div class="stat-row"><span class="stat-label">Usable Space</span><span class="stat-val bad">50% — mirrors eat half the space</span></div>
+        <div class="stat-row"><span class="stat-label">Use Case</span><span class="stat-val">Databases, high-performance + high-reliability servers</span></div>
+
+        <div class="lecture-box">
+          <div class="ltitle">🎓 From the Lecture</div>
+          <p>"RAID 10 is a <strong>RAID of RAIDs</strong>. Two RAID 1 mirrors placed inside a RAID 0 stripe. The file splits left and right (stripe), but each side is fully mirrored. <strong>Disaster tolerant</strong> — lose an entire pair and it still runs."</p>
+        </div>
+
+        <div class="alert success">
+          <span>🏆</span><span><strong>Best overall for performance + safety.</strong> Common in enterprise databases. Most expensive per usable GB.</span>
+        </div>
+
+        <div class="memory-box">
+          <div class="title">🧠 Memory Hook</div>
+          <div class="text">
+            RAID <strong>10</strong> = RAID <strong>1</strong> + RAID <strong>0</strong><br>
+            <strong>"Perfect TEN 🔟 — mirror then stripe"</strong><br>
+            🪞⚡ Mirror first. Speed second. Best of both.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RAID Categories -->
+<div class="section">
+  <div class="section-title">🗂️ RAID Tolerance Categories</div>
+  <div class="categories">
+    <div class="cat-card fail">
+      <h3>⚠️ Failure Resistant</h3>
+      <p style="margin-bottom:10px;">Protects against loss of erased data if a <strong>single disk</strong> fails.</p>
+      <ul><li>RAID 1</li><li>RAID 5</li></ul>
+    </div>
+    <div class="cat-card fault">
+      <h3>🛡️ Fault Tolerant</h3>
+      <p style="margin-bottom:10px;">Array continues to <strong>function</strong> even if a component fails.</p>
+      <ul><li>RAID 1</li><li>RAID 5</li><li>RAID 6</li></ul>
+    </div>
+    <div class="cat-card disaster">
+      <h3>💥 Disaster Tolerant</h3>
+      <p style="margin-bottom:10px;">Two <strong>independent zones</strong> with full data access. Lose half the array — still runs.</p>
+      <ul><li>RAID 10</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Ref Table -->
+<div class="section">
+  <div class="section-title">📊 Quick Reference — All RAID Levels</div>
+  <table>
+    <tr><th>RAID</th><th>Name</th><th>Min Drives</th><th>Fault Tolerance</th><th>Usable Space</th><th>Best For</th></tr>
+    <tr><td><span class="tag r0c">RAID 0</span></td><td>Striping</td><td>2</td><td style="color:#c0392b;font-weight:700;">❌ None</td><td>100%</td><td>Speed only</td></tr>
+    <tr><td><span class="tag r1c">RAID 1</span></td><td>Mirroring</td><td>2</td><td style="color:#1e8449;font-weight:700;">✅ 1 drive</td><td>50%</td><td>OS / critical data</td></tr>
+    <tr><td><span class="tag r5c">RAID 5</span></td><td>Stripe + Parity</td><td>3</td><td style="color:#1e8449;font-weight:700;">✅ 1 drive</td><td>Total − 1 drive</td><td>File servers / NAS</td></tr>
+    <tr><td><span class="tag r6c">RAID 6</span></td><td>Double Parity</td><td>4</td><td style="color:#1e8449;font-weight:700;">✅✅ 2 drives</td><td>Total − 2 drives</td><td>Enterprise / archives</td></tr>
+    <tr><td><span class="tag r10c">RAID 10</span></td><td>Stripe of Mirrors</td><td>4</td><td style="color:#1e8449;font-weight:700;">✅ 1 per pair</td><td>50%</td><td>Databases / high perf</td></tr>
+  </table>
+</div>
+
+<!-- Final Lock -->
+<div class="final-lock">
+  <h2>🔒 Final Memory Lock</h2>
+  <div class="lock-grid">
+    <div class="lock-card"><div class="lvl" style="color:#ff7675;">RAID 0</div><div class="hook">0 = Zero safety 💀<br>Fast but fragile<br>🍭 Peppermint stripe</div></div>
+    <div class="lock-card"><div class="lvl" style="color:#74b9ff;">RAID 1</div><div class="hook">Mirror 🪞<br>Same image always<br>50% space gone</div></div>
+    <div class="lock-card"><div class="lvl" style="color:#55efc4;">RAID 5</div><div class="hook">Five is Alive 🔺<br>Parity = math backup<br>Min 3 drives</div></div>
+    <div class="lock-card"><div class="lvl" style="color:#81ecec;">RAID 6</div><div class="hook">Double Shield 🛡️🛡️<br>RAID 5 + 1 parity<br>Min 4 drives</div></div>
+    <div class="lock-card"><div class="lvl" style="color:#d7a4ff;">RAID 10</div><div class="hook">Perfect TEN 🔟<br>RAID 1 + RAID 0<br>🪞⚡ Mirror then stripe</div></div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
+<!-- ==================== EXAM ATTACK SYSTEM ==================== -->
+<div class="section">
+  <div class="section-title">🎯 EXAM ATTACK SYSTEM — How to Answer RAID Questions</div>
+  
+  <div style="background:#fff3cd;border-left:6px solid #ff9800;padding:25px;border-radius:12px;margin-bottom:25px;">
+    <div style="font-size:1.3em;font-weight:700;color:#856404;margin-bottom:15px;">⚡ When You See a RAID Question:</div>
+    <div style="font-size:1.05em;color:#2c3e50;line-height:1.9;">
+      <strong>Step 1: What do they want?</strong><br>
+      • Speed only? → RAID 0<br>
+      • Safety only (2 drives)? → RAID 1<br>
+      • Parity mentioned? → RAID 5<br>
+      • Double parity? → RAID 6<br>
+      • Speed + safety? → RAID 10<br><br>
+      
+      <strong>Step 2: Check minimum drives</strong><br>
+      • 2 drives available → RAID 0 or RAID 1<br>
+      • 3 drives → RAID 5 possible<br>
+      • 4 drives → RAID 6 or RAID 10<br><br>
+      
+      <strong>Step 3: Watch for traps!</strong><br>
+      • "Before configuring RAID" → Format disks first<br>
+      • "Windows software RAID" → Use mirrored volumes (RAID 1)<br>
+      • "Protect employee data" → Redundancy needed (NOT RAID 0)<br>
+      • "Maximum capacity" → RAID 0 (but warn about zero safety)
+    </div>
+  </div>
+
+  <!-- Example Question -->
+  <div style="background:white;border-radius:15px;padding:25px;box-shadow:0 5px 15px rgba(0,0,0,0.1);margin-bottom:20px;">
+    <div style="background:#667eea;color:white;padding:12px 18px;border-radius:8px;margin-bottom:18px;font-weight:700;font-size:1.1em;">
+      📝 EXAM EXAMPLE QUESTION
+    </div>
+    <div style="font-size:1.05em;line-height:1.8;color:#2c3e50;margin-bottom:20px;">
+      <strong>Scenario:</strong> You work for a small company as the HR specialist. You maintain employee information on a Windows 11 desktop with two high-capacity hard disks. You want to protect this information from hard disk failure using Windows software RAID.<br><br>
+      <strong>Which is your BEST solution?</strong>
+    </div>
+    
+    <div style="display:grid;gap:12px;">
+      <div style="padding:14px;border:2px solid #e0e0e0;border-radius:10px;background:#f9f9f9;">
+        ❌ <strong>Use spanned volumes</strong> — No redundancy
+      </div>
+      <div style="padding:14px;border:2px solid #e0e0e0;border-radius:10px;background:#f9f9f9;">
+        ❌ <strong>Use RAID 5 volumes</strong> — Needs 3+ drives (you only have 2)
+      </div>
+      <div style="padding:14px;border:2px solid #e0e0e0;border-radius:10px;background:#f9f9f9;">
+        ❌ <strong>Use striped volumes</strong> — RAID 0, no protection
+      </div>
+      <div style="padding:14px;border:3px solid #28a745;border-radius:10px;background:#d4edda;font-weight:700;">
+        ✅ <strong>Use mirrored volumes</strong> — RAID 1, perfect for 2 drives + protection
+      </div>
+    </div>
+
+    <div style="background:#eef2ff;border-left:5px solid #667eea;padding:15px;border-radius:8px;margin-top:18px;">
+      <strong style="color:#667eea;">🧠 Attack Strategy:</strong><br>
+      <span style="color:#2c3e50;">
+      1. Keywords: "protect from failure" → need redundancy<br>
+      2. Available: "two hard disks" → RAID 1 or RAID 0<br>
+      3. Goal: safety (not speed) → RAID 1 mirroring<br>
+      4. Eliminate: Spanned/Striped = no protection, RAID 5 = needs 3 drives
+      </span>
+    </div>
+  </div>
+
+  <!-- Before Configuring Question -->
+  <div style="background:white;border-radius:15px;padding:25px;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+    <div style="background:#667eea;color:white;padding:12px 18px;border-radius:8px;margin-bottom:18px;font-weight:700;font-size:1.1em;">
+      📝 EXAM TRAP — "Before Configuring"
+    </div>
+    <div style="font-size:1.05em;line-height:1.8;color:#2c3e50;margin-bottom:20px;">
+      <strong>Question:</strong> What do you need to do with Disk 1 and Disk 2 BEFORE configuring them for a RAID 1 array?
+    </div>
+    
+    <div style="background:#fff3cd;border-left:5px solid #f39c12;padding:15px;border-radius:8px;margin-bottom:15px;">
+      <strong style="color:#856404;">✅ CORRECT ANSWER:</strong><br>
+      <span style="color:#2c3e50;font-size:1.05em;">Format the disks / Ensure disks are unformatted or clean</span>
+    </div>
+
+    <div style="background:#f8d7da;border-left:5px solid #dc3545;padding:15px;border-radius:8px;">
+      <strong style="color:#721c24;">❌ COMMON WRONG ANSWERS:</strong><br>
+      <span style="color:#2c3e50;">
+      • "Install the operating system first" — NO, RAID is configured BEFORE OS in hardware RAID<br>
+      • "Nothing, just configure RAID" — NO, disks need to be prepared<br>
+      • "Create partitions" — NO, RAID controller handles this
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COMPARISON TABLE ==================== -->
+<div class="section">
+  <div class="section-title">⚖️ RAID Comparison — Reliability, Capacity, Performance</div>
+  
+  <table>
+    <tr>
+      <th style="width:15%;">RAID</th>
+      <th style="width:20%;">Reliability</th>
+      <th style="width:20%;">Capacity</th>
+      <th style="width:20%;">Performance</th>
+      <th style="width:25%;">Best Use Case</th>
+    </tr>
+    <tr>
+      <td style="font-weight:700;color:#c0392b;">RAID 0</td>
+      <td><span style="color:#c0392b;font-weight:700;">⭐☆☆☆☆</span><br>Zero redundancy</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐⭐</span><br>100% usable</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐⭐</span><br>Fastest</td>
+      <td>Temp storage, cache, video editing scratch disk</td>
+    </tr>
+    <tr>
+      <td style="font-weight:700;color:#1a5276;">RAID 1</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐⭐</span><br>Full mirror</td>
+      <td><span style="color:#c0392b;font-weight:700;">⭐⭐☆☆☆</span><br>50% usable</td>
+      <td><span style="color:#f39c12;font-weight:700;">⭐⭐⭐☆☆</span><br>Good read</td>
+      <td>OS drives, critical small datasets</td>
+    </tr>
+    <tr>
+      <td style="font-weight:700;color:#1e8449;">RAID 5</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐☆</span><br>1 drive failure</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐☆</span><br>Total − 1 drive</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐☆</span><br>Excellent read</td>
+      <td>File servers, NAS, SMB storage</td>
+    </tr>
+    <tr>
+      <td style="font-weight:700;color:#0e6655;">RAID 6</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐⭐</span><br>2 drive failures</td>
+      <td><span style="color:#f39c12;font-weight:700;">⭐⭐⭐☆☆</span><br>Total − 2 drives</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐☆</span><br>Good read</td>
+      <td>Enterprise, large arrays, archives</td>
+    </tr>
+    <tr>
+      <td style="font-weight:700;color:#6c3483;">RAID 10</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐⭐</span><br>1 per pair</td>
+      <td><span style="color:#c0392b;font-weight:700;">⭐⭐☆☆☆</span><br>50% usable</td>
+      <td><span style="color:#27ae60;font-weight:700;">⭐⭐⭐⭐⭐</span><br>Excellent both</td>
+      <td>Databases, high-performance servers</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ==================== BENEFITS & LIMITATIONS ==================== -->
+<div class="section">
+  <div class="section-title">✅❌ Benefits & Limitations by RAID Level</div>
+  
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+    
+    <!-- RAID 0 -->
+    <div style="border-radius:15px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+      <div style="background:linear-gradient(135deg,#c0392b,#e74c3c);color:white;padding:18px;font-weight:700;font-size:1.2em;">RAID 0</div>
+      <div style="background:white;padding:20px;">
+        <div style="font-weight:700;color:#27ae60;margin-bottom:8px;">✅ Benefits:</div>
+        <ul style="margin-left:20px;margin-bottom:15px;color:#2c3e50;">
+          <li>Maximum performance</li>
+          <li>100% capacity</li>
+          <li>Simple setup</li>
+        </ul>
+        <div style="font-weight:700;color:#c0392b;margin-bottom:8px;">❌ Limitations:</div>
+        <ul style="margin-left:20px;color:#2c3e50;">
+          <li>Zero fault tolerance</li>
+          <li>One disk fails = all lost</li>
+          <li>Not suitable for critical data</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RAID 1 -->
+    <div style="border-radius:15px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+      <div style="background:linear-gradient(135deg,#1a5276,#2980b9);color:white;padding:18px;font-weight:700;font-size:1.2em;">RAID 1</div>
+      <div style="background:white;padding:20px;">
+        <div style="font-weight:700;color:#27ae60;margin-bottom:8px;">✅ Benefits:</div>
+        <ul style="margin-left:20px;margin-bottom:15px;color:#2c3e50;">
+          <li>Simple redundancy</li>
+          <li>Fast read performance</li>
+          <li>Quick rebuild time</li>
+          <li>Only needs 2 drives</li>
+        </ul>
+        <div style="font-weight:700;color:#c0392b;margin-bottom:8px;">❌ Limitations:</div>
+        <ul style="margin-left:20px;color:#2c3e50;">
+          <li>50% capacity lost</li>
+          <li>Expensive per GB</li>
+          <li>Slower writes</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RAID 5 -->
+    <div style="border-radius:15px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+      <div style="background:linear-gradient(135deg,#1e8449,#27ae60);color:white;padding:18px;font-weight:700;font-size:1.2em;">RAID 5</div>
+      <div style="background:white;padding:20px;">
+        <div style="font-weight:700;color:#27ae60;margin-bottom:8px;">✅ Benefits:</div>
+        <ul style="margin-left:20px;margin-bottom:15px;color:#2c3e50;">
+          <li>Good balance speed/safety</li>
+          <li>Better capacity than RAID 1</li>
+          <li>Excellent read performance</li>
+          <li>Industry standard</li>
+        </ul>
+        <div style="font-weight:700;color:#c0392b;margin-bottom:8px;">❌ Limitations:</div>
+        <ul style="margin-left:20px;color:#2c3e50;">
+          <li>Slower writes (parity calc)</li>
+          <li>Rebuild takes long</li>
+          <li>Only 1 drive can fail</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RAID 6 -->
+    <div style="border-radius:15px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+      <div style="background:linear-gradient(135deg,#0e6655,#17a589);color:white;padding:18px;font-weight:700;font-size:1.2em;">RAID 6</div>
+      <div style="background:white;padding:20px;">
+        <div style="font-weight:700;color:#27ae60;margin-bottom:8px;">✅ Benefits:</div>
+        <ul style="margin-left:20px;margin-bottom:15px;color:#2c3e50;">
+          <li>2 simultaneous failures OK</li>
+          <li>Best for large arrays</li>
+          <li>Safer than RAID 5</li>
+        </ul>
+        <div style="font-weight:700;color:#c0392b;margin-bottom:8px;">❌ Limitations:</div>
+        <ul style="margin-left:20px;color:#2c3e50;">
+          <li>Even slower writes</li>
+          <li>Very long rebuild</li>
+          <li>Needs 4+ drives</li>
+          <li>More expensive controller</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RAID 10 -->
+    <div style="border-radius:15px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+      <div style="background:linear-gradient(135deg,#6c3483,#9b59b6);color:white;padding:18px;font-weight:700;font-size:1.2em;">RAID 10</div>
+      <div style="background:white;padding:20px;">
+        <div style="font-weight:700;color:#27ae60;margin-bottom:8px;">✅ Benefits:</div>
+        <ul style="margin-left:20px;margin-bottom:15px;color:#2c3e50;">
+          <li>Excellent performance</li>
+          <li>High redundancy</li>
+          <li>Fast rebuild</li>
+          <li>Best overall RAID</li>
+        </ul>
+        <div style="font-weight:700;color:#c0392b;margin-bottom:8px;">❌ Limitations:</div>
+        <ul style="margin-left:20px;color:#2c3e50;">
+          <li>50% capacity lost</li>
+          <li>Most expensive option</li>
+          <li>Needs 4+ even drives</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== TOLERANCE VISUAL ==================== -->
+<div class="section">
+  <div class="section-title">🛡️ RAID Tolerance Levels — Visual Guide</div>
+  
+  <div style="background:white;border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+    
+    <!-- Failure Resistant -->
+    <div style="background:linear-gradient(135deg,#e67e22,#d35400);color:white;padding:20px;border-radius:12px;margin-bottom:20px;">
+      <div style="font-size:1.5em;font-weight:700;margin-bottom:12px;">⚠️ Failure Resistant</div>
+      <div style="font-size:1.05em;line-height:1.7;opacity:0.95;">
+        <strong>Definition:</strong> Protects against loss of data if a <strong>single disk fails</strong><br>
+        <strong>Examples:</strong> RAID 1, RAID 5<br>
+        <strong>Key Point:</strong> Can lose 1 disk, data stays intact
+      </div>
+      <div style="margin-top:15px;padding:15px;background:rgba(255,255,255,0.15);border-radius:8px;font-size:0.95em;">
+        💡 Think: "Resistant to one failure"
+      </div>
+    </div>
+
+    <!-- Fault Tolerant -->
+    <div style="background:linear-gradient(135deg,#2980b9,#1a5276);color:white;padding:20px;border-radius:12px;margin-bottom:20px;">
+      <div style="font-size:1.5em;font-weight:700;margin-bottom:12px;">🛡️ Fault Tolerant</div>
+      <div style="font-size:1.05em;line-height:1.7;opacity:0.95;">
+        <strong>Definition:</strong> Array <strong>continues to function</strong> even if a component fails<br>
+        <strong>Examples:</strong> RAID 1, RAID 5, RAID 6<br>
+        <strong>Key Point:</strong> System keeps running during/after a disk failure
+      </div>
+      <div style="margin-top:15px;padding:15px;background:rgba(255,255,255,0.15);border-radius:8px;font-size:0.95em;">
+        💡 Think: "Tolerates the fault and keeps working"
+      </div>
+    </div>
+
+    <!-- Disaster Tolerant -->
+    <div style="background:linear-gradient(135deg,#8e44ad,#6c3483);color:white;padding:20px;border-radius:12px;">
+      <div style="font-size:1.5em;font-weight:700;margin-bottom:12px;">💥 Disaster Tolerant</div>
+      <div style="font-size:1.05em;line-height:1.7;opacity:0.95;">
+        <strong>Definition:</strong> Has <strong>two independent zones</strong> with full data access at all times<br>
+        <strong>Example:</strong> RAID 10<br>
+        <strong>Key Point:</strong> Can lose an entire mirror pair and still function
+      </div>
+      <div style="margin-top:15px;padding:15px;background:rgba(255,255,255,0.15);border-radius:8px;font-size:0.95em;">
+        💡 Think: "Disaster = lose half the array, still alive"
+      </div>
+    </div>
+
+    <!-- Comparison -->
+    <div style="margin-top:25px;background:#f8f9fa;padding:20px;border-radius:12px;">
+      <div style="font-size:1.2em;font-weight:700;color:#2c3e50;margin-bottom:15px;">📊 Quick Comparison</div>
+      <table style="width:100%;font-size:0.95em;">
+        <tr style="background:#667eea;color:white;">
+          <th style="padding:12px;">Level</th>
+          <th style="padding:12px;">Can Survive</th>
+          <th style="padding:12px;">RAIDs</th>
+        </tr>
+        <tr>
+          <td style="padding:12px;font-weight:700;">Failure Resistant</td>
+          <td style="padding:12px;">1 disk failure</td>
+          <td style="padding:12px;">RAID 1, RAID 5</td>
+        </tr>
+        <tr style="background:#f9f9f9;">
+          <td style="padding:12px;font-weight:700;">Fault Tolerant</td>
+          <td style="padding:12px;">Component fails, keeps running</td>
+          <td style="padding:12px;">RAID 1, 5, 6</td>
+        </tr>
+        <tr>
+          <td style="padding:12px;font-weight:700;">Disaster Tolerant</td>
+          <td style="padding:12px;">Entire zone/pair failure</td>
+          <td style="padding:12px;">RAID 10</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
