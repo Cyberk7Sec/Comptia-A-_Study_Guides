@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompTIA A+ Core 1 — Study Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090d;
+  --surface: #0d1117;
+  --card: #111820;
+  --card2: #141d27;
+  --border: #1e2c3a;
+  --border2: #243040;
+  --accent: #e8292a;
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,0.12);
+  --green-border: rgba(34,197,94,0.3);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.1);
+  --red-border: rgba(239,68,68,0.3);
+  --yellow: #facc15;
+  --yellow-dim: rgba(250,204,21,0.1);
+  --yellow-border: rgba(250,204,21,0.3);
+  --cyan: #38bdf8;
+  --text: #cbd5e1;
+  --text2: #94a3b8;
+  --white: #f1f5f9;
+  --mono: 'Share Tech Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;font-size:15px;line-height:1.6;}
+
+/* LAYOUT */
+.wrap{max-width:1000px;margin:0 auto;padding:40px 20px;}
+
+/* HEADER */
+header{margin-bottom:40px;}
+.exam-tag{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;padding:5px 14px;border-radius:2px;margin-bottom:16px;font-family:var(--mono);}
+.main-title{font-family:'Inter',sans-serif;font-size:clamp(36px,6vw,64px);font-weight:900;letter-spacing:-2px;color:var(--white);line-height:1;}
+.main-title .highlight{color:var(--accent);}
+.tagline{font-family:var(--mono);font-size:12px;color:var(--text2);letter-spacing:2px;margin-top:10px;}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:6px;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;}
+.leg-dot{width:10px;height:10px;border-radius:50%;}
+.leg-green{background:var(--green);}
+.leg-yellow{background:var(--yellow);}
+.leg-red{background:var(--red);}
+
+/* PROGRESS */
+.progress-wrap{display:flex;align-items:center;gap:14px;margin-top:16px;}
+.progress-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--yellow));width:0%;transition:width .5s ease;}
+.progress-text{font-family:var(--mono);font-size:11px;color:var(--text2);white-space:nowrap;}
+
+/* STATUS SUMMARY */
+.status-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px 14px;text-align:center;}
+.stat-num{font-size:26px;font-weight:900;line-height:1;}
+.stat-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;margin-top:3px;}
+.stat-green .stat-num{color:var(--green);}
+.stat-yellow .stat-num{color:var(--yellow);}
+.stat-red .stat-num{color:var(--red);}
+.stat-green .stat-label{color:var(--green);}
+.stat-yellow .stat-label{color:var(--yellow);}
+.stat-red .stat-label{color:var(--red);}
+
+/* DOMAIN */
+.domain{margin-bottom:40px;}
+.domain-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:6px;}
+.domain-title{font-size:17px;font-weight:800;color:var(--white);letter-spacing:-0.3px;}
+.domain-pct{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--yellow);background:var(--yellow-dim);padding:4px 10px;border:1px solid var(--yellow-border);border-radius:3px;}
+
+/* TOPIC CARD */
+.topics-grid{display:flex;flex-direction:column;gap:10px;}
+.topic-card{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color .2s,background .2s;}
+.topic-card:hover{border-color:var(--border2);}
+.topic-card.got-it{border-left-color:var(--green);background:rgba(34,197,94,0.03);}
+.topic-card.memorize{border-left-color:var(--yellow);background:rgba(250,204,21,0.03);}
+.topic-card.shaky{border-left-color:var(--red);background:rgba(239,68,68,0.03);}
+
+/* TOPIC HEADER */
+.topic-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none;}
+.status-dot{width:10px;height:10px;border-radius:50%;background:var(--border);flex-shrink:0;transition:all .2s;}
+.got-it .status-dot{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,0.5);}
+.memorize .status-dot{background:var(--yellow);box-shadow:0 0 8px rgba(250,204,21,0.5);}
+.shaky .status-dot{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,0.5);}
+.topic-name{flex:1;font-size:15px;font-weight:700;color:var(--white);}
+.memo-btn{background:var(--yellow-dim);border:1px solid var(--yellow-border);color:var(--yellow);font-family:var(--mono);font-size:9px;letter-spacing:1px;padding:5px 10px;cursor:pointer;border-radius:3px;flex-shrink:0;font-weight:600;}
+.memo-btn:hover{background:var(--yellow);color:#000;}
+.chevron{color:var(--text2);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.topic-card.open .chevron{transform:rotate(90deg);}
+
+/* TOPIC BODY */
+.topic-body{display:none;border-top:1px solid var(--border);}
+.topic-card.open .topic-body{display:block;}
+
+/* IMAGE ROW */
+.image-row{display:flex;gap:10px;padding:16px;overflow-x:auto;background:var(--card2);}
+.drop-zone{width:180px;height:120px;flex-shrink:0;border:2px dashed var(--border2);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;background:var(--card);}
+.drop-zone:hover{border-color:var(--cyan);background:rgba(56,189,248,0.05);}
+.drop-zone.has-image{border-style:solid;border-color:var(--border2);}
+.drop-zone.drag-over{border-color:var(--cyan);background:rgba(56,189,248,0.1);transform:scale(1.02);}
+.drop-zone img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.drop-zone .dz-content{display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;}
+.drop-zone .dz-icon{font-size:28px;}
+.drop-zone .dz-label{font-family:var(--mono);font-size:9px;color:var(--text2);letter-spacing:1px;text-align:center;padding:0 8px;}
+.drop-zone .dz-hint{font-family:var(--mono);font-size:8px;color:var(--border2);letter-spacing:1px;}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.drop-zone .remove-img{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.7);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2;}
+.drop-zone.has-image:hover .remove-img{display:flex;}
+.img-caption{text-align:center;margin-top:6px;}
+.img-caption-text{font-family:var(--mono);font-size:9px;color:var(--text2);letter-spacing:1px;}
+
+/* CONTENT */
+.content-pad{padding:16px;}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px;margin-top:16px;}
+.section-label:first-child{margin-top:0;}
+.topic-body p{font-size:14px;line-height:1.75;color:var(--text);}
+.parts-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.part-tag{font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.2);color:var(--text);border-radius:3px;}
+.gotcha-box{margin-top:14px;padding:12px 14px;background:rgba(250,204,21,0.06);border-left:3px solid var(--yellow);border-radius:0 4px 4px 0;}
+.gotcha-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--yellow);font-weight:700;margin-bottom:5px;}
+.gotcha-box p{font-size:13px;color:var(--text);line-height:1.7;}
+
+/* ACTION BUTTONS */
+.action-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px;}
+.act-btn{padding:11px 8px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;border:1px solid transparent;cursor:pointer;border-radius:4px;transition:all .15s;}
+.btn-got{background:var(--green-dim);color:var(--green);border-color:var(--green-border);}
+.btn-got:hover,.got-it .btn-got{background:var(--green);color:#000;border-color:var(--green);}
+.btn-mem{background:var(--yellow-dim);color:var(--yellow);border-color:var(--yellow-border);}
+.btn-mem:hover,.memorize .btn-mem{background:var(--yellow);color:#000;border-color:var(--yellow);}
+.btn-shaky{background:var(--red-dim);color:var(--red);border-color:var(--red-border);}
+.btn-shaky:hover,.shaky .btn-shaky{background:var(--red);color:#fff;border-color:var(--red);}
+
+/* BOTTOM ACTIONS */
+.bottom-actions{margin-top:40px;display:flex;gap:10px;flex-wrap:wrap;}
+.main-btn{padding:13px 26px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;border:none;cursor:pointer;border-radius:4px;transition:all .2s;}
+.btn-weakness{background:var(--accent);color:#fff;}
+.btn-weakness:hover{background:#ff3333;box-shadow:0 0 20px rgba(232,41,42,0.35);}
+.btn-drill{background:var(--yellow);color:#000;}
+.btn-drill:hover{background:#fde047;}
+.btn-reset{background:transparent;color:var(--text2);border:1px solid var(--border);}
+.btn-reset:hover{color:var(--white);border-color:var(--border2);}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;overflow-y:auto;padding:40px 20px;}
+.modal-overlay.show{display:flex;align-items:flex-start;justify-content:center;}
+.modal{background:var(--surface);border:1px solid var(--border);max-width:740px;width:100%;padding:32px;position:relative;border-radius:8px;}
+.modal-title{font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--white);margin-bottom:4px;}
+.modal-title.red{color:var(--accent);}
+.modal-title.yellow{color:var(--yellow);}
+.modal-sub{font-family:var(--mono);font-size:10px;color:var(--text2);letter-spacing:2px;margin-bottom:24px;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;padding:6px 14px;font-family:var(--mono);font-size:11px;border-radius:3px;}
+.modal-close:hover{color:var(--white);border-color:var(--border2);}
+.print-btn{margin-top:20px;padding:12px 24px;background:var(--accent);color:#fff;border:none;font-family:'Inter',sans-serif;font-weight:700;font-size:13px;cursor:pointer;border-radius:4px;}
+.empty-state{text-align:center;padding:40px;color:var(--text2);font-family:var(--mono);font-size:12px;letter-spacing:2px;line-height:2.5;}
+
+/* WEAKNESS ITEMS */
+.weakness-item{padding:16px;border:1px solid var(--red-border);border-left:4px solid var(--red);margin-bottom:12px;background:var(--red-dim);border-radius:4px;}
+.drill-item{padding:16px;border:1px solid var(--yellow-border);border-left:4px solid var(--yellow);margin-bottom:12px;background:var(--yellow-dim);border-radius:4px;}
+.wi-domain{font-family:var(--mono);font-size:9px;color:var(--text2);letter-spacing:2px;margin-bottom:5px;}
+.wi-name{font-size:17px;font-weight:800;color:var(--white);letter-spacing:-0.3px;margin-bottom:8px;}
+.wi-summary{font-size:13px;color:var(--text);line-height:1.7;}
+.wi-memo{margin-top:12px;padding:10px 12px;background:rgba(250,204,21,0.06);border-left:2px solid var(--yellow);border-radius:0 3px 3px 0;}
+.wi-memo-label{font-family:var(--mono);font-size:9px;color:var(--yellow);letter-spacing:2px;font-weight:700;margin-bottom:6px;}
+.wi-memo ul{padding-left:16px;}
+.wi-memo li{font-size:12px;color:var(--text);line-height:1.7;}
+
+/* MUST MEMORIZE POPUP */
+.memo-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.memo-overlay.show{display:flex;}
+.memo-box{background:#0d1520;border:2px solid var(--yellow);max-width:660px;width:100%;max-height:88vh;overflow-y:auto;border-radius:8px;position:relative;}
+.memo-header{background:var(--yellow);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:6px 6px 0 0;}
+.memo-header h3{font-size:18px;font-weight:900;color:#000;letter-spacing:-0.5px;}
+.memo-close-btn{background:none;border:none;font-size:22px;cursor:pointer;color:#000;font-weight:900;line-height:1;}
+.memo-body{padding:20px;}
+.memo-topic-name{font-family:var(--mono);font-size:10px;color:var(--yellow);letter-spacing:2px;margin-bottom:16px;}
+.memo-item{display:flex;gap:14px;padding:12px 14px;margin-bottom:8px;background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:4px;}
+.memo-num{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--yellow);flex-shrink:0;line-height:1;min-width:28px;}
+.memo-text{font-size:14px;line-height:1.65;color:var(--white);}
+.memo-text strong{color:var(--yellow);}
+.memo-tip{margin-top:16px;padding:12px 14px;background:rgba(232,41,42,0.08);border-left:3px solid var(--accent);border-radius:0 4px 4px 0;}
+.memo-tip-label{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:2px;font-weight:700;margin-bottom:4px;}
+.memo-tip p{font-size:13px;color:var(--text);line-height:1.65;}
+
+@media(max-width:600px){
+  .action-btns{grid-template-columns:1fr;}
+  .status-summary{grid-template-columns:repeat(3,1fr);}
+}
+@media print{
+  body{background:#fff;color:#000;}
+  .modal-overlay{display:block;position:static;background:none;padding:0;}
+  .modal{border:none;padding:0;}
+  .modal-close,.print-btn,header,.domain,.bottom-actions,.memo-overlay{display:none!important;}
+  .weakness-item,.drill-item{border:1px solid #ccc;page-break-inside:avoid;}
+  .wi-name{color:#000;}
+  .wi-summary{color:#333;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="exam-tag">📋 220-1101</div>
+    <div class="main-title">CompTIA A+<br><span class="highlight">Core 1</span> Tracker</div>
+    <div class="tagline">// CLICK TOPIC → MEMORIZE → STUDY → MARK YOUR STATUS</div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="leg-dot leg-green"></div> Got It — understood & confident</div>
+      <div class="legend-item"><div class="leg-dot leg-yellow"></div> Needs Memorizing — understand it, just need to drill it</div>
+      <div class="legend-item"><div class="leg-dot leg-red"></div> Still Shaky — need more study</div>
+    </div>
+
+    <div class="status-summary">
+      <div class="stat-box stat-green"><div class="stat-num" id="countGreen">0</div><div class="stat-label">GOT IT</div></div>
+      <div class="stat-box stat-yellow"><div class="stat-num" id="countYellow">0</div><div class="stat-label">MEMORIZE</div></div>
+      <div class="stat-box stat-red"><div class="stat-num" id="countRed">0</div><div class="stat-label">SHAKY</div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">0 / 0 reviewed</div>
+    </div>
+  </header>
+
+  <div id="topicsContainer"></div>
+
+  <div class="bottom-actions">
+    <button class="main-btn btn-weakness" onclick="openModal('weakness')">🔴 WEAKNESS SHEET</button>
+    <button class="main-btn btn-drill" onclick="openModal('drill')">⚡ DRILL LIST</button>
+    <button class="main-btn btn-reset" onclick="resetAll()">↺ Reset All</button>
+  </div>
+</div>
+
+<!-- Must Memorize Popup -->
+<div class="memo-overlay" id="memoOverlay" onclick="closeMemoOutside(event)">
+  <div class="memo-box" id="memoBox">
+    <div class="memo-header">
+      <h3>⚡ MUST MEMORIZE</h3>
+      <button class="memo-close-btn" onclick="closeMemo()">✕</button>
+    </div>
+    <div class="memo-body" id="memoBody"></div>
+  </div>
+</div>
+
+<!-- Weakness Modal -->
+<div class="modal-overlay" id="weaknessModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('weakness')">✕ CLOSE</button>
+    <div class="modal-title red">🔴 Weakness Sheet</div>
+    <div class="modal-sub">// TOPICS MARKED "STILL SHAKY" — NEEDS FULL REVIEW</div>
+    <div id="weaknessContent"></div>
+    <button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
+  </div>
+</div>
+
+<!-- Drill Modal -->
+<div class="modal-overlay" id="drillModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('drill')">✕ CLOSE</button>
+    <div class="modal-title yellow">⚡ Drill List</div>
+    <div class="modal-sub">// TOPICS YOU UNDERSTAND BUT NEED TO MEMORIZE — DRILL THESE</div>
+    <div id="drillContent"></div>
+    <button class="print-btn" style="background:var(--yellow);color:#000;" onclick="window.print()">🖨 Print / Save PDF</button>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────
+// DATA
+// ─────────────────────────────────────
+const TOPICS = [
+  {
+    domain:"3.0 Hardware", pct:"25%", id:"hw",
+    topics:[
+      {
+        id:"hw1", name:"Motherboard Components & Form Factors",
+        imgSlots:["Motherboard (full view)","ATX vs Mini-ITX size","PCIe + SATA slots closeup"],
+        mustMemorize:[
+          {text:"<strong>ATX</strong> = standard full size, most expansion slots"},
+          {text:"<strong>Micro-ATX</strong> = smaller, fewer slots, still fits ATX cases"},
+          {text:"<strong>Mini-ITX</strong> = tiny, only ONE PCIe x16 slot"},
+          {text:"<strong>24-pin connector</strong> = main motherboard power"},
+          {text:"<strong>CMOS Battery</strong> = CR2032 coin cell — keeps BIOS settings when powered off"},
+          {text:"<strong>DIMM slots</strong> = desktop RAM | <strong>SODIMM</strong> = laptop RAM"},
+          {text:"<strong>M.2 slot</strong> = NVMe or SATA SSD (looks the same, different speed)"},
+        ],
+        memotip:"ATX = most slots. Mini-ITX = one PCIe slot only. Dead CMOS battery = BIOS resets every time you power off.",
+        summary:"The motherboard connects every component. Know form factors (ATX, Micro-ATX, Mini-ITX), what's on the board (CPU socket, RAM slots, PCIe, M.2, SATA), and all power connectors.",
+        parts:["CPU Socket","DIMM Slots","PCIe x16 / x1","M.2 Slot","SATA Ports","24-pin ATX","8-pin EPS (CPU)","CMOS Battery","Chipset","USB/Front Panel Headers"],
+        gotcha:"Mini-ITX has only ONE PCIe slot. ATX has the most. CMOS battery reset = BIOS loses settings. The exam will describe symptoms and ask you to pick the cause."
+      },
+      {
+        id:"hw2", name:"CPUs — Sockets & Cooling",
+        imgSlots:["Intel CPU (LGA pins on socket)","AMD CPU (PGA pins on chip)","Heatsink + thermal paste"],
+        mustMemorize:[
+          {text:"<strong>LGA</strong> (Land Grid Array) = pins are on the SOCKET → Intel"},
+          {text:"<strong>PGA</strong> (Pin Grid Array) = pins are on the CPU → older AMD"},
+          {text:"<strong>Intel and AMD sockets are NOT interchangeable</strong>"},
+          {text:"<strong>Thermal paste</strong> goes BETWEEN CPU and heatsink — always required"},
+          {text:"<strong>Air cooling</strong> = heatsink + fan (HSF)"},
+          {text:"<strong>Liquid cooling (AIO)</strong> = pump, radiator, fans — quieter, better performance"},
+        ],
+        memotip:"LGA = Land = socket has pins (Intel). PGA = Pins on chip (AMD). Never mix sockets. No thermal paste = CPU overheats = throttling or shutdown.",
+        summary:"CPU is the brain. Intel uses LGA (pins on socket), AMD uses PGA (pins on chip). They are NOT interchangeable. Cooling is critical — always apply thermal paste between CPU and heatsink.",
+        parts:["Intel LGA Socket","AMD AM4/AM5 Socket","Heatsink + Fan (HSF)","Thermal Paste","AIO Liquid Cooler","Cores / Threads","Clock Speed (GHz)"],
+        gotcha:"LGA = pins on socket (Intel). PGA = pins on CPU (AMD). CPU overheating = check thermal paste and fan seating first. Thermal paste is not optional."
+      },
+      {
+        id:"hw3", name:"RAM — Types & Slots",
+        imgSlots:["DDR4 DIMM (desktop)","SODIMM (laptop, shorter)","DDR4 vs DDR5 notch comparison"],
+        mustMemorize:[
+          {text:"<strong>DIMM</strong> = Desktop RAM (full length)"},
+          {text:"<strong>SODIMM</strong> = Laptop RAM (shorter)"},
+          {text:"<strong>DDR4 ≠ DDR5</strong> — different notch positions, physically incompatible"},
+          {text:"<strong>Dual channel</strong> = 2 matched sticks in correct slots = faster"},
+          {text:"<strong>ECC RAM</strong> = Error Correcting Code = servers only"},
+          {text:"RAM type must match what the motherboard supports"},
+        ],
+        memotip:"SO = Small Outline = laptop. DDR4 and DDR5 notches are in different positions — you cannot physically install the wrong type. Always check motherboard specs before buying RAM.",
+        summary:"Desktops use DIMMs, laptops use SODIMMs. DDR4 and DDR5 are current standards — not interchangeable. Install in matched pairs for dual-channel performance.",
+        parts:["DDR4","DDR5","DIMM (desktop)","SODIMM (laptop)","Dual Channel","ECC RAM","Speed (MHz / MT/s)"],
+        gotcha:"SODIMM = laptop, always. DDR4 and DDR5 have different notches so you physically can't mix them. Dual channel requires matched pairs in the correct color-coded slots."
+      },
+      {
+        id:"hw4", name:"Storage — HDD, SSD, NVMe",
+        imgSlots:["HDD (3.5\" spinning platter)","NVMe M.2 SSD (no cables)","SATA cable + SATA SSD"],
+        mustMemorize:[
+          {text:"<strong>Speed order: HDD &lt; SATA SSD &lt; NVMe</strong> (NVMe is fastest)"},
+          {text:"<strong>HDD</strong> = spinning platters, 3.5\" desktop / 2.5\" laptop"},
+          {text:"<strong>SATA SSD</strong> = solid state, uses SATA data cable (same as HDD)"},
+          {text:"<strong>NVMe M.2</strong> = plugs directly into M.2 slot — NO cable needed"},
+          {text:"<strong>M.2 slot can hold SATA or NVMe</strong> — looks the same, very different speed"},
+          {text:"<strong>RAID 0</strong> = striping = speed, NO redundancy"},
+          {text:"<strong>RAID 1</strong> = mirroring = redundancy, data protection"},
+          {text:"<strong>RAID 5</strong> = striping + parity, min 3 drives"},
+          {text:"<strong>RAID 10</strong> = striping + mirroring, min 4 drives"},
+          {text:"<strong>NEVER defrag an SSD</strong> — reduces lifespan"},
+        ],
+        memotip:"NVMe is ALWAYS fastest. M.2 slot = could be SATA or NVMe (check specs). RAID 1 = mirror = I have a copy. RAID 0 = fast but if one drive dies you lose everything.",
+        summary:"Three storage types in order of speed: HDD (slowest), SATA SSD, NVMe (fastest). NVMe uses M.2 slot with no cable. Know RAID levels. Never defrag SSDs.",
+        parts:["HDD 3.5\" / 2.5\"","SATA SSD","NVMe M.2","SATA Data Cable","M.2 Slot","RAID 0/1/5/10","S.M.A.R.T."],
+        gotcha:"M.2 slot accepts both SATA and NVMe drives — they look identical but NVMe is much faster. Never defrag SSD. SMART warning = back up your data immediately."
+      },
+      {
+        id:"hw5", name:"Power Supply (PSU)",
+        imgSlots:["PSU unit (modular)","24-pin ATX connector","SATA power + Molex connectors"],
+        mustMemorize:[
+          {text:"<strong>24-pin ATX</strong> = main motherboard power (large connector)"},
+          {text:"<strong>8-pin EPS</strong> = CPU power (near CPU socket on motherboard)"},
+          {text:"<strong>6/8-pin PCIe</strong> = dedicated GPU power"},
+          {text:"<strong>SATA power</strong> = flat L-shaped, for drives"},
+          {text:"<strong>Molex</strong> = large 4-pin, older fans and legacy devices"},
+          {text:"<strong>80+ rating</strong> = efficiency (Bronze → Silver → Gold → Platinum)"},
+          {text:"<strong>Modular</strong> = detachable cables | <strong>Non-modular</strong> = all cables fixed"},
+        ],
+        memotip:"Random shutdowns under load = PSU first. Undersized PSU = can't power GPU = crash. 24-pin = mobo, 8-pin EPS = CPU, PCIe = GPU. These three power the main components.",
+        summary:"PSU converts AC wall power to DC. Must provide enough wattage. Know all connector types. Modular PSUs let you use only the cables you need.",
+        parts:["24-pin ATX","8-pin EPS (CPU)","PCIe 6/8-pin (GPU)","SATA Power","Molex (4-pin)","80+ Rating","Modular / Non-Modular"],
+        gotcha:"Random shutdown under load = suspect PSU. If fan spins but no POST = undersized or failed PSU. Check PSU wattage vs component requirements."
+      },
+      {
+        id:"hw6", name:"Expansion Cards & PCIe Slots",
+        imgSlots:["PCIe x16 slot (long, for GPU)","PCIe x1 slot (short, for NIC/sound)","GPU installed in x16 slot"],
+        mustMemorize:[
+          {text:"<strong>PCIe x16</strong> = longest slot = GPU (highest bandwidth)"},
+          {text:"<strong>PCIe x1</strong> = shortest slot = NIC, sound card, small cards"},
+          {text:"<strong>x16 slot CAN accept x1 card</strong> (open-ended) — NOT vice versa"},
+          {text:"<strong>Integrated GPU</strong> = built-in, uses shared system RAM (slower)"},
+          {text:"<strong>Dedicated GPU</strong> = separate card with its own VRAM (faster)"},
+          {text:"<strong>GPU goes in x16 slot closest to the CPU</strong> for best performance"},
+        ],
+        memotip:"Bigger slot accepts smaller card, not the reverse. GPU always x16. Screen artifacts (glitches, lines, random colors) = GPU issue.",
+        summary:"PCIe slots connect expansion cards. x16 for GPU (most bandwidth), x1 for smaller cards. Integrated GPU shares system RAM. Dedicated GPU has its own VRAM.",
+        parts:["GPU","NIC (Network Card)","Sound Card","PCIe x16","PCIe x1","VRAM","Capture Card"],
+        gotcha:"Artifacts on screen = GPU. Integrated GPU uses system RAM (slower). A bigger PCIe slot can accept a smaller card with an open-ended slot."
+      },
+      {
+        id:"hw7", name:"Cables & Connectors",
+        imgSlots:["Display connectors (HDMI, DP, VGA, DVI)","USB-A, B, C, Micro, Mini comparison","Thunderbolt vs USB-C (lightning bolt icon)"],
+        mustMemorize:[
+          {text:"<strong>HDMI</strong> = audio + video, common on TVs and monitors"},
+          {text:"<strong>DisplayPort</strong> = audio + video, higher bandwidth, gaming/professional"},
+          {text:"<strong>VGA</strong> = analog only, 15-pin, blue connector, LEGACY"},
+          {text:"<strong>DVI-D</strong> = digital only | <strong>DVI-I</strong> = digital + analog | <strong>DVI-A</strong> = analog only"},
+          {text:"<strong>USB-A</strong> = rectangular | <strong>USB-B</strong> = square (printers) | <strong>USB-C</strong> = oval, reversible"},
+          {text:"<strong>USB 3.0</strong> = BLUE port/connector inside"},
+          {text:"<strong>Thunderbolt</strong> = same shape as USB-C but NOT the same — look for ⚡ icon"},
+        ],
+        memotip:"VGA = blue = old = analog only. USB 3.0 = blue inside. DVI-I = I for Integrated (digital AND analog). Thunderbolt looks like USB-C but has a lightning bolt icon.",
+        summary:"Know every connector by appearance and name. Display: HDMI, DisplayPort, VGA (legacy), DVI variants. Data: USB-A/B/C, Thunderbolt. USB 3.0 is always color-coded blue.",
+        parts:["HDMI","DisplayPort","VGA (15-pin blue)","DVI-D / DVI-I / DVI-A","USB-A / USB-B / USB-C","Micro-USB / Mini-USB","Thunderbolt (⚡ icon)","SATA Data Cable"],
+        gotcha:"Thunderbolt uses USB-C connector but is NOT USB. Identified by the lightning bolt (⚡) icon. USB 3.0 = blue. DVI-I supports both digital and analog signals."
+      },
+      {
+        id:"hw8", name:"BIOS / UEFI",
+        imgSlots:["UEFI setup screen","CMOS battery location on motherboard","TPM chip on motherboard"],
+        mustMemorize:[
+          {text:"<strong>POST</strong> = Power-On Self Test — runs every boot to check hardware"},
+          {text:"<strong>UEFI</strong> = modern BIOS — GUI interface, supports drives >2TB, faster boot"},
+          {text:"<strong>Secure Boot</strong> = only allows signed OSes to load (disable for Linux)"},
+          {text:"<strong>CMOS battery</strong> = CR2032 coin cell — stores BIOS settings when off"},
+          {text:"<strong>Dead CMOS battery</strong> = BIOS resets date/time and settings every boot"},
+          {text:"<strong>TPM 2.0</strong> = security chip, required for Windows 11"},
+          {text:"<strong>Boot order</strong> = controls which device (SSD, USB, DVD) boots first"},
+        ],
+        memotip:"BIOS loses settings on every boot = dead CMOS battery. TPM = Windows 11 needs it enabled in BIOS. Secure Boot = must disable to install Linux.",
+        summary:"BIOS/UEFI is firmware that initializes hardware before the OS loads. POST checks hardware on startup. CMOS battery keeps settings. TPM required for Win 11.",
+        parts:["POST","UEFI vs Legacy BIOS","Secure Boot","Boot Order","CMOS Battery (CR2032)","TPM 2.0","Virtualization Setting (VT-x)"],
+        gotcha:"BIOS resetting = dead CMOS battery. TPM 2.0 must be enabled for Windows 11. Secure Boot blocks unsigned OSes — disable it for Linux dual-boot."
+      }
+    ]
+  },
+  {
+    domain:"5.0 Hardware & Network Troubleshooting", pct:"28%", id:"ts",
+    topics:[
+      {
+        id:"ts1", name:"Troubleshooting Methodology — The 6 Steps",
+        imgSlots:["Step 1-3 flowchart","Step 4-6 flowchart","Documentation example"],
+        mustMemorize:[
+          {text:"<strong>Step 1:</strong> Identify the problem (ask questions, gather symptoms)"},
+          {text:"<strong>Step 2:</strong> Establish a theory of probable cause"},
+          {text:"<strong>Step 3:</strong> Test the theory — if WRONG → go back to Step 2"},
+          {text:"<strong>Step 4:</strong> Establish a plan of action + identify effects"},
+          {text:"<strong>Step 5:</strong> Implement the solution or escalate"},
+          {text:"<strong>Step 6:</strong> Verify full functionality + DOCUMENT everything"},
+          {text:"Documentation is ALWAYS last. If theory fails, return to Step 2 (not Step 1)"},
+        ],
+        memotip:"If the exam asks 'what is the NEXT step' — follow the order strictly. Theory fails = back to Step 2. Document = always last (Step 6). Never skip to implementation without a plan.",
+        summary:"CompTIA's 6-step troubleshooting methodology is tested directly. Know the exact order and what happens when each step fails. Documentation is always the final step.",
+        parts:["Step 1: Identify","Step 2: Theory","Step 3: Test","Step 4: Plan","Step 5: Implement","Step 6: Verify & Document"],
+        gotcha:"Theory fails in Step 3 → return to Step 2, NOT Step 1. Documentation is always Step 6 — always last. Exam scenario questions always test 'what is the next step'."
+      },
+      {
+        id:"ts2", name:"POST & Boot Failures",
+        imgSlots:["Beep code chart","BSOD screen","No signal / black screen example"],
+        mustMemorize:[
+          {text:"<strong>1 short beep</strong> = POST passed successfully"},
+          {text:"<strong>Multiple beeps</strong> = hardware failure (pattern tells you which component)"},
+          {text:"<strong>No beeps + no display</strong> = PSU or motherboard failed"},
+          {text:"<strong>#1 fix for POST failure</strong> = reseat the RAM first"},
+          {text:"<strong>Black screen after POST</strong> = OS or storage issue (not hardware)"},
+          {text:"<strong>Missing OS error</strong> = wrong boot order or drive failed"},
+        ],
+        memotip:"Always reseat RAM first when nothing POSTs — most common fix, takes 30 seconds. One beep = good. No beeps AND no display = PSU or motherboard suspect.",
+        summary:"POST runs at every startup. Failures show as beep codes or blank screens. No POST = RAM, PSU, CPU, or motherboard. Black screen after BIOS = OS/drive issue.",
+        parts:["Beep Codes","No POST","Black Screen","Missing OS Error","BIOS Access","Reseating RAM"],
+        gotcha:"1 beep = good. Multiple beeps = component failed. No beeps + no display = PSU or mobo. Reseat RAM first — it fixes POST failures more often than anything else."
+      },
+      {
+        id:"ts3", name:"Hardware Failure Symptoms",
+        imgSlots:["BSOD (Blue Screen of Death)","GPU artifacts / screen glitch","Swollen capacitors on motherboard"],
+        mustMemorize:[
+          {text:"<strong>BSOD</strong> = RAM failure, bad driver, or storage problem"},
+          {text:"<strong>Screen artifacts</strong> (glitches, lines, wrong colors) = GPU problem"},
+          {text:"<strong>Thermal shutdown</strong> = CPU/GPU overheating → check fans + thermal paste"},
+          {text:"<strong>Random restarts under load</strong> = PSU or overheating"},
+          {text:"<strong>Grinding / clicking noise</strong> = HDD dying — back up immediately"},
+          {text:"<strong>Burning smell</strong> = component failed — POWER OFF immediately"},
+          {text:"<strong>SMART failure warning</strong> = HDD predicting its own death → back up NOW"},
+          {text:"<strong>Capacitor bulge</strong> on motherboard = failed motherboard"},
+        ],
+        memotip:"Match symptom to component: Artifacts=GPU, BSOD+memory errors=RAM, grinding=HDD, random shutdowns under load=PSU, burning smell=power off first.",
+        summary:"Identify which component is failing based on symptoms. Artifacts = GPU. BSOD = RAM or drivers. Grinding/clicking = HDD dying. Burning smell = power off immediately.",
+        parts:["BSOD","Screen Artifacts","Thermal Shutdown","Random Restarts","Grinding Noise","Burning Smell","SMART Warning","Capacitor Bulge"],
+        gotcha:"Artifacts = GPU. BSOD + memory error codes = RAM. SMART failure = imminent HDD death. Clicking + grinding = mechanical failure. Power off on burning smell — don't wait."
+      },
+      {
+        id:"ts4", name:"Storage Troubleshooting",
+        imgSlots:["CHKDSK running in command prompt","SMART status tool (CrystalDiskInfo)","Drive not detected in BIOS"],
+        mustMemorize:[
+          {text:"<strong>Drive not in BIOS</strong> = check SATA cable + power connector first"},
+          {text:"<strong>CHKDSK</strong> = Windows tool to check and repair drive file system errors"},
+          {text:"<strong>SMART failure</strong> = HDD predicting failure — back up immediately"},
+          {text:"<strong>HDD slow</strong> = may need defragmentation"},
+          {text:"<strong>SSD NEVER needs defragmentation</strong> — it reduces SSD lifespan"},
+          {text:"<strong>Clicking HDD</strong> = mechanical failure — data loss is imminent"},
+        ],
+        memotip:"SSD = never defrag. HDD = defrag OK. Drive not showing in BIOS = physical connection first (cable or power). CHKDSK = fix file system. Clicking = replace the drive NOW.",
+        summary:"Drive not detected → check cables and BIOS. CHKDSK repairs file errors. SMART warns before drive fails. SSD never needs defrag. Clicking HDD = replace immediately.",
+        parts:["SMART Failure","Drive Not Detected","Slow Performance","CHKDSK","Drive Clicking","Defrag (HDD only, never SSD)"],
+        gotcha:"SSDs do NOT need defragmentation — it wears flash memory unnecessarily. CHKDSK repairs file system. Clicking drive = replace it and restore from backup."
+      },
+      {
+        id:"ts5", name:"Display & Video Troubleshooting",
+        imgSlots:["No signal on monitor","Flashlight test on dim laptop screen","Dead pixel vs stuck pixel comparison"],
+        mustMemorize:[
+          {text:"<strong>No display</strong> = test cable first, then try different monitor"},
+          {text:"<strong>Image on mobo port but NOT GPU port</strong> = GPU failed or not seated"},
+          {text:"<strong>Flickering</strong> = loose cable or driver issue"},
+          {text:"<strong>Dim laptop screen</strong> = backlight or inverter failed"},
+          {text:"<strong>Flashlight test</strong> = shine flashlight on dim screen → if you see content = backlight dead (not whole screen)"},
+          {text:"<strong>Dead pixel</strong> = always black | <strong>Stuck pixel</strong> = always one color"},
+          {text:"<strong>Burn-in</strong> = image permanently on screen (OLED / old plasma)"},
+        ],
+        memotip:"Always test cable and monitor first before blaming GPU. Flashlight + dim screen = backlight is dead (cheaper fix). Dead pixel = black. Stuck pixel = color.",
+        summary:"Troubleshoot displays systematically: cable → monitor → GPU seating. Laptop dim = backlight. Flashlight test identifies backlight vs screen failure.",
+        parts:["No Signal","Flickering","Dead Pixel","Stuck Pixel","Burn-in","Dim Backlight","LCD Inverter"],
+        gotcha:"Flashlight on dim laptop = if you see a faint image the backlight is dead, not the whole screen. Test cable and monitor before assuming GPU failure."
+      },
+      {
+        id:"ts6", name:"Network Troubleshooting (Layered Approach)",
+        imgSlots:["ipconfig output showing 169.254.x.x","Ping command in CMD","Link light on NIC / switch"],
+        mustMemorize:[
+          {text:"<strong>Step 1:</strong> Check cable + link light on NIC"},
+          {text:"<strong>Step 2:</strong> Run ipconfig — check your IP address"},
+          {text:"<strong>Step 3:</strong> ping 127.0.0.1 — loopback, tests your own TCP/IP stack"},
+          {text:"<strong>Step 4:</strong> ping default gateway — tests local network connection"},
+          {text:"<strong>Step 5:</strong> ping external IP (8.8.8.8) — tests internet path"},
+          {text:"<strong>169.254.x.x</strong> = APIPA = DHCP server not found, no internet"},
+          {text:"<strong>No link light</strong> = bad cable, wrong port, or device off"},
+          {text:"<strong>DNS failure</strong> = can ping IP but websites won't load"},
+        ],
+        memotip:"169.254.x.x = APIPA = DHCP failed = no internet. Always go physical → local → internet. If pinging 8.8.8.8 works but websites don't = DNS is broken.",
+        summary:"Always troubleshoot from physical layer up. Check cable, check IP, ping loopback, ping gateway, ping internet. APIPA = DHCP failure. DNS failure = IPs work but domains don't.",
+        parts:["ipconfig","ping 127.0.0.1","ping gateway","ping 8.8.8.8","Link Light","169.254.x.x (APIPA)","DNS Failure"],
+        gotcha:"169.254.x.x = APIPA = no DHCP = no internet. Ping 8.8.8.8 works but browser fails = DNS issue. Always go physical first before touching software settings."
+      },
+      {
+        id:"ts7", name:"Laptop-Specific Troubleshooting",
+        imgSlots:["Laptop Wi-Fi Fn key toggle","Compressed air cleaning laptop vents","Laptop DC power jack"],
+        mustMemorize:[
+          {text:"<strong>Wi-Fi not working</strong> = check Fn key Wi-Fi toggle FIRST"},
+          {text:"<strong>Battery not charging</strong> = bad battery, charger, or DC jack"},
+          {text:"<strong>Overheating</strong> = clogged vents → compressed air (power off first)"},
+          {text:"<strong>No display but sounds = screen/backlight issue</strong> (use flashlight test)"},
+          {text:"<strong>Touchpad not working</strong> = check Fn key disable toggle"},
+          {text:"<strong>Keys not responding</strong> = debris under keyboard or hardware failure"},
+        ],
+        memotip:"Physical Wi-Fi switch is always checked first. Compressed air for overheating — always the answer before replacing parts. Flashlight + dim screen = backlight dead.",
+        summary:"Laptops have unique issues. Check physical toggles before software fixes. Compressed air for overheating. Flashlight test for screen vs backlight. MDM for enterprise control.",
+        parts:["Wi-Fi Fn Toggle","Battery / DC Jack","Compressed Air (vents)","LCD Backlight","Keyboard / Touchpad","Docking Station Issues"],
+        gotcha:"Physical Wi-Fi toggle is the #1 overlooked fix. Compressed air for overheating = always the first hardware fix. Flashlight + dim screen = backlight, not whole screen."
+      }
+    ]
+  },
+  {
+    domain:"2.0 Networking", pct:"23%", id:"net",
+    topics:[
+      {
+        id:"net1", name:"Network Cables & Connectors",
+        imgSlots:["RJ-45 connector closeup","Cat5e vs Cat6 (spline inside)","Fiber optic cable types"],
+        mustMemorize:[
+          {text:"<strong>Cat5e</strong> = up to 1 Gbps, 100m"},
+          {text:"<strong>Cat6</strong> = up to 10 Gbps (shorter distances), has internal plastic spline"},
+          {text:"<strong>Cat6a</strong> = up to 10 Gbps at full 100m distance"},
+          {text:"<strong>RJ-45</strong> = 8-pin Ethernet connector"},
+          {text:"<strong>Single-mode fiber</strong> = long distance, laser light, yellow cable"},
+          {text:"<strong>Multi-mode fiber</strong> = shorter distance, LED light, orange or aqua cable"},
+          {text:"<strong>Plenum cable</strong> = required inside walls/ceilings — fire code (low smoke)"},
+        ],
+        memotip:"Plenum = inside walls = fire safe = always required by code. Cat6 has a plastic spline divider inside. Single-mode = S for skinny core = long distances.",
+        summary:"Ethernet uses RJ-45 connectors. Cat5e/6/6a vary in speed and distance. Fiber has two types: single-mode (long) and multi-mode (short). Plenum cable required in enclosed building spaces.",
+        parts:["RJ-45","Cat5e","Cat6 / Cat6a","Coaxial RG-6","Single-Mode Fiber","Multi-Mode Fiber","Plenum Cable"],
+        gotcha:"Plenum-rated cable is required in walls and ceiling — the exam always tests this. Cat6 internal spline reduces crosstalk. Single-mode = yellow = long distance."
+      },
+      {
+        id:"net2", name:"Network Hardware (Hub, Switch, Router, AP)",
+        imgSlots:["Network switch (managed)","Home router","Wireless access point (WAP)"],
+        mustMemorize:[
+          {text:"<strong>Hub</strong> = Layer 1 = dumb, broadcasts to ALL ports = obsolete"},
+          {text:"<strong>Switch</strong> = Layer 2 = smart, sends to correct port by MAC address"},
+          {text:"<strong>Router</strong> = Layer 3 = connects networks, assigns IPs via DHCP"},
+          {text:"<strong>WAP</strong> = Wireless Access Point = extends Wi-Fi, is NOT a router"},
+          {text:"<strong>Modem</strong> = converts ISP signal (cable/DSL) to Ethernet"},
+          {text:"<strong>PoE switch</strong> = powers devices (cameras, WAPs) over Ethernet"},
+        ],
+        memotip:"Hub=L1, Switch=L2, Router=L3. Switch = smarter hub (no collisions, sends only to correct port). WAP ≠ router. Modem = ISP connection.",
+        summary:"Know each device's OSI layer and function. Hub is obsolete. Switch is smart. Router connects networks. WAP extends wireless. Modem converts ISP signal.",
+        parts:["Hub (Layer 1)","Switch (Layer 2)","Router (Layer 3)","WAP","Modem","PoE Switch","Patch Panel"],
+        gotcha:"Hub = everyone sees all traffic = bad. Switch = only the right port gets the traffic = good. Router = gateway between networks. Exam tests Layer 1/2/3 constantly."
+      },
+      {
+        id:"net3", name:"Wireless Standards (802.11)",
+        imgSlots:["Wi-Fi generation comparison chart","2.4 GHz vs 5 GHz range diagram","Wi-Fi channel overlap (1,6,11)"],
+        mustMemorize:[
+          {text:"<strong>802.11n</strong> = Wi-Fi 4 = 2.4 + 5 GHz, up to 600 Mbps"},
+          {text:"<strong>802.11ac</strong> = Wi-Fi 5 = 5 GHz ONLY, up to 3.5 Gbps"},
+          {text:"<strong>802.11ax</strong> = Wi-Fi 6 = 2.4 + 5 + 6 GHz, fastest current standard"},
+          {text:"<strong>2.4 GHz</strong> = longer range, slower, more interference"},
+          {text:"<strong>5 GHz</strong> = shorter range, faster, less interference"},
+          {text:"<strong>Non-overlapping channels on 2.4 GHz</strong> = 1, 6, and 11 only"},
+          {text:"<strong>WPA2</strong> = AES encryption = current standard"},
+          {text:"<strong>WEP</strong> = broken, never use | <strong>WPA3</strong> = newest standard"},
+        ],
+        memotip:"Channels 1, 6, 11 on 2.4GHz = the only ones that don't overlap. Wi-Fi 5 (802.11ac) = 5 GHz ONLY. WEP = cracked = avoid. WPA2 AES = minimum acceptable.",
+        summary:"Know Wi-Fi generations and their frequencies. 2.4GHz = range. 5GHz = speed. Only channels 1, 6, 11 on 2.4GHz don't overlap. WPA2 AES is current encryption standard.",
+        parts:["802.11n (Wi-Fi 4)","802.11ac (Wi-Fi 5)","802.11ax (Wi-Fi 6)","2.4 GHz","5 GHz","Channels 1, 6, 11","WPA2 / WPA3"],
+        gotcha:"2.4GHz = only 3 non-overlapping channels (1, 6, 11). 802.11ac = 5GHz ONLY — no 2.4GHz. WEP = broken. WPA2 with AES = current minimum."
+      },
+      {
+        id:"net4", name:"TCP/IP & IP Addressing",
+        imgSlots:["IPv4 address breakdown diagram","Private IP ranges reference","DHCP lease process diagram"],
+        mustMemorize:[
+          {text:"<strong>Private IP ranges (NOT internet routable):</strong>"},
+          {text:"10.0.0.0 – 10.255.255.255"},
+          {text:"172.16.0.0 – 172.31.255.255"},
+          {text:"192.168.0.0 – 192.168.255.255"},
+          {text:"<strong>169.254.x.x</strong> = APIPA = DHCP failed, self-assigned"},
+          {text:"<strong>127.0.0.1</strong> = loopback = pings yourself (tests TCP/IP stack)"},
+          {text:"<strong>Default gateway</strong> = router's IP address on your network"},
+          {text:"<strong>DNS</strong> = converts domain names to IPs (Google DNS = 8.8.8.8)"},
+          {text:"<strong>DHCP</strong> = auto-assigns IP, subnet, gateway, DNS to devices"},
+        ],
+        memotip:"Memorize the 3 private ranges. 169.254 = APIPA = DHCP failed. 127.0.0.1 = loopback = always your own machine. DNS down = ping IPs works but websites fail.",
+        summary:"Every device needs IP, subnet mask, gateway, DNS. DHCP assigns these automatically. Know private ranges. APIPA = DHCP failure. DNS converts names to IPs.",
+        parts:["IPv4 / IPv6","Subnet Mask","Default Gateway","DNS Server","DHCP","169.254.x.x (APIPA)","127.0.0.1 (loopback)"],
+        gotcha:"Three private IP ranges must be memorized cold. 169.254.x.x = APIPA = no DHCP. DNS failure = websites fail but direct IP pings work."
+      }
+    ]
+  },
+  {
+    domain:"1.0 Mobile Devices", pct:"13%", id:"mob",
+    topics:[
+      {
+        id:"mob1", name:"Laptop Hardware & Upgrades",
+        imgSlots:["SODIMM vs DIMM side by side","IPS vs TN vs OLED display comparison","Docking station connected to laptop"],
+        mustMemorize:[
+          {text:"<strong>SODIMM</strong> = laptop RAM (smaller than desktop DIMM)"},
+          {text:"<strong>Usually upgradeable</strong>: RAM, storage, battery"},
+          {text:"<strong>Usually NOT upgradeable</strong>: soldered CPU, soldered RAM (thin/ultrabooks)"},
+          {text:"<strong>IPS</strong> = best color accuracy + wide viewing angles"},
+          {text:"<strong>TN</strong> = fastest response time, cheapest, poor viewing angles"},
+          {text:"<strong>OLED</strong> = best contrast + deepest blacks, burn-in risk"},
+          {text:"<strong>Docking station</strong> = one cable connects laptop to all desktop peripherals"},
+        ],
+        memotip:"IPS = Image quality. TN = fast/gaming. OLED = premium. SODIMM = always laptop. Ask 'can this be upgraded' = RAM and storage usually yes, CPU usually no.",
+        summary:"Laptops use SODIMM RAM and 2.5\"/M.2 storage. Know display types. Many modern thin laptops have soldered components that can't be upgraded.",
+        parts:["SODIMM RAM","2.5\" SATA SSD","M.2 NVMe","IPS / TN / OLED","Battery","Docking Station","Webcam"],
+        gotcha:"SODIMM = laptop always. Modern ultrabooks often have soldered RAM (not upgradeable). IPS for color accuracy, TN for speed, OLED for quality with burn-in risk."
+      },
+      {
+        id:"mob2", name:"Mobile Connections & Accessories",
+        imgSlots:["USB-C vs Lightning connector","NFC tap-to-pay demo","Bluetooth pairing screen"],
+        mustMemorize:[
+          {text:"<strong>USB-C</strong> = reversible, current Android standard"},
+          {text:"<strong>Lightning</strong> = Apple proprietary, being replaced by USB-C"},
+          {text:"<strong>NFC</strong> = Near Field Communication = ~4cm max range = tap to pay"},
+          {text:"<strong>Bluetooth pairing</strong> = both devices must enter pairing mode"},
+          {text:"<strong>Mobile hotspot</strong> = phone shares cellular as Wi-Fi for other devices"},
+          {text:"<strong>MDM</strong> = Mobile Device Management = enterprise remote control of devices"},
+        ],
+        memotip:"NFC = 4cm = extremely close range by design (security). Lightning = Apple only. MDM = company controls your phone settings, can remotely wipe it.",
+        summary:"Mobile connects via USB-C or Lightning. NFC for tap-to-pay (very short range by design). Bluetooth needs pairing mode. MDM manages corporate devices remotely.",
+        parts:["USB-C","Lightning","Bluetooth","NFC","Mobile Hotspot","GPS","Accelerometer","MDM"],
+        gotcha:"NFC = ~4cm range, designed short for security. Lightning = Apple-only, being phased out. MDM allows remote lock and wipe of enterprise devices."
+      }
+    ]
+  },
+  {
+    domain:"4.0 Virtualization & Cloud Computing", pct:"11%", id:"cloud",
+    topics:[
+      {
+        id:"cloud1", name:"Virtualization Concepts",
+        imgSlots:["Type 1 hypervisor diagram","Type 2 hypervisor diagram (VirtualBox)","VM snapshot restore"],
+        mustMemorize:[
+          {text:"<strong>Type 1 hypervisor</strong> = bare-metal = runs directly ON hardware (VMware ESXi, Hyper-V)"},
+          {text:"<strong>Type 2 hypervisor</strong> = runs ON top of an OS (VirtualBox, VMware Workstation)"},
+          {text:"<strong>Type 1 = enterprise, more efficient</strong> (no host OS overhead)"},
+          {text:"<strong>Type 2 = desktop/testing use, easier setup</strong>"},
+          {text:"<strong>Snapshot</strong> = saved state of a VM — easy restore point before making changes"},
+          {text:"<strong>VMs share</strong> the host's physical CPU, RAM, and storage"},
+        ],
+        memotip:"Type 1 = #1 = best = enterprise = no host OS. Type 2 = runs inside another OS = desktop use. Snapshot = checkpoint you can roll back to.",
+        summary:"One physical machine runs multiple VMs via a hypervisor. Type 1 = bare-metal (enterprise). Type 2 = inside an OS (desktop). Snapshots save/restore VM state.",
+        parts:["VM","Type 1 Hypervisor","Type 2 Hypervisor","Host OS","Guest OS","Snapshot","Virtual NIC"],
+        gotcha:"Type 1 = no host OS = more efficient = enterprise. Type 2 = needs host OS = slower = desktop testing. Snapshots let you undo changes to a VM."
+      },
+      {
+        id:"cloud2", name:"Cloud Computing Models",
+        imgSlots:["IaaS vs PaaS vs SaaS diagram","Public vs Private vs Hybrid cloud","Shared responsibility model"],
+        mustMemorize:[
+          {text:"<strong>IaaS</strong> = Infrastructure as a Service = virtual hardware, you manage everything (AWS EC2)"},
+          {text:"<strong>PaaS</strong> = Platform as a Service = you deploy apps, provider manages OS/hardware (Heroku)"},
+          {text:"<strong>SaaS</strong> = Software as a Service = just use the app, provider manages all (Gmail, Office 365)"},
+          {text:"<strong>IaaS = most control | SaaS = least control</strong>"},
+          {text:"<strong>Public cloud</strong> = shared infrastructure (AWS, Azure, Google Cloud)"},
+          {text:"<strong>Private cloud</strong> = your own dedicated infrastructure"},
+          {text:"<strong>Hybrid cloud</strong> = mix of public + private"},
+        ],
+        memotip:"Pizza analogy: IaaS = make from scratch. PaaS = get the dough, add toppings. SaaS = delivered to your door. More letters = more you manage. IaaS > PaaS > SaaS (your responsibility).",
+        summary:"IaaS/PaaS/SaaS differ in how much the provider vs you manage. IaaS = most control. SaaS = just use it. Public, private, and hybrid cloud are deployment models.",
+        parts:["IaaS","PaaS","SaaS","Public Cloud","Private Cloud","Hybrid Cloud","Community Cloud"],
+        gotcha:"'Who is responsible for X?' IaaS = you manage OS and up. PaaS = you manage app and data. SaaS = provider manages everything. The exam tests this distinction."
+      }
+    ]
+  }
+];
+
+// ─────────────────────────────────────
+// IMAGE STORAGE (localStorage)
+// ─────────────────────────────────────
+function saveImage(topicId, slotIdx, dataUrl){
+  localStorage.setItem(`img_${topicId}_${slotIdx}`, dataUrl);
+}
+function loadImage(topicId, slotIdx){
+  return localStorage.getItem(`img_${topicId}_${slotIdx}`);
+}
+function removeImage(topicId, slotIdx){
+  localStorage.removeItem(`img_${topicId}_${slotIdx}`);
+}
+
+// ─────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────
+function renderTopics(){
+  const container = document.getElementById('topicsContainer');
+  container.innerHTML = '';
+  TOPICS.forEach(domain => {
+    const dDiv = document.createElement('div');
+    dDiv.className = 'domain';
+    dDiv.innerHTML = `
+      <div class="domain-header">
+        <div class="domain-title">${domain.domain}</div>
+        <div class="domain-pct">${domain.pct} of exam</div>
+      </div>
+      <div class="topics-grid" id="grid-${domain.id}"></div>
+    `;
+    container.appendChild(dDiv);
+    const grid = dDiv.querySelector(`#grid-${domain.id}`);
+    domain.topics.forEach(t => {
+      const saved = localStorage.getItem('topic_'+t.id) || '';
+      const card = document.createElement('div');
+      card.className = `topic-card ${saved}`;
+      card.id = 'card_'+t.id;
+
+      // Build image slots
+      const imgSlotHtml = t.imgSlots.map((label, idx) => {
+        const stored = loadImage(t.id, idx);
+        const hasImg = !!stored;
+        return `
+          <div class="img-box">
+            <div class="drop-zone ${hasImg?'has-image':''}" id="dz_${t.id}_${idx}"
+              ondragover="handleDragOver(event)"
+              ondragleave="handleDragLeave(event)"
+              ondrop="handleDrop(event,'${t.id}',${idx})">
+              ${hasImg ? `<img src="${stored}" alt="${label}">` : `<div class="dz-content"><div class="dz-icon">📸</div><div class="dz-label">${label}</div><div class="dz-hint">drop or click</div></div>`}
+              <input type="file" accept="image/*" onchange="handleFileInput(event,'${t.id}',${idx})">
+              <button class="remove-img" onclick="removeImg(event,'${t.id}',${idx})">✕</button>
+            </div>
+            <div class="img-caption"><span class="img-caption-text">${label}</span></div>
+          </div>
+        `;
+      }).join('');
+
+      card.innerHTML = `
+        <div class="topic-header" id="th_${t.id}">
+          <div class="status-dot"></div>
+          <div class="topic-name">${t.name}</div>
+          <button class="memo-btn" onclick="showMemo(event,'${t.id}')">⚡ MEMORIZE</button>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="topic-body">
+          <div class="image-row">${imgSlotHtml}</div>
+          <div class="content-pad">
+            <div class="section-label">BIG PICTURE</div>
+            <p>${t.summary}</p>
+            <div class="section-label">KEY PARTS TO KNOW</div>
+            <div class="parts-list">${t.parts.map(p=>`<span class="part-tag">${p}</span>`).join('')}</div>
+            <div class="gotcha-box">
+              <div class="gotcha-label">⚡ EXAM GOTCHA</div>
+              <p>${t.gotcha}</p>
+            </div>
+            <div class="section-label">MARK YOUR STATUS</div>
+            <div class="action-btns">
+              <button class="act-btn btn-got" onclick="markTopic('${t.id}','got-it')">✓ Got It</button>
+              <button class="act-btn btn-mem" onclick="markTopic('${t.id}','memorize')">⚡ Needs Memorizing</button>
+              <button class="act-btn btn-shaky" onclick="markTopic('${t.id}','shaky')">✗ Still Shaky</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      card.querySelector('#th_'+t.id).addEventListener('click', function(e){
+        if(e.target.closest('.memo-btn')) return;
+        toggleCard(t.id);
+      });
+      grid.appendChild(card);
+    });
+  });
+  updateProgress();
+}
+
+function toggleCard(id){
+  document.getElementById('card_'+id).classList.toggle('open');
+}
+
+function markTopic(id, status){
+  const card = document.getElementById('card_'+id);
+  card.classList.remove('got-it','memorize','shaky');
+  card.classList.add(status);
+  localStorage.setItem('topic_'+id, status);
+  updateProgress();
+}
+
+function updateProgress(){
+  let total=0, reviewed=0, green=0, yellow=0, red=0;
+  TOPICS.forEach(d=>d.topics.forEach(t=>{
+    total++;
+    const s = localStorage.getItem('topic_'+t.id);
+    if(s){ reviewed++; }
+    if(s==='got-it') green++;
+    if(s==='memorize') yellow++;
+    if(s==='shaky') red++;
+  }));
+  document.getElementById('progressFill').style.width=(reviewed/total*100)+'%';
+  document.getElementById('progressText').textContent=`${reviewed} / ${total} reviewed`;
+  document.getElementById('countGreen').textContent=green;
+  document.getElementById('countYellow').textContent=yellow;
+  document.getElementById('countRed').textContent=red;
+}
+
+// ─────────────────────────────────────
+// DRAG & DROP
+// ─────────────────────────────────────
+function handleDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function handleDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function handleDrop(e, topicId, slotIdx){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')) loadImageFile(file, topicId, slotIdx);
+}
+function handleFileInput(e, topicId, slotIdx){
+  const file = e.target.files[0];
+  if(file) loadImageFile(file, topicId, slotIdx);
+}
+function loadImageFile(file, topicId, slotIdx){
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const dataUrl = ev.target.result;
+    saveImage(topicId, slotIdx, dataUrl);
+    const dz = document.getElementById(`dz_${topicId}_${slotIdx}`);
+    dz.classList.add('has-image');
+    dz.querySelector('.dz-content') && (dz.querySelector('.dz-content').remove());
+    let img = dz.querySelector('img');
+    if(!img){img=document.createElement('img');dz.insertBefore(img,dz.querySelector('input'));}
+    img.src = dataUrl;
+  };
+  reader.readAsDataURL(file);
+}
+function removeImg(e, topicId, slotIdx){
+  e.stopPropagation();
+  removeImage(topicId, slotIdx);
+  const dz = document.getElementById(`dz_${topicId}_${slotIdx}`);
+  const slot = TOPICS.flatMap(d=>d.topics).find(t=>t.id===topicId);
+  const label = slot ? slot.imgSlots[slotIdx] : 'Image';
+  dz.classList.remove('has-image');
+  const img = dz.querySelector('img');
+  if(img) img.remove();
+  const inp = dz.querySelector('input');
+  dz.insertBefore(Object.assign(document.createElement('div'),{
+    className:'dz-content',
+    innerHTML:`<div class="dz-icon">📸</div><div class="dz-label">${label}</div><div class="dz-hint">drop or click</div>`
+  }), inp);
+}
+
+// ─────────────────────────────────────
+// MUST MEMORIZE POPUP
+// ─────────────────────────────────────
+function findTopic(id){ for(const d of TOPICS) for(const t of d.topics) if(t.id===id) return t; }
+
+function showMemo(e, id){
+  e.stopPropagation();
+  const t = findTopic(id);
+  document.getElementById('memoBody').innerHTML = `
+    <div class="memo-topic-name">// ${t.name.toUpperCase()}</div>
+    ${t.mustMemorize.map((item,i)=>`
+      <div class="memo-item">
+        <div class="memo-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="memo-text">${item.text}</div>
+      </div>
+    `).join('')}
+    <div class="memo-tip">
+      <div class="memo-tip-label">💡 MEMORY TIP</div>
+      <p>${t.memotip}</p>
+    </div>
+  `;
+  document.getElementById('memoOverlay').classList.add('show');
+}
+function closeMemo(){ document.getElementById('memoOverlay').classList.remove('show'); }
+function closeMemoOutside(e){ if(e.target===document.getElementById('memoOverlay')) closeMemo(); }
+
+// ─────────────────────────────────────
+// MODALS
+// ─────────────────────────────────────
+function openModal(type){
+  if(type==='weakness'){
+    const shaky=[];
+    TOPICS.forEach(d=>d.topics.forEach(t=>{ if(localStorage.getItem('topic_'+t.id)==='shaky') shaky.push({domain:d.domain,...t}); }));
+    document.getElementById('weaknessContent').innerHTML = shaky.length===0
+      ? '<div class="empty-state">NO TOPICS MARKED "STILL SHAKY" YET<br><br>Mark topics red to populate this sheet.</div>'
+      : shaky.map(t=>`
+          <div class="weakness-item">
+            <div class="wi-domain">${t.domain}</div>
+            <div class="wi-name">${t.name}</div>
+            <div class="wi-summary">${t.summary}</div>
+            <div class="wi-memo">
+              <div class="wi-memo-label">⚡ MUST MEMORIZE</div>
+              <ul>${t.mustMemorize.map(m=>`<li>${m.text}</li>`).join('')}</ul>
+            </div>
+          </div>`).join('');
+    document.getElementById('weaknessModal').classList.add('show');
+  } else {
+    const drill=[];
+    TOPICS.forEach(d=>d.topics.forEach(t=>{ if(localStorage.getItem('topic_'+t.id)==='memorize') drill.push({domain:d.domain,...t}); }));
+    document.getElementById('drillContent').innerHTML = drill.length===0
+      ? '<div class="empty-state">NO TOPICS MARKED "NEEDS MEMORIZING" YET<br><br>Mark topics yellow to populate this drill list.</div>'
+      : drill.map(t=>`
+          <div class="drill-item">
+            <div class="wi-domain">${t.domain}</div>
+            <div class="wi-name">${t.name}</div>
+            <div class="wi-memo">
+              <div class="wi-memo-label">⚡ DRILL THESE</div>
+              <ul>${t.mustMemorize.map(m=>`<li>${m.text}</li>`).join('')}</ul>
+            </div>
+            <div class="memo-tip" style="margin-top:10px;padding:10px 12px;background:rgba(250,204,21,0.06);border-left:3px solid var(--yellow);">
+              <strong style="font-size:11px;color:var(--yellow);">💡 MEMORY TIP: </strong>
+              <span style="font-size:12px;color:var(--text);">${t.memotip}</span>
+            </div>
+          </div>`).join('');
+    document.getElementById('drillModal').classList.add('show');
+  }
+}
+function closeModal(type){ document.getElementById(type+'Modal').classList.remove('show'); }
+function resetAll(){ if(!confirm('Reset all progress and saved images?')) return; localStorage.clear(); renderTopics(); }
+
+renderTopics();
+</script>
+</body>
+</html>
