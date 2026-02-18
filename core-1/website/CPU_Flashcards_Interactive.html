@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPU Flashcards – CompTIA A+ Core 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07070f;
+    --surface: #0f0f1a;
+    --surface2: #161625;
+    --surface3: #1e1e30;
+    --yellow: #FFD600;
+    --orange: #FF6B00;
+    --red: #FF2D55;
+    --pink: #FF47A3;
+    --blue: #00C6FF;
+    --green: #00FF9C;
+    --purple: #BF5FFF;
+    --teal: #00E5CC;
+    --text: #E8E8F5;
+    --muted: #777799;
+    --border: #1f1f35;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,198,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,198,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(7,7,15,0.9);
+    backdrop-filter: blur(12px);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 900;
+    background: linear-gradient(120deg, var(--blue), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.08em;
+  }
+
+  .logo span {
+    display: block;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    background: none;
+    -webkit-text-fill-color: var(--muted);
+    color: var(--muted);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  /* ─── FILTER BAR ─── */
+  .filter-bar {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 1rem auto 0;
+    padding-bottom: 0.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.35rem 0.9rem;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .filter-btn.active { background: var(--blue); color: #000; border-color: var(--blue); font-weight: 700; }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 0 0;
+    flex-wrap: wrap;
+  }
+
+  .stat { display: flex; align-items: center; gap: 0.5rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; }
+  .stat-num { font-family: 'Orbitron', monospace; font-size: 1.1rem; font-weight: 700; }
+  .stat-label { color: var(--muted); }
+  .stat.total .stat-num { color: var(--text); }
+  .stat.correct .stat-num { color: var(--green); }
+  .stat.wrong .stat-num { color: var(--red); }
+  .stat.remaining .stat-num { color: var(--blue); }
+
+  .progress-track {
+    flex: 1;
+    min-width: 150px;
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ─── MAIN ─── */
+  main {
+    position: relative;
+    z-index: 10;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ─── CARD ARENA ─── */
+  .card-arena {
+    perspective: 1200px;
+    margin: 0 auto 1.5rem;
+    max-width: 700px;
+    height: 340px;
+  }
+
+  .card-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+
+  .card-wrapper.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .card-front-face {
+    background: var(--surface);
+  }
+  .card-front-face::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% -20%, rgba(0,198,255,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .card-back-face {
+    background: var(--surface2);
+    transform: rotateY(180deg);
+  }
+  .card-back-face::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(0,255,156,0.05) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* glow by category */
+  .card-wrapper[data-cat="CPU Internals"] .card-front-face       { box-shadow: 0 0 40px rgba(0,198,255,0.1), inset 0 0 0 1px rgba(0,198,255,0.12); }
+  .card-wrapper[data-cat="Instruction Cycle"] .card-front-face   { box-shadow: 0 0 40px rgba(255,214,0,0.09), inset 0 0 0 1px rgba(255,214,0,0.12); }
+  .card-wrapper[data-cat="Architecture"] .card-front-face        { box-shadow: 0 0 40px rgba(255,107,0,0.09), inset 0 0 0 1px rgba(255,107,0,0.12); }
+  .card-wrapper[data-cat="Memory Hierarchy"] .card-front-face    { box-shadow: 0 0 40px rgba(191,95,255,0.1), inset 0 0 0 1px rgba(191,95,255,0.12); }
+  .card-wrapper[data-cat="Cores & Threads"] .card-front-face     { box-shadow: 0 0 40px rgba(0,255,156,0.08), inset 0 0 0 1px rgba(0,255,156,0.12); }
+  .card-wrapper[data-cat="Virtualization"] .card-front-face      { box-shadow: 0 0 40px rgba(255,71,163,0.1), inset 0 0 0 1px rgba(255,71,163,0.12); }
+  .card-wrapper[data-cat="CPU Sockets"] .card-front-face         { box-shadow: 0 0 40px rgba(255,45,85,0.1), inset 0 0 0 1px rgba(255,45,85,0.12); }
+  .card-wrapper[data-cat="Platforms"] .card-front-face           { box-shadow: 0 0 40px rgba(0,229,204,0.09), inset 0 0 0 1px rgba(0,229,204,0.12); }
+  .card-wrapper[data-cat="Troubleshooting"] .card-front-face     { box-shadow: 0 0 40px rgba(255,214,0,0.09), inset 0 0 0 1px rgba(255,214,0,0.1); }
+  .card-wrapper[data-cat="Exam Traps"] .card-front-face          { box-shadow: 0 0 40px rgba(255,45,85,0.14), inset 0 0 0 1px rgba(255,45,85,0.18); }
+
+  /* badge colors */
+  .badge-CPU\ Internals     { background: rgba(0,198,255,0.15); color: var(--blue); }
+  .badge-Instruction\ Cycle { background: rgba(255,214,0,0.15); color: var(--yellow); }
+  .badge-Architecture       { background: rgba(255,107,0,0.15); color: var(--orange); }
+  .badge-Memory\ Hierarchy  { background: rgba(191,95,255,0.15); color: var(--purple); }
+  .badge-Cores\ \&\ Threads  { background: rgba(0,255,156,0.15); color: var(--green); }
+  .badge-Virtualization     { background: rgba(255,71,163,0.15); color: var(--pink); }
+  .badge-CPU\ Sockets       { background: rgba(255,45,85,0.15); color: var(--red); }
+  .badge-Platforms          { background: rgba(0,229,204,0.15); color: var(--teal); }
+  .badge-Troubleshooting    { background: rgba(255,214,0,0.12); color: var(--yellow); }
+  .badge-Exam\ Traps        { background: rgba(255,45,85,0.15); color: var(--red); }
+
+  .card-category-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  .card-number {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+  }
+
+  .card-question {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.1rem, 3vw, 1.45rem);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.45;
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+  }
+
+  .flip-hint {
+    position: absolute;
+    bottom: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    animation: pulse-hint 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-hint {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.85; }
+  }
+
+  .card-answer {
+    font-size: clamp(0.92rem, 2.5vw, 1.12rem);
+    color: var(--green);
+    line-height: 1.65;
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+  }
+  .card-answer b, .card-answer strong { color: var(--yellow); font-weight: 700; }
+
+  .card-trap {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(255,45,85,0.08);
+    border-top: 1px solid rgba(255,45,85,0.25);
+    padding: 0.7rem 1.5rem;
+    font-size: 0.76rem;
+    color: var(--orange);
+    font-family: 'Space Mono', monospace;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  /* ─── RESULT BUTTONS ─── */
+  .result-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+  .result-buttons.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+  .btn-result {
+    flex: 1;
+    max-width: 200px;
+    padding: 0.85rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-wrong { background: rgba(255,45,85,0.1); border: 1px solid rgba(255,45,85,0.5); color: var(--red); }
+  .btn-wrong:hover { background: rgba(255,45,85,0.22); transform: translateY(-2px); }
+  .btn-correct { background: rgba(0,255,156,0.1); border: 1px solid rgba(0,255,156,0.5); color: var(--green); }
+  .btn-correct:hover { background: rgba(0,255,156,0.22); transform: translateY(-2px); }
+
+  /* ─── NAV BUTTONS ─── */
+  .nav-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    max-width: 700px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .btn-nav {
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .btn-nav:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-nav.primary { background: var(--blue); color: #000; border-color: var(--blue); font-weight: 700; }
+  .btn-nav.primary:hover { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+  /* ─── MODE SWITCHER ─── */
+  .mode-switch { display: flex; gap: 0.4rem; margin-left: auto; }
+  .mode-btn {
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mode-btn.active { background: var(--surface3); color: var(--text); border-color: var(--blue); }
+
+  /* ─── SECTION DIVIDER ─── */
+  .section-divider {
+    max-width: 700px;
+    margin: 2.5rem auto 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── MINI GRID ─── */
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 0.6rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .mini-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .mini-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+  .mini-card.done-correct { border-color: rgba(0,255,156,0.4); background: rgba(0,255,156,0.04); }
+  .mini-card.done-wrong { border-color: rgba(255,45,85,0.4); background: rgba(255,45,85,0.04); }
+  .mini-card.current { border-color: var(--blue); background: rgba(0,198,255,0.05); }
+
+  .mini-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--muted); }
+  .mini-card.done-correct .mini-dot { background: var(--green); }
+  .mini-card.done-wrong .mini-dot { background: var(--red); }
+  .mini-card.current .mini-dot { background: var(--blue); }
+
+  .mini-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* ─── COMPLETE SCREEN ─── */
+  .complete-screen {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+    animation: fadeInUp 0.5s ease;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .complete-screen.visible { display: block; }
+
+  .complete-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(120deg, var(--blue), var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .score-display { display: inline-flex; align-items: baseline; gap: 0.3rem; margin: 1rem 0 2rem; }
+  .score-big { font-family: 'Orbitron', monospace; font-size: 4rem; font-weight: 900; color: var(--green); }
+  .score-total { font-family: 'Orbitron', monospace; font-size: 1.5rem; color: var(--muted); }
+  .score-pct { font-family: 'Space Mono', monospace; font-size: 1rem; color: var(--blue); margin-left: 1rem; }
+  .complete-msg { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+
+  /* ─── KEYBOARD HINTS ─── */
+  .keyboard-hints {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .key-hint { display: flex; align-items: center; gap: 0.4rem; font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); }
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface2);
+    font-size: 0.6rem;
+    min-width: 22px;
+    color: var(--text);
+  }
+
+  @media (max-width: 600px) {
+    .card-arena { height: 300px; }
+    .card-face { padding: 1.8rem 1.2rem; }
+    .card-question { font-size: 1rem; }
+    .card-answer { font-size: 0.88rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo">
+      CPU FLASHCARDS
+      <span>COMPTIA A+ CORE 1 · 67 CARDS</span>
+    </div>
+    <div class="mode-switch">
+      <button class="mode-btn active" id="modeStudy" onclick="setMode('study')">STUDY</button>
+      <button class="mode-btn" id="modeWrong" onclick="setMode('wrong')">WRONG ONLY</button>
+      <button class="mode-btn" id="modeShuffle" onclick="shuffleDeck()">SHUFFLE</button>
+    </div>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" onclick="filterCategory('All', this)">ALL</button>
+    <button class="filter-btn" onclick="filterCategory('CPU Internals', this)">INTERNALS</button>
+    <button class="filter-btn" onclick="filterCategory('Instruction Cycle', this)">INST. CYCLE</button>
+    <button class="filter-btn" onclick="filterCategory('Architecture', this)">ARCHITECTURE</button>
+    <button class="filter-btn" onclick="filterCategory('Memory Hierarchy', this)">MEM HIER.</button>
+    <button class="filter-btn" onclick="filterCategory('Cores & Threads', this)">CORES/THREADS</button>
+    <button class="filter-btn" onclick="filterCategory('Virtualization', this)">VIRTUALIZATION</button>
+    <button class="filter-btn" onclick="filterCategory('CPU Sockets', this)">SOCKETS</button>
+    <button class="filter-btn" onclick="filterCategory('Platforms', this)">PLATFORMS</button>
+    <button class="filter-btn" onclick="filterCategory('Troubleshooting', this)">TROUBLESHOOT</button>
+    <button class="filter-btn" onclick="filterCategory('Exam Traps', this)">EXAM TRAPS</button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat total"><div class="stat-num" id="statTotal">67</div><div class="stat-label">total</div></div>
+    <div class="stat remaining"><div class="stat-num" id="statRemaining">67</div><div class="stat-label">remaining</div></div>
+    <div class="stat correct"><div class="stat-num" id="statCorrect">0</div><div class="stat-label">correct</div></div>
+    <div class="stat wrong"><div class="stat-num" id="statWrong">0</div><div class="stat-label">wrong</div></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+  <div id="studyArea">
+    <!-- CARD -->
+    <div class="card-arena">
+      <div class="card-wrapper" id="cardWrapper" onclick="flipCard()">
+        <div class="card-face card-front-face">
+          <div class="card-category-badge" id="cardCat">Category</div>
+          <div class="card-number" id="cardNum">1 / 67</div>
+          <div class="card-question" id="cardQuestion">Loading...</div>
+          <div class="flip-hint">↓ click to reveal answer ↓</div>
+        </div>
+        <div class="card-face card-back-face">
+          <div class="card-category-badge" id="cardCatBack">Category</div>
+          <div class="card-number" id="cardNumBack">1 / 67</div>
+          <div class="card-answer" id="cardAnswer">Answer</div>
+          <div class="card-trap" id="cardTrap" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT BUTTONS -->
+    <div class="result-buttons" id="resultButtons">
+      <button class="btn-result btn-wrong" onclick="markCard(false)">✗ &nbsp;MISSED IT</button>
+      <button class="btn-result btn-correct" onclick="markCard(true)">✓ &nbsp;GOT IT</button>
+    </div>
+
+    <!-- NAV -->
+    <div class="nav-buttons">
+      <button class="btn-nav" onclick="prevCard()">← PREV</button>
+      <button class="btn-nav" onclick="flipCard()">FLIP CARD</button>
+      <button class="btn-nav" onclick="nextCard()">NEXT →</button>
+      <button class="btn-nav primary" onclick="resetDeck()">↺ RESTART</button>
+    </div>
+
+    <!-- KEYBOARD HINTS -->
+    <div class="keyboard-hints">
+      <div class="key-hint"><div class="key">SPACE</div> flip</div>
+      <div class="key-hint"><div class="key">→</div> next</div>
+      <div class="key-hint"><div class="key">←</div> prev</div>
+      <div class="key-hint"><div class="key">1</div> missed</div>
+      <div class="key-hint"><div class="key">2</div> got it</div>
+    </div>
+
+    <!-- MINI GRID -->
+    <div class="section-divider">ALL CARDS</div>
+    <div class="mini-grid" id="miniGrid"></div>
+  </div>
+
+  <!-- COMPLETE SCREEN -->
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-title">DECK COMPLETE</div>
+    <div class="score-display">
+      <div class="score-big" id="finalCorrect">0</div>
+      <div class="score-total" id="finalTotal">/67</div>
+      <div class="score-pct" id="finalPct">0%</div>
+    </div>
+    <div class="complete-msg" id="completeMsg"></div>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <button class="btn-nav primary" onclick="resetDeck()">↺ RESTART ALL</button>
+      <button class="btn-nav" onclick="setMode('wrong')">REVIEW WRONG ONLY</button>
+    </div>
+  </div>
+</main>
+
+<script>
+const ALL_CARDS = [
+  // ── CPU INTERNALS ──
+  { q: "What are the 5 main components inside a CPU?", a: "1. <b>ALU</b> (Arithmetic Logic Unit)<br>2. <b>CU</b> (Control Unit)<br>3. <b>FPU</b> (Floating Point Unit)<br>4. <b>Registers</b> (temp storage)<br>5. <b>Cache</b> (L1/L2/L3 buffer)", cat: "CPU Internals", trap: "" },
+  { q: "What does the ALU do?", a: "Performs all <b>integer math</b> (+ − × ÷) and <b>logical operations</b> (AND, OR, NOT, XOR, comparisons).", cat: "CPU Internals", trap: "ALU handles integers only. Decimal/floating-point math goes to the FPU." },
+  { q: "What does the Control Unit (CU) do?", a: "Directs ALL CPU operations. It <b>fetches, decodes, and schedules</b> instructions. Does NOT calculate — tells ALU and FPU what to do.", cat: "CPU Internals", trap: "CU is the manager, not the worker. It handles Fetch and Decode. ALU handles Execute." },
+  { q: "What is the FPU and when is it used?", a: "<b>Floating Point Unit</b> — handles decimal/floating-point math. Used for 3D graphics, physics simulations, scientific calculations.", cat: "CPU Internals", trap: "" },
+  { q: "What are CPU registers?", a: "The <b>fastest memory in the entire system</b> — built directly inside the CPU core. Hold data being actively operated on. Only bytes in size.", cat: "CPU Internals", trap: "Registers are faster than L1 cache. They are volatile and tiny but have zero latency." },
+  { q: "What is the difference between L1, L2, and L3 cache?", a: "<b>L1:</b> fastest, per-core, ~32–128 KB<br><b>L2:</b> slightly slower, per-core, ~256 KB–2 MB<br><b>L3:</b> slowest cache, <b>shared across all cores</b>, 4–64 MB", cat: "CPU Internals", trap: "L3 is shared — all cores access the same L3. L1 and L2 are private per-core." },
+  { q: "What does the Bus Interface Unit connect?", a: "Connects CPU to external components — <b>RAM via the memory bus</b> and <b>motherboard chipset via the system bus</b>.", cat: "CPU Internals", trap: "" },
+
+  // ── INSTRUCTION CYCLE ──
+  { q: "What are the 4 stages of the CPU instruction cycle in order?", a: "<b>Fetch → Decode → Execute → Write-back</b>", cat: "Instruction Cycle", trap: "The order never changes. This is guaranteed to appear on the exam." },
+  { q: "What happens during the FETCH stage?", a: "The <b>Control Unit</b> retrieves the next instruction from <b>cache or RAM</b> using the Program Counter register.", cat: "Instruction Cycle", trap: "" },
+  { q: "What happens during the DECODE stage?", a: "The <b>Control Unit</b> interprets the binary instruction and determines what operation needs to be performed.", cat: "Instruction Cycle", trap: "" },
+  { q: "What happens during the EXECUTE stage?", a: "The <b>ALU or FPU</b> performs the actual operation — math, logic, or data movement.", cat: "Instruction Cycle", trap: "The CU handles Fetch and Decode. The ALU/FPU handles Execute." },
+  { q: "What happens during the WRITE-BACK stage?", a: "The result is <b>stored back</b> into a register, cache, or RAM. Cycle then repeats for the next instruction.", cat: "Instruction Cycle", trap: "" },
+  { q: "What does 3.5 GHz clock speed mean for the instruction cycle?", a: "The CPU completes <b>3.5 billion clock cycles per second</b>. Each cycle can correspond to one or more instruction stages.", cat: "Instruction Cycle", trap: "More GHz = more cycles. But IPC (Instructions Per Cycle) also matters — not just raw GHz." },
+  { q: "Which CPU component manages the Fetch and Decode stages?", a: "The <b>Control Unit (CU)</b>.", cat: "Instruction Cycle", trap: "Common trap: students think the ALU manages everything. CU manages F and D. ALU handles E." },
+
+  // ── ARCHITECTURE ──
+  { q: "What does RISC stand for and what are its key traits?", a: "<b>Reduced Instruction Set Computing</b> — small simple instructions, ~1 clock cycle per instruction, power efficient, used in ARM.", cat: "Architecture", trap: "" },
+  { q: "What does CISC stand for and what are its key traits?", a: "<b>Complex Instruction Set Computing</b> — large instruction set, one instruction can do multi-step work, used in x86/x64.", cat: "Architecture", trap: "" },
+  { q: "What architecture does ARM use and why?", a: "ARM uses <b>RISC</b> — simple instructions designed for power efficiency. Used in phones, tablets, Apple M-series.", cat: "Architecture", trap: "ARM software must be compiled specifically for ARM. x86 apps won't run natively." },
+  { q: "What architecture do Intel and AMD desktop CPUs use?", a: "Both use <b>CISC</b> — specifically <b>x86 (32-bit)</b> and <b>x64/x86-64 (64-bit)</b>.", cat: "Architecture", trap: "" },
+  { q: "What is the maximum RAM a 32-bit (x86) CPU can address?", a: "<b>4 GB</b> — hard ceiling, no workarounds, no exceptions.", cat: "Architecture", trap: "If a question mentions a 32-bit CPU and RAM, the answer is always 4 GB max." },
+  { q: "Can a 64-bit CPU run a 32-bit operating system?", a: "<b>Yes</b> — 64-bit CPUs are backward compatible and can run 32-bit software and OS.", cat: "Architecture", trap: "" },
+  { q: "Can a 32-bit CPU run a 64-bit operating system?", a: "<b>No</b> — a 32-bit CPU physically cannot run a 64-bit OS. Hard incompatibility.", cat: "Architecture", trap: "One of the most common exam traps. 32-bit cannot go up to 64-bit. Ever." },
+  { q: "What must be true about software running on an ARM device?", a: "Software must be <b>compiled specifically for ARM</b>. x86/x64 apps require emulation on ARM — which is slower.", cat: "Architecture", trap: "ARM and x86 are different instruction sets. A native x86 .exe won't run on ARM without emulation." },
+  { q: "What is x86-64 (x64)?", a: "A <b>64-bit extension of the x86 CISC architecture</b>. Used in all modern desktop CPUs. Runs both 32-bit and 64-bit software. Can address 256 TB+.", cat: "Architecture", trap: "" },
+
+  // ── MEMORY HIERARCHY ──
+  { q: "What is the speed order of memory types from fastest to slowest?", a: "Registers → L1 Cache → L2 Cache → L3 Cache → RAM → Storage", cat: "Memory Hierarchy", trap: "Same hierarchy from the RAM guide. Know it cold." },
+  { q: "Which cache level is shared across all CPU cores?", a: "<b>L3 cache</b> — shared across all cores on the same CPU die.", cat: "Memory Hierarchy", trap: "L1 and L2 are private per-core. L3 is the shared pool." },
+  { q: "What is a cache miss?", a: "Requested data is not in cache. CPU escalates to next slower tier: L1 miss → L2 → L3 → RAM → virtual memory.", cat: "Memory Hierarchy", trap: "" },
+  { q: "Where are CPU registers located?", a: "<b>Inside each CPU core</b> — part of the core itself. Zero distance penalty, the absolute fastest memory.", cat: "Memory Hierarchy", trap: "Registers are faster than L1 cache because they're inside the execution path itself." },
+
+  // ── CORES & THREADS ──
+  { q: "What is a CPU core?", a: "A <b>complete, independent processing unit</b> inside the CPU. Each core can execute its own instruction stream simultaneously.", cat: "Cores & Threads", trap: "" },
+  { q: "What is a CPU thread?", a: "A <b>logical processing lane</b> within a core. With HT or SMT, one physical core handles 2 threads by sharing its execution units.", cat: "Cores & Threads", trap: "Thread ≠ physical core. A thread is software-visible but not a physical processor." },
+  { q: "What does 8C/16T mean in a CPU specification?", a: "<b>8 physical cores, 16 logical threads.</b> 2 threads per core = Hyper-Threading (Intel) or SMT (AMD) is enabled.", cat: "Cores & Threads", trap: "If threads = cores (e.g. 8C/8T), HT/SMT is disabled or not supported." },
+  { q: "What is Intel's multithreading technology called?", a: "<b>Hyper-Threading (HT)</b> — allows each physical core to handle 2 instruction threads simultaneously.", cat: "Cores & Threads", trap: "AMD's equivalent is SMT. Same concept, different brand name." },
+  { q: "What is AMD's multithreading technology called?", a: "<b>SMT — Simultaneous Multi-Threading</b>. One physical core handles 2 threads. Intel's equivalent is Hyper-Threading.", cat: "Cores & Threads", trap: "" },
+  { q: "Does Hyper-Threading double CPU performance?", a: "<b>No</b> — HT improves throughput ~20–30% for multi-threaded workloads. It does NOT create real physical cores.", cat: "Cores & Threads", trap: "A 'virtual core' from HT ≠ physical core. Physical core count is the real count." },
+  { q: "What workloads benefit most from more CPU cores?", a: "Multi-threaded workloads: <b>video rendering, 3D modeling, virtual machines, multitasking, code compilation</b>.", cat: "Cores & Threads", trap: "Single-threaded tasks (many games) benefit more from clock speed than core count." },
+
+  // ── VIRTUALIZATION ──
+  { q: "What is Intel's CPU virtualization technology called?", a: "<b>VT-x (Intel Virtualization Technology)</b> — hardware extension that lets hypervisors run multiple OSes efficiently.", cat: "Virtualization", trap: "Must be enabled in UEFI/BIOS. Often disabled by default on consumer boards." },
+  { q: "What is AMD's CPU virtualization technology called?", a: "<b>AMD-V</b> (also called SVM — Secure Virtual Machine). AMD's equivalent of Intel VT-x.", cat: "Virtualization", trap: "Must be enabled in UEFI/BIOS. Same concept as VT-x — different brand." },
+  { q: "What is SLAT and why is it needed?", a: "<b>Second Level Address Translation</b> — hardware that accelerates VM memory management. Required for Hyper-V and most modern hypervisors.", cat: "Virtualization", trap: "Without SLAT, Hyper-V won't run. Separate feature from VT-x/AMD-V." },
+  { q: "What is SLAT called on Intel vs AMD?", a: "Intel = <b>EPT (Extended Page Tables)</b><br>AMD = <b>RVI / NPT (Rapid Virtualization Indexing / Nested Page Tables)</b>", cat: "Virtualization", trap: "EPT and RVI are the same concept with different names." },
+  { q: "VMs run poorly. What is the most likely BIOS-level fix?", a: "Enable <b>VT-x</b> (Intel) or <b>AMD-V</b> (AMD) in UEFI/BIOS settings. These are disabled by default on many systems.", cat: "Virtualization", trap: "This is the #1 VM performance troubleshooting answer on the exam." },
+  { q: "What does VT-d do vs VT-x?", a: "<b>VT-x</b> = CPU virtualization (run multiple OSes).<br><b>VT-d</b> = device passthrough (VM gets direct hardware access).", cat: "Virtualization", trap: "VT-x is required for all VMs. VT-d is only needed for hardware passthrough to VMs." },
+
+  // ── CPU SOCKETS ──
+  { q: "What does LGA stand for and where are the pins?", a: "<b>Land Grid Array</b> — pins are on the <b>motherboard socket</b>. CPU has flat contact pads (lands).", cat: "CPU Sockets", trap: "LGA = pins on Motherboard. Bend a pin here = expensive motherboard repair." },
+  { q: "What does PGA stand for and where are the pins?", a: "<b>Pin Grid Array</b> — pins are on the <b>CPU itself</b>. The socket is smooth.", cat: "CPU Sockets", trap: "PGA = pins on CPU. Bend a pin here = CPU may be ruined." },
+  { q: "Which socket type does Intel use?", a: "Intel uses <b>LGA</b> — pins on the motherboard socket.", cat: "CPU Sockets", trap: "" },
+  { q: "Which socket type does AMD use?", a: "Older AMD (AM4) = <b>PGA</b> (pins on CPU)<br>Newer AMD (AM5) = <b>LGA</b> (pins on motherboard — like Intel)", cat: "CPU Sockets", trap: "AMD AM5 switched to LGA. Trend is toward LGA across all platforms." },
+  { q: "What is a ZIF socket?", a: "<b>Zero Insertion Force</b> — lever releases locking mechanism so CPU drops in with NO physical force required.", cat: "CPU Sockets", trap: "If a CPU requires force to install, something is wrong. ZIF = zero pressure." },
+  { q: "What is the Pin 1 / triangle marker used for?", a: "Alignment guide — CPU and socket both have a <b>triangle indicator</b> that must be matched before lowering the CPU in.", cat: "CPU Sockets", trap: "Misaligned CPU = bent pins, no POST. Always align triangle before lowering." },
+  { q: "Why must thermal paste be applied during CPU installation?", a: "Fills microscopic air gaps between CPU heat spreader and cooler base. Air is a poor conductor — paste dramatically improves heat transfer.", cat: "CPU Sockets", trap: "" },
+  { q: "What is the correct amount and placement of thermal paste?", a: "<b>Pea-sized dot in the center</b> of the CPU IHS. Cooler pressure spreads it evenly.", cat: "CPU Sockets", trap: "Too much = spills over edges. Too little = hot spots. Center dot is correct." },
+
+  // ── PLATFORMS ──
+  { q: "What CPUs are used in desktop computers?", a: "Intel: <b>Core i3/i5/i7/i9</b><br>AMD: <b>Ryzen 3/5/7/9</b><br>Priority: general use, gaming, high clock speed.", cat: "Platforms", trap: "" },
+  { q: "What CPUs are used in workstations?", a: "AMD: <b>Threadripper</b> · Intel: <b>Xeon W</b><br>Priority: video editing, 3D rendering, many cores + high RAM.", cat: "Platforms", trap: "" },
+  { q: "What CPUs are used in servers?", a: "Intel: <b>Xeon Scalable</b> · AMD: <b>EPYC</b><br>Priority: reliability, ECC RAM, 24/7 uptime, multi-socket.", cat: "Platforms", trap: "Server = always Xeon or EPYC on the exam." },
+  { q: "What CPUs are used in mobile devices?", a: "ARM-based: <b>Snapdragon, Apple A-series</b><br>Mobile Intel/AMD: <b>Core Ultra U/P series</b><br>Priority: power efficiency, low TDP.", cat: "Platforms", trap: "" },
+  { q: "What does TDP stand for and why does it matter for mobile?", a: "<b>Thermal Design Power</b> — max heat a CPU generates under load (watts). Lower TDP = less heat = longer battery life.", cat: "Platforms", trap: "TDP is the key spec for mobile CPUs. Low TDP = battery life. High TDP = performance." },
+  { q: "Which platform always requires ECC RAM?", a: "<b>Server platforms</b> using Xeon or EPYC. ECC required for data integrity in 24/7 production environments.", cat: "Platforms", trap: "Consumer desktops do not use ECC. Servers always do." },
+  { q: "What is a multi-socket server?", a: "A server motherboard with <b>2 or more CPU sockets</b> working together. Maximum core count and memory bandwidth.", cat: "Platforms", trap: "" },
+
+  // ── TROUBLESHOOTING ──
+  { q: "System won't POST after installing a new CPU. First things to check?", a: "1. CPU socket type matches<br>2. Inspect for bent pins<br>3. Reseat CPU — align triangle, ZIF lever<br>4. Connect 4/8-pin CPU power<br>5. CPU fan connected to CPU_FAN header", cat: "Troubleshooting", trap: "" },
+  { q: "OS installation fails. What CPU issue could cause this?", a: "<b>32/64-bit architecture mismatch</b> — trying to install 64-bit OS on 32-bit CPU, or ARM device needs ARM OS image.", cat: "Troubleshooting", trap: "" },
+  { q: "VMs won't start or run very slowly. What BIOS setting is the fix?", a: "Enable <b>VT-x</b> (Intel) or <b>AMD-V</b> (AMD) in UEFI/BIOS — often disabled by default.", cat: "Troubleshooting", trap: "" },
+  { q: "System slows dramatically under load then crashes. What is this?", a: "<b>Thermal throttling</b> — CPU reduces clock speed to prevent heat damage. Fix: thermal paste, cooler, airflow.", cat: "Troubleshooting", trap: "Thermal throttle ≠ CPU failure. CPU is protecting itself. Fix the cooling first." },
+  { q: "What happens if the CPU fan is not connected to the CPU_FAN header?", a: "System may <b>refuse to boot</b> or trigger thermal shutdown rapidly. CPU_FAN header is monitored by BIOS/UEFI.", cat: "Troubleshooting", trap: "" },
+  { q: "Bent pin in LGA socket vs PGA socket — what does each mean for repair?", a: "LGA bent pin = <b>motherboard damage</b> (board may need replacement).<br>PGA bent pin = <b>CPU damage</b> (CPU replacement).", cat: "Troubleshooting", trap: "In both cases = potentially costly repair. Never force a CPU." },
+
+  // ── EXAM TRAPS ──
+  { q: "64-bit CPU installed but only 4 GB of RAM is recognized. What's wrong?", a: "The <b>OS is 32-bit</b>, which has a 4 GB max address limit regardless of physical RAM or CPU capability.", cat: "Exam Traps", trap: "CPU supports more RAM but the 32-bit OS imposes the 4 GB limit. Fix: install a 64-bit OS." },
+  { q: "What is the difference between Hyper-Threading and more physical cores?", a: "HT creates <b>2 logical threads per physical core</b> by sharing execution units. Physical cores are more powerful than HT threads.", cat: "Exam Traps", trap: "Exam may try to equate HT threads with physical cores. They are NOT equal." },
+  { q: "Can x86 software run natively on Apple M-series (ARM)?", a: "<b>No</b> — runs via <b>Rosetta 2 emulation</b>. Native = ARM-compiled apps only.", cat: "Exam Traps", trap: "Real-world example of ARM vs x86 incompatibility. Emulation works but adds overhead." },
+  { q: "What is the difference between VT-x and VT-d?", a: "<b>VT-x</b> = CPU virtualization (run multiple OSes).<br><b>VT-d</b> = device passthrough (VM gets direct hardware access).", cat: "Exam Traps", trap: "VT-x is required for all VMs. VT-d is required only for hardware device passthrough." },
+  { q: "System POSTs but CPU temp hits 100°C immediately. What's wrong?", a: "<b>Thermal paste not applied</b> or <b>cooler not properly seated</b> — CPU has almost no thermal transfer to cooler.", cat: "Exam Traps", trap: "" },
+  { q: "A user says 'my CPU has 16 cores'. The spec says 8C/16T. Are they right?", a: "<b>No</b> — CPU has <b>8 physical cores</b> and 16 logical threads via Hyper-Threading. 16T ≠ 16 physical cores.", cat: "Exam Traps", trap: "Thread count ≠ core count. This misconception is extremely common." },
+];
+
+let deck = [];
+let currentIndex = 0;
+let isFlipped = false;
+let results = {};
+let activeCategory = 'All';
+let mode = 'study';
+
+function getBadgeClass(cat) {
+  const map = {
+    'CPU Internals': 'badge-CPU Internals',
+    'Instruction Cycle': 'badge-Instruction Cycle',
+    'Architecture': 'badge-Architecture',
+    'Memory Hierarchy': 'badge-Memory Hierarchy',
+    'Cores & Threads': 'badge-Cores & Threads',
+    'Virtualization': 'badge-Virtualization',
+    'CPU Sockets': 'badge-CPU Sockets',
+    'Platforms': 'badge-Platforms',
+    'Troubleshooting': 'badge-Troubleshooting',
+    'Exam Traps': 'badge-Exam Traps',
+  };
+  return map[cat] || '';
+}
+
+function initDeck() {
+  if (mode === 'wrong') {
+    deck = ALL_CARDS.filter((_, i) => results[i] === false);
+    if (deck.length === 0) deck = [...ALL_CARDS];
+  } else {
+    deck = activeCategory === 'All'
+      ? [...ALL_CARDS]
+      : ALL_CARDS.filter(c => c.cat === activeCategory);
+  }
+  currentIndex = 0;
+  results = {};
+  renderCard();
+  renderMiniGrid();
+  updateStats();
+  document.getElementById('completeScreen').classList.remove('visible');
+  document.getElementById('studyArea').style.display = 'block';
+}
+
+function renderCard() {
+  if (deck.length === 0) return;
+  const card = deck[currentIndex];
+  const wrapper = document.getElementById('cardWrapper');
+
+  isFlipped = false;
+  wrapper.classList.remove('flipped');
+  document.getElementById('resultButtons').classList.remove('visible');
+
+  wrapper.setAttribute('data-cat', card.cat);
+
+  const badgeClass = getBadgeClass(card.cat);
+
+  const frontBadge = document.getElementById('cardCat');
+  frontBadge.textContent = card.cat;
+  frontBadge.className = 'card-category-badge ' + badgeClass;
+
+  const backBadge = document.getElementById('cardCatBack');
+  backBadge.textContent = card.cat;
+  backBadge.className = 'card-category-badge ' + badgeClass;
+
+  document.getElementById('cardQuestion').textContent = card.q;
+  document.getElementById('cardNum').textContent = `${currentIndex + 1} / ${deck.length}`;
+  document.getElementById('cardAnswer').innerHTML = card.a;
+  document.getElementById('cardNumBack').textContent = `${currentIndex + 1} / ${deck.length}`;
+
+  const trapEl = document.getElementById('cardTrap');
+  if (card.trap) {
+    trapEl.style.display = 'block';
+    trapEl.innerHTML = '';
+    const span = document.createElement('span');
+    span.style.cssText = 'color: var(--red); font-weight: 700;';
+    span.textContent = '⚡ TRAP: ';
+    trapEl.appendChild(span);
+    trapEl.appendChild(document.createTextNode(card.trap));
+  } else {
+    trapEl.style.display = 'none';
+  }
+
+  document.querySelectorAll('.mini-card').forEach((el, i) => {
+    el.classList.remove('current');
+    if (i === currentIndex) el.classList.add('current');
+  });
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('cardWrapper').classList.toggle('flipped', isFlipped);
+  document.getElementById('resultButtons').classList.toggle('visible', isFlipped);
+}
+
+function markCard(correct) {
+  results[currentIndex] = correct;
+  updateStats();
+  renderMiniGrid();
+  nextCard();
+}
+
+function nextCard() {
+  if (currentIndex < deck.length - 1) { currentIndex++; renderCard(); }
+  else showComplete();
+}
+
+function prevCard() {
+  if (currentIndex > 0) { currentIndex--; renderCard(); }
+}
+
+function showComplete() {
+  const total = deck.length;
+  const correct = Object.values(results).filter(Boolean).length;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  document.getElementById('finalCorrect').textContent = correct;
+  document.getElementById('finalTotal').textContent = `/${total}`;
+  document.getElementById('finalPct').textContent = `${pct}%`;
+
+  const msgs = {
+    100: 'Perfect score. You know this CPU section cold. ✓',
+    80: 'Strong performance. Review the missed cards once more.',
+    60: 'Getting there. Focus on your wrong answers.',
+    0: 'Keep going — use WRONG ONLY mode to drill the hard ones.',
+  };
+  const threshold = pct === 100 ? 100 : pct >= 80 ? 80 : pct >= 60 ? 60 : 0;
+  document.getElementById('completeMsg').textContent = msgs[threshold];
+
+  document.getElementById('studyArea').style.display = 'none';
+  document.getElementById('completeScreen').classList.add('visible');
+}
+
+function updateStats() {
+  const correct = Object.values(results).filter(Boolean).length;
+  const wrong = Object.values(results).filter(v => v === false).length;
+  const done = correct + wrong;
+  const pct = deck.length > 0 ? (done / deck.length) * 100 : 0;
+
+  document.getElementById('statTotal').textContent = deck.length;
+  document.getElementById('statRemaining').textContent = deck.length - done;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function renderMiniGrid() {
+  const grid = document.getElementById('miniGrid');
+  grid.innerHTML = '';
+  deck.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'mini-card';
+    if (results[i] === true) div.classList.add('done-correct');
+    if (results[i] === false) div.classList.add('done-wrong');
+    if (i === currentIndex) div.classList.add('current');
+    div.innerHTML = `<div class="mini-dot"></div><div class="mini-text">${card.q}</div>`;
+    div.onclick = () => { currentIndex = i; renderCard(); };
+    grid.appendChild(div);
+  });
+}
+
+function filterCategory(cat, btn) {
+  activeCategory = cat;
+  mode = 'study';
+  document.getElementById('modeStudy').classList.add('active');
+  document.getElementById('modeWrong').classList.remove('active');
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  initDeck();
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('modeStudy').classList.toggle('active', m === 'study');
+  document.getElementById('modeWrong').classList.toggle('active', m === 'wrong');
+  if (m === 'study') {
+    document.getElementById('completeScreen').classList.remove('visible');
+    document.getElementById('studyArea').style.display = 'block';
+  }
+  initDeck();
+}
+
+function shuffleDeck() {
+  deck = deck.sort(() => Math.random() - 0.5);
+  currentIndex = 0;
+  results = {};
+  renderCard();
+  renderMiniGrid();
+  updateStats();
+  document.getElementById('completeScreen').classList.remove('visible');
+  document.getElementById('studyArea').style.display = 'block';
+}
+
+function resetDeck() {
+  results = {};
+  initDeck();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+  if (e.code === 'ArrowRight') nextCard();
+  if (e.code === 'ArrowLeft') prevCard();
+  if (e.key === '1' && isFlipped) markCard(false);
+  if (e.key === '2' && isFlipped) markCard(true);
+});
+
+initDeck();
+</script>
+</body>
+</html>
