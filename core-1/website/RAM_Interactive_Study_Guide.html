@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAM Master Study Guide – CompTIA A+ Core 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --yellow: #FFD600;
+    --orange: #FF6B00;
+    --red: #FF2D55;
+    --pink: #FF47A3;
+    --blue: #00C6FF;
+    --green: #00FF9C;
+    --purple: #BF5FFF;
+    --text: #E8E8F0;
+    --muted: #888899;
+    --cache-color: #00C6FF;
+    --ram-color: #00FF9C;
+    --virtual-color: #FF6B00;
+    --storage-color: #FF2D55;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,15,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #222;
+    padding: 0 2rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 1rem 1.2rem;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  nav a:hover { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+  /* HERO */
+  .hero {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,214,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--yellow), var(--orange), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.05em;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* SECTIONS */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, currentColor, transparent);
+    opacity: 0.3;
+  }
+
+  .section-title.yellow { color: var(--yellow); }
+  .section-title.orange { color: var(--orange); }
+  .section-title.red { color: var(--red); }
+  .section-title.pink { color: var(--pink); }
+  .section-title.blue { color: var(--blue); }
+  .section-title.green { color: var(--green); }
+
+  /* ===================== */
+  /* CONCEPT DIAGRAM       */
+  /* ===================== */
+  .concept-diagram {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .concept-diagram::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(255,214,0,0.02) 25%, transparent 50%);
+    animation: rotate 20s linear infinite;
+  }
+
+  @keyframes rotate { to { transform: rotate(360deg); } }
+
+  .diagram-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cpu-box {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(191,95,255,0.3);
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--purple);
+    position: relative;
+  }
+
+  .cpu-box::after {
+    content: '🧠 BRAIN';
+    display: block;
+    font-size: 0.65rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-top: 0.2rem;
+  }
+
+  .memory-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .mem-node {
+    border-radius: 12px;
+    padding: 1.2rem 0.8rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    border: 2px solid;
+  }
+
+  .mem-node:hover {
+    transform: translateY(-4px);
+  }
+
+  .mem-node.cache {
+    background: rgba(0,198,255,0.08);
+    border-color: var(--cache-color);
+    box-shadow: 0 0 20px rgba(0,198,255,0.15);
+  }
+
+  .mem-node.ram {
+    background: rgba(0,255,156,0.08);
+    border-color: var(--ram-color);
+    box-shadow: 0 0 20px rgba(0,255,156,0.15);
+  }
+
+  .mem-node.virtual {
+    background: rgba(255,107,0,0.08);
+    border-color: var(--virtual-color);
+    box-shadow: 0 0 20px rgba(255,107,0,0.15);
+  }
+
+  .mem-node.storage {
+    background: rgba(255,45,85,0.08);
+    border-color: var(--storage-color);
+    box-shadow: 0 0 20px rgba(255,45,85,0.15);
+  }
+
+  .mem-node .icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+
+  .mem-node .label {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .mem-node.cache .label { color: var(--cache-color); }
+  .mem-node.ram .label { color: var(--ram-color); }
+  .mem-node.virtual .label { color: var(--virtual-color); }
+  .mem-node.storage .label { color: var(--storage-color); }
+
+  .mem-node .sub {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .speed-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.6rem;
+    font-family: 'Space Mono', monospace;
+    margin-top: 0.4rem;
+    font-weight: 700;
+  }
+
+  .mem-node.cache .speed-badge { background: rgba(0,198,255,0.2); color: var(--cache-color); }
+  .mem-node.ram .speed-badge { background: rgba(0,255,156,0.2); color: var(--ram-color); }
+  .mem-node.virtual .speed-badge { background: rgba(255,107,0,0.2); color: var(--virtual-color); }
+  .mem-node.storage .speed-badge { background: rgba(255,45,85,0.2); color: var(--storage-color); }
+
+  /* FLOW ARROWS */
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    margin: 0.5rem 0;
+  }
+
+  .arrow-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--muted), transparent);
+    max-width: 200px;
+  }
+
+  /* ===================== */
+  /* PERFORMANCE LADDER    */
+  /* ===================== */
+  .ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid #222;
+  }
+
+  .ladder-rung {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    position: relative;
+    transition: transform 0.2s;
+  }
+
+  .ladder-rung:hover { transform: translateX(6px); }
+
+  .rung-bar {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 8px;
+    opacity: 0.15;
+  }
+
+  .ladder-rung .rung-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    min-width: 120px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .rung-speed {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+
+  .rung-bars {
+    display: flex;
+    gap: 3px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .rung-bar-unit {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+  }
+
+  /* ===================== */
+  /* DDR BREAKDOWN         */
+  /* ===================== */
+  .ddr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .ddr-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #222;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ddr-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .ddr-card.d::before { background: var(--yellow); }
+  .ddr-card.s::before { background: var(--orange); }
+  .ddr-card.ddr::before { background: var(--pink); }
+
+  .ddr-card .letter {
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .ddr-card.d .letter { color: var(--yellow); }
+  .ddr-card.s .letter { color: var(--orange); }
+  .ddr-card.ddr .letter { color: var(--pink); }
+
+  .ddr-card .word {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .ddr-card .explain {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.5;
+  }
+
+  /* MEMO TECHNIQUE */
+  .memo-box {
+    background: linear-gradient(135deg, rgba(255,214,0,0.08), rgba(255,107,0,0.08));
+    border: 1px solid rgba(255,214,0,0.3);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.2rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .memo-box .memo-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+  .memo-box .memo-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    color: var(--yellow);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+  }
+
+  .memo-box .memo-text {
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .memo-box .memo-text strong {
+    color: var(--yellow);
+  }
+
+  /* EXAM TRAP BOX */
+  .trap-box {
+    background: rgba(255,45,85,0.06);
+    border: 1px solid rgba(255,45,85,0.4);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.2rem 0;
+  }
+
+  .trap-box .trap-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .trap-box .trap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255,45,85,0.1);
+    font-size: 0.9rem;
+  }
+
+  .trap-box .trap-item:last-child { border-bottom: none; }
+  .trap-box .trap-item::before { content: '⚡'; flex-shrink: 0; }
+
+  /* TABLE */
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+
+  .styled-table th {
+    background: var(--surface2);
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    border-bottom: 1px solid #333;
+  }
+
+  .styled-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #1a1a24;
+    background: var(--surface);
+  }
+
+  .styled-table tr:last-child td { border-bottom: none; }
+  .styled-table tr:hover td { background: var(--surface2); }
+
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+
+  .tag.yellow { background: rgba(255,214,0,0.15); color: var(--yellow); }
+  .tag.orange { background: rgba(255,107,0,0.15); color: var(--orange); }
+  .tag.red { background: rgba(255,45,85,0.15); color: var(--red); }
+  .tag.pink { background: rgba(255,71,163,0.15); color: var(--pink); }
+  .tag.green { background: rgba(0,255,156,0.15); color: var(--green); }
+  .tag.blue { background: rgba(0,198,255,0.15); color: var(--blue); }
+
+  /* VIRTUAL MEMORY DIAGRAM */
+  .vm-diagram {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .vm-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .vm-step {
+    display: flex;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .vm-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+    flex-shrink: 0;
+  }
+
+  .vm-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid;
+    flex-shrink: 0;
+    margin-top: 1.2rem;
+  }
+
+  .vm-line {
+    width: 2px;
+    flex: 1;
+    min-height: 20px;
+    margin: 0 auto;
+  }
+
+  .vm-content {
+    flex: 1;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    border: 1px solid;
+  }
+
+  .vm-content .vm-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .vm-content .vm-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* normal flow */
+  .vm-step.normal .vm-dot { border-color: var(--green); background: rgba(0,255,156,0.2); }
+  .vm-step.normal .vm-line { background: rgba(0,255,156,0.3); }
+  .vm-step.normal .vm-content { background: rgba(0,255,156,0.05); border-color: rgba(0,255,156,0.3); }
+  .vm-step.normal .vm-title { color: var(--green); }
+
+  /* paging */
+  .vm-step.paging .vm-dot { border-color: var(--orange); background: rgba(255,107,0,0.2); }
+  .vm-step.paging .vm-line { background: rgba(255,107,0,0.3); }
+  .vm-step.paging .vm-content { background: rgba(255,107,0,0.05); border-color: rgba(255,107,0,0.3); }
+  .vm-step.paging .vm-title { color: var(--orange); }
+
+  /* thrashing */
+  .vm-step.thrashing .vm-dot { border-color: var(--red); background: rgba(255,45,85,0.2); }
+  .vm-step.thrashing .vm-line { background: rgba(255,45,85,0.3); }
+  .vm-step.thrashing .vm-content { background: rgba(255,45,85,0.05); border-color: rgba(255,45,85,0.3); }
+  .vm-step.thrashing .vm-title { color: var(--red); }
+
+  /* CHANNELS DIAGRAM */
+  .channels-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .channel-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #222;
+    text-align: center;
+  }
+
+  .channel-card .lane-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0.8rem auto;
+    width: fit-content;
+  }
+
+  .lane {
+    height: 8px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lane::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255,255,255,0.4);
+    animation: flow 1.5s linear infinite;
+    border-radius: 4px;
+  }
+
+  .channel-card:nth-child(1) .lane { background: rgba(0,198,255,0.6); width: 120px; }
+  .channel-card:nth-child(1) .lane::after { animation-delay: 0s; }
+
+  .channel-card:nth-child(2) .lane { background: rgba(0,255,156,0.6); width: 120px; }
+  .channel-card:nth-child(2) .lane::after { animation-delay: 0.3s; }
+
+  .channel-card:nth-child(3) .lane { background: rgba(255,107,0,0.6); width: 120px; }
+
+  .channel-card:nth-child(4) .lane { background: rgba(255,214,0,0.6); width: 120px; }
+
+  @keyframes flow {
+    0% { left: -50%; }
+    100% { left: 150%; }
+  }
+
+  .channel-card .channel-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+
+  .channel-card .channel-bits {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  .channel-card .channel-bandwidth {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+
+  /* ECC BLOCK DIAGRAM */
+  .ecc-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 2rem;
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid #222;
+    flex-wrap: wrap;
+  }
+
+  .ecc-block {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .ecc-arrow {
+    width: 30px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: linear-gradient(135deg, rgba(191,95,255,0.08), rgba(0,198,255,0.08));
+    border: 1px solid rgba(191,95,255,0.3);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  .formula-box .formula-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--purple);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .formula-box .formula {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .formula-box .formula span { color: var(--yellow); }
+  .formula-box .example {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+
+  /* DIMM vs SODIMM */
+  .dimm-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .dimm-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #222;
+  }
+
+  .dimm-visual {
+    background: linear-gradient(135deg, #1a3a1a, #2a5a2a);
+    border-radius: 4px;
+    margin: 1rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dimm-card:first-child .dimm-visual {
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(135deg, #1a2a3a, #2a3a5a);
+  }
+
+  .dimm-card:last-child .dimm-visual {
+    width: 60%;
+    height: 35px;
+    background: linear-gradient(135deg, #1a3a2a, #2a5a3a);
+  }
+
+  .chip {
+    width: 18px;
+    height: 14px;
+    border-radius: 2px;
+    background: #0a0a0a;
+    border: 1px solid #333;
+  }
+
+  .chips-row {
+    display: flex;
+    gap: 4px;
+    padding: 0 1rem;
+  }
+
+  .notch-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 40%;
+    width: 12px;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .dimm-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .dimm-sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    margin-top: 0.3rem;
+  }
+
+  .dimm-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-top: 0.8rem;
+  }
+
+  /* TROUBLESHOOT CARDS */
+  .trouble-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .trouble-card {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid #222;
+    overflow: hidden;
+  }
+
+  .trouble-header {
+    padding: 1rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .trouble-card.boot .trouble-header { background: rgba(255,45,85,0.1); color: var(--red); }
+  .trouble-card.bsod .trouble-header { background: rgba(0,198,255,0.1); color: var(--blue); }
+  .trouble-card.slow .trouble-header { background: rgba(255,107,0,0.1); color: var(--orange); }
+
+  .trouble-body {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .trouble-body .cause {
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    margin-bottom: 0.6rem;
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.6rem;
+  }
+
+  .trouble-body .fix-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    font-size: 0.85rem;
+  }
+
+  .trouble-body .fix-item::before { content: '→'; color: var(--green); }
+
+  /* QUICK REFERENCE */
+  .quick-ref {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .quick-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.2rem;
+    border: 1px solid #222;
+  }
+
+  .quick-card .qc-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .quick-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #1a1a24;
+    font-size: 0.85rem;
+  }
+
+  .quick-item:last-child { border-bottom: none; }
+
+  .quick-item .qi-key { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+
+  /* SECTION DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #333, transparent);
+    margin: 1rem 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .memory-row { grid-template-columns: repeat(2, 1fr); }
+    .ddr-grid { grid-template-columns: 1fr; }
+    .channels-grid { grid-template-columns: 1fr; }
+    .dimm-compare { grid-template-columns: 1fr; }
+    .trouble-grid { grid-template-columns: 1fr; }
+    .quick-ref { grid-template-columns: 1fr; }
+    nav a { font-size: 0.6rem; padding: 0.8rem; }
+  }
+
+  /* SCROLL ANIMATION */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* POPUP / TOOLTIP */
+  .tooltip-trigger { cursor: help; border-bottom: 1px dashed var(--yellow); }
+
+  /* highlight important */
+  .hl-y { color: var(--yellow); font-weight: 700; }
+  .hl-o { color: var(--orange); font-weight: 700; }
+  .hl-r { color: var(--red); font-weight: 700; }
+  .hl-p { color: var(--pink); font-weight: 700; }
+  .hl-g { color: var(--green); font-weight: 700; }
+  .hl-b { color: var(--blue); font-weight: 700; }
+
+  /* DDR gen comparison */
+  .gen-row {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+    background: var(--surface);
+    border: 1px solid #222;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gen-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0.08;
+  }
+
+  .gen-name {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    min-width: 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .gen-info { font-size: 0.8rem; color: var(--muted); font-family: 'Space Mono', monospace; position: relative; z-index: 1; flex: 1; }
+
+  .gen-power {
+    position: relative;
+    z-index: 1;
+  }
+
+  .power-bar {
+    display: flex;
+    gap: 2px;
+  }
+
+  .power-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#overview">OVERVIEW</a>
+  <a href="#ddr">DDR SDRAM</a>
+  <a href="#performance">PERFORMANCE</a>
+  <a href="#channels">CHANNELS</a>
+  <a href="#virtual">VIRTUAL MEM</a>
+  <a href="#ecc">ECC RAM</a>
+  <a href="#dimm">DIMM/SODIMM</a>
+  <a href="#troubleshoot">TROUBLESHOOT</a>
+  <a href="#exam">EXAM TRAPS</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>RAM MASTER GUIDE</h1>
+  <p>CompTIA A+ Core 1 · Visual Edition · Everything You Need to Memorize</p>
+</div>
+
+<!-- ================================ -->
+<!-- SECTION 1: CONCEPT OVERVIEW      -->
+<!-- ================================ -->
+<div class="section" id="overview">
+  <div class="section-title yellow">01 / MEMORY SYSTEM OVERVIEW</div>
+
+  <div class="concept-diagram fade-in">
+    <div class="diagram-center">
+
+      <div class="cpu-box">⚡ CPU — PROCESSOR</div>
+
+      <div style="text-align:center; color: var(--muted); font-family:'Space Mono',monospace; font-size:0.7rem;">
+        ↓ CPU accesses memory in this priority order ↓
+      </div>
+
+      <div class="memory-row">
+        <div class="mem-node cache">
+          <div class="icon">🔵</div>
+          <div class="label">CACHE</div>
+          <div class="sub">L1 → L2 → L3<br>Inside CPU</div>
+          <div class="speed-badge">~1ns · KB–MB</div>
+        </div>
+        <div class="mem-node ram">
+          <div class="icon">🟢</div>
+          <div class="label">RAM</div>
+          <div class="sub">DDR SDRAM<br>Motherboard</div>
+          <div class="speed-badge">~10–50ns · GB</div>
+        </div>
+        <div class="mem-node virtual">
+          <div class="icon">🟠</div>
+          <div class="label">VIRTUAL</div>
+          <div class="sub">Page File<br>On SSD/HDD</div>
+          <div class="speed-badge">~100µs · Overflow</div>
+        </div>
+        <div class="mem-node storage">
+          <div class="icon">🔴</div>
+          <div class="label">STORAGE</div>
+          <div class="sub">SSD / HDD<br>Permanent</div>
+          <div class="speed-badge">Slowest · TB</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; width:100%; text-align:center; font-size:0.75rem; font-family:'Space Mono',monospace; color:var(--muted);">
+        <div>Volatile ✓<br>Non-persistent ✓</div>
+        <div>Volatile ✓<br>Non-persistent ✓</div>
+        <div>Volatile ✓<br>Slow as storage</div>
+        <div>Non-volatile ✓<br>Persistent ✓</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="memo-box" style="margin-top:1.5rem;">
+    <div class="memo-icon">⚡</div>
+    <div>
+      <div class="memo-label">SPEED ORDER — "COPS RUN VERY SLOW"</div>
+      <div class="memo-text">
+        <strong style="color:var(--blue);">C</strong>ache &nbsp;→&nbsp;
+        <strong style="color:var(--green);">R</strong>AM &nbsp;→&nbsp;
+        <strong style="color:var(--orange);">V</strong>irtual &nbsp;→&nbsp;
+        <strong style="color:var(--red);">S</strong>torage<br>
+        Each step is <span class="hl-r">10–1000× slower</span> than the one before it. Miss RAM → you feel it instantly.
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick comparison table -->
+  <div style="margin-top:2rem;">
+    <table class="styled-table fade-in">
+      <thead>
+        <tr>
+          <th>MEMORY TYPE</th>
+          <th>LOCATION</th>
+          <th>VOLATILE?</th>
+          <th>SIZE</th>
+          <th>SPEED</th>
+          <th>COST/GB</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag blue">Cache</span></td>
+          <td>Inside CPU</td>
+          <td><span class="hl-r">YES</span></td>
+          <td>KB–MB</td>
+          <td><span class="hl-g">🔥 Fastest</span></td>
+          <td>Very High</td>
+        </tr>
+        <tr>
+          <td><span class="tag green">RAM</span></td>
+          <td>Motherboard</td>
+          <td><span class="hl-r">YES</span></td>
+          <td>GB</td>
+          <td><span class="hl-g">⚡ Very Fast</span></td>
+          <td>Medium</td>
+        </tr>
+        <tr>
+          <td><span class="tag orange">Virtual Memory</span></td>
+          <td>SSD/HDD</td>
+          <td><span class="hl-r">YES</span></td>
+          <td>Configurable</td>
+          <td><span class="hl-o">🐢 Slow</span></td>
+          <td>Low</td>
+        </tr>
+        <tr>
+          <td><span class="tag red">SSD/HDD</span></td>
+          <td>Storage device</td>
+          <td><span class="hl-g">NO</span></td>
+          <td>GB–TB</td>
+          <td><span class="hl-r">🐌 Slowest</span></td>
+          <td>Lowest</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 2: DDR SDRAM             -->
+<!-- ================================ -->
+<div class="section" id="ddr">
+  <div class="section-title orange">02 / DDR SDRAM — WHAT EACH LETTER MEANS</div>
+
+  <div class="ddr-grid fade-in">
+    <div class="ddr-card d">
+      <div class="letter">D</div>
+      <div class="word">DYNAMIC</div>
+      <div class="explain">Uses capacitors + transistors.<br>Charge = 1 · No charge = 0<br>Must refresh thousands of times/sec</div>
+    </div>
+    <div class="ddr-card s">
+      <div class="letter">S</div>
+      <div class="word">SYNCHRONOUS</div>
+      <div class="explain">Timed with the CPU clock.<br>CPU says "now" → RAM replies<br>in perfect sync.</div>
+    </div>
+    <div class="ddr-card ddr">
+      <div class="letter">DDR</div>
+      <div class="word">DOUBLE DATA RATE</div>
+      <div class="explain">Sends data on both rising &amp;<br>falling edge of clock.<br>= 2 transfers per cycle</div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🎯</div>
+    <div>
+      <div class="memo-label">ACRONYM LOCK — "DEAD SOLDIERS DOUBLE"</div>
+      <div class="memo-text">
+        <strong style="color:var(--yellow);">D</strong>ynamic = capacitors <strong>die</strong> (leak charge) → must be refreshed constantly<br>
+        <strong style="color:var(--orange);">S</strong>ynchronous = marches in <strong>step</strong> with the CPU clock — perfectly timed<br>
+        <strong style="color:var(--pink);">DDR</strong> = fires on the way <strong>up</strong> AND the way <strong>down</strong> of each clock pulse → 2× data
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULA -->
+  <div class="formula-box fade-in">
+    <div class="formula-label">⚡ EXAM FORMULA — TRANSFER RATE</div>
+    <div class="formula">Transfer Rate = <span>Data Rate</span> × 8</div>
+    <div class="example">Example: 200 MT/s × 8 = <span class="hl-y">1,600 MB/s</span> → That's why DDR-200 = <span class="hl-o">PC-1600</span></div>
+  </div>
+
+  <div class="trap-box">
+    <div class="trap-label">🚨 EXAM TRAP — FORMULA</div>
+    <div class="trap-item">DDR = 2 transfers per clock (rising + falling edge)</div>
+    <div class="trap-item">100 MHz clock → 200 MT/s (not 100 MT/s)</div>
+    <div class="trap-item">Transfer Rate (MB/s) = MT/s × 8 bytes</div>
+    <div class="trap-item">DDR-200 → PC-1600 · DDR-400 → PC-3200</div>
+  </div>
+
+  <!-- DDR Generations -->
+  <div style="margin-top:2rem;">
+    <div class="section-title pink" style="font-size:1rem; margin-bottom:1rem;">DDR GENERATIONS — SPEED PROGRESSION</div>
+
+    <div class="gen-row">
+      <div class="gen-fill" style="background:var(--muted); width:30%;"></div>
+      <div class="gen-name" style="color:var(--muted);">DDR3</div>
+      <div class="gen-info">Max ~16GB · 1.5V · Older systems</div>
+      <div class="gen-power">
+        <div class="power-bar">
+          <div class="power-dot" style="background:var(--red);"></div>
+          <div class="power-dot" style="background:var(--red);"></div>
+          <div class="power-dot" style="background:var(--red);"></div>
+          <div class="power-dot" style="background:#222;"></div>
+          <div class="power-dot" style="background:#222;"></div>
+        </div>
+        <div style="font-size:0.65rem; color:var(--muted); font-family:'Space Mono',monospace; margin-top:2px;">HIGH POWER</div>
+      </div>
+    </div>
+
+    <div class="gen-row">
+      <div class="gen-fill" style="background:var(--orange); width:60%;"></div>
+      <div class="gen-name" style="color:var(--orange);">DDR4</div>
+      <div class="gen-info">Max ~32GB · 1.2V · Current standard</div>
+      <div class="gen-power">
+        <div class="power-bar">
+          <div class="power-dot" style="background:var(--orange);"></div>
+          <div class="power-dot" style="background:var(--orange);"></div>
+          <div class="power-dot" style="background:#222;"></div>
+          <div class="power-dot" style="background:#222;"></div>
+          <div class="power-dot" style="background:#222;"></div>
+        </div>
+        <div style="font-size:0.65rem; color:var(--muted); font-family:'Space Mono',monospace; margin-top:2px;">MEDIUM POWER</div>
+      </div>
+    </div>
+
+    <div class="gen-row">
+      <div class="gen-fill" style="background:var(--green); width:100%;"></div>
+      <div class="gen-name" style="color:var(--green);">DDR5</div>
+      <div class="gen-info">Max 128GB+ · 1.1V · Dual 32-bit channels per DIMM · Latest</div>
+      <div class="gen-power">
+        <div class="power-bar">
+          <div class="power-dot" style="background:var(--green);"></div>
+          <div class="power-dot" style="background:#222;"></div>
+          <div class="power-dot" style="background:#222;"></div>
+          <div class="power-dot" style="background:#222;"></div>
+          <div class="power-dot" style="background:#222;"></div>
+        </div>
+        <div style="font-size:0.65rem; color:var(--muted); font-family:'Space Mono',monospace; margin-top:2px;">LOW POWER</div>
+      </div>
+    </div>
+
+    <div class="memo-box" style="margin-top:1rem;">
+      <div class="memo-icon">📉</div>
+      <div>
+        <div class="memo-label">PATTERN LOCK — EVERY NEW DDR: "FASTER, BIGGER, CHEAPER TO RUN"</div>
+        <div class="memo-text">
+          Speed <strong style="color:var(--green);">↑</strong> &nbsp;·&nbsp; Max capacity <strong style="color:var(--green);">↑</strong> &nbsp;·&nbsp; Voltage <strong style="color:var(--red);">↓</strong> &nbsp;·&nbsp; Notch position shifts<br>
+          <span class="hl-r">DDR3 = 1.5V · DDR4 = 1.2V · DDR5 = 1.1V</span> — each drops 0.3V or 0.1V. Never goes backward.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAS Latency -->
+  <div style="margin-top:2rem;">
+    <div class="section-title yellow" style="font-size:1rem; margin-bottom:1rem;">CAS LATENCY — RESPONSE DELAY</div>
+
+    <div style="background:var(--surface); border-radius:12px; padding:1.5rem; border:1px solid #222;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.8rem; color:var(--muted); margin-bottom:1rem;">
+        CAS = Column Access Strobe · How many clock cycles RAM takes to respond after being asked for data
+      </div>
+
+      <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+        <div style="background:rgba(255,45,85,0.1); border:1px solid rgba(255,45,85,0.3); border-radius:8px; padding:1rem 2rem; text-align:center;">
+          <div style="font-family:'Orbitron',monospace; font-size:1.5rem; font-weight:900; color:var(--red);">CL16</div>
+          <div style="font-size:0.75rem; color:var(--muted);">❌ Slower</div>
+        </div>
+        <div style="color:var(--muted); font-size:1.5rem;">→</div>
+        <div style="background:rgba(0,255,156,0.1); border:1px solid rgba(0,255,156,0.3); border-radius:8px; padding:1rem 2rem; text-align:center;">
+          <div style="font-family:'Orbitron',monospace; font-size:1.5rem; font-weight:900; color:var(--green);">CL14</div>
+          <div style="font-size:0.75rem; color:var(--muted);">✅ Faster</div>
+        </div>
+        <div style="color:var(--muted); font-size:0.8rem; font-family:'Space Mono',monospace; max-width:250px;">
+          Lower number = fewer cycles to wait = faster response
+        </div>
+      </div>
+
+      <div class="trap-box">
+        <div class="trap-label">🚨 EXAM TRAP — CAS LATENCY</div>
+        <div class="trap-item">CAS latency is ONLY comparable within the SAME DDR generation AND SAME speed</div>
+        <div class="trap-item">CL14 DDR4-3200 vs CL16 DDR5-6000 → The DDR5 is still faster overall</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 3: PERFORMANCE LADDER    -->
+<!-- ================================ -->
+<div class="section" id="performance">
+  <div class="section-title red">03 / PERFORMANCE LADDER — SPEED HIERARCHY</div>
+
+  <div class="ladder fade-in">
+    <!-- L1 Cache -->
+    <div class="ladder-rung" style="border-left: 4px solid var(--cache-color);">
+      <div class="rung-bar" style="background:var(--cache-color); width:100%;"></div>
+      <div class="rung-name" style="color:var(--cache-color);">L1 CACHE</div>
+      <div class="rung-speed">~1–4 cycles · 32–128 KB · Inside CPU core</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+      </div>
+    </div>
+    <div class="ladder-rung" style="border-left: 4px solid var(--cache-color);">
+      <div class="rung-bar" style="background:var(--cache-color); width:85%;"></div>
+      <div class="rung-name" style="color:var(--cache-color);">L2 CACHE</div>
+      <div class="rung-speed">~4–12 cycles · 256 KB–2 MB · Near CPU core</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+    <div class="ladder-rung" style="border-left: 4px solid var(--cache-color);">
+      <div class="rung-bar" style="background:var(--cache-color); width:70%;"></div>
+      <div class="rung-name" style="color:var(--cache-color);">L3 CACHE</div>
+      <div class="rung-speed">~30–40 cycles · 4–64 MB · Shared by all cores</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--cache-color);"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; color:var(--muted); padding:0.5rem; font-family:'Space Mono',monospace; font-size:0.7rem;">─── ─── RAM BOUNDARY ─── ───</div>
+
+    <div class="ladder-rung" style="border-left: 4px solid var(--ram-color);">
+      <div class="rung-bar" style="background:var(--ram-color); width:55%;"></div>
+      <div class="rung-name" style="color:var(--ram-color);">DDR5</div>
+      <div class="rung-speed">Fastest DDR · 4800+ MT/s · 1.1V</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:var(--ram-color);"></div>
+        <div class="rung-bar-unit" style="background:var(--ram-color);"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+    <div class="ladder-rung" style="border-left: 4px solid var(--ram-color);">
+      <div class="rung-bar" style="background:var(--ram-color); width:45%;"></div>
+      <div class="rung-name" style="color:var(--ram-color);">DDR4</div>
+      <div class="rung-speed">2133–3200 MT/s · 1.2V · Current standard</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:var(--ram-color);"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+    <div class="ladder-rung" style="border-left: 4px solid var(--ram-color); opacity:0.6;">
+      <div class="rung-bar" style="background:var(--ram-color); width:35%;"></div>
+      <div class="rung-name" style="color:var(--ram-color);">DDR3</div>
+      <div class="rung-speed">800–1866 MT/s · 1.5V · Legacy</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:#333;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; color:var(--muted); padding:0.5rem; font-family:'Space Mono',monospace; font-size:0.7rem;">─── ─── VIRTUAL MEMORY BOUNDARY ─── ───</div>
+
+    <div class="ladder-rung" style="border-left: 4px solid var(--virtual-color);">
+      <div class="rung-bar" style="background:var(--virtual-color); width:20%;"></div>
+      <div class="rung-name" style="color:var(--virtual-color);">VIRTUAL (SSD)</div>
+      <div class="rung-speed">Page file on SSD · Much slower than RAM</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+    <div class="ladder-rung" style="border-left: 4px solid var(--storage-color);">
+      <div class="rung-bar" style="background:var(--storage-color); width:15%;"></div>
+      <div class="rung-name" style="color:var(--storage-color);">SSD</div>
+      <div class="rung-speed">Storage device · Non-volatile · GB–TB</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+    <div class="ladder-rung" style="border-left: 4px solid var(--storage-color); opacity:0.6;">
+      <div class="rung-bar" style="background:var(--storage-color); width:8%;"></div>
+      <div class="rung-name" style="color:var(--storage-color);">HDD</div>
+      <div class="rung-speed">Spinning disk · Slowest · Large capacity</div>
+      <div class="rung-bars">
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+        <div class="rung-bar-unit" style="background:#222;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="memo-box" style="margin-top:1.5rem;">
+    <div class="memo-icon">🏢</div>
+    <div>
+      <div class="memo-label">VISUAL LOCK — THE PENTHOUSE RULE</div>
+      <div class="memo-text">
+        CPU always tries the <strong style="color:var(--blue);">penthouse first (Cache)</strong>. Not there? Goes down to <strong style="color:var(--green);">floor 2 (RAM)</strong>.<br>
+        RAM full? Forced to the <strong style="color:var(--orange);">basement (Virtual)</strong>. Performance collapses.<br>
+        <span class="hl-r">Thrashing = CPU riding the elevator nonstop. Fix = add RAM = move back upstairs.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 4: CHANNELS              -->
+<!-- ================================ -->
+<div class="section" id="channels">
+  <div class="section-title pink">04 / MEMORY CHANNELS — BANDWIDTH LANES</div>
+
+  <div class="channels-grid fade-in">
+    <div class="channel-card">
+      <div class="channel-name" style="color:var(--blue);">SINGLE CHANNEL</div>
+      <div class="channel-bits">64-bit bus</div>
+      <div class="lane-visual">
+        <div class="lane"></div>
+      </div>
+      <div class="channel-bandwidth" style="background:rgba(0,198,255,0.1); color:var(--blue);">1× bandwidth</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-name" style="color:var(--green);">DUAL CHANNEL</div>
+      <div class="channel-bits">128-bit bus (2 × 64)</div>
+      <div class="lane-visual">
+        <div class="lane"></div>
+        <div class="lane" style="animation-delay:0.3s;"></div>
+      </div>
+      <div class="channel-bandwidth" style="background:rgba(0,255,156,0.1); color:var(--green);">2× bandwidth</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-name" style="color:var(--orange);">TRIPLE CHANNEL</div>
+      <div class="channel-bits">192-bit bus (3 × 64)</div>
+      <div class="lane-visual">
+        <div class="lane"></div>
+        <div class="lane" style="animation-delay:0.2s;"></div>
+        <div class="lane" style="animation-delay:0.4s;"></div>
+      </div>
+      <div class="channel-bandwidth" style="background:rgba(255,107,0,0.1); color:var(--orange);">3× bandwidth</div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-name" style="color:var(--yellow);">QUAD CHANNEL</div>
+      <div class="channel-bits">256-bit bus (4 × 64)</div>
+      <div class="lane-visual">
+        <div class="lane"></div>
+        <div class="lane" style="animation-delay:0.15s;"></div>
+        <div class="lane" style="animation-delay:0.3s;"></div>
+        <div class="lane" style="animation-delay:0.45s;"></div>
+      </div>
+      <div class="channel-bandwidth" style="background:rgba(255,214,0,0.1); color:var(--yellow);">4× bandwidth</div>
+    </div>
+  </div>
+
+  <!-- Dual channel installation guide -->
+  <div style="background:var(--surface); border-radius:12px; padding:1.5rem; border:1px solid #222; margin-top:1.5rem;" class="fade-in">
+    <div style="font-family:'Orbitron',monospace; font-size:0.85rem; color:var(--pink); margin-bottom:1rem; font-weight:700;">⚠ DUAL CHANNEL INSTALLATION — DO IT RIGHT</div>
+
+    <div style="display:flex; gap:1rem; align-items:flex-start; flex-wrap:wrap;">
+      <!-- slot visual -->
+      <div style="display:flex; gap:6px; align-items:flex-end; padding:1rem; background:var(--surface2); border-radius:8px;">
+        <div style="text-align:center;">
+          <div style="width:20px; height:80px; border-radius:2px; background:rgba(0,255,156,0.4); border:2px solid var(--green); margin-bottom:4px;"></div>
+          <div style="font-size:0.6rem; color:var(--green); font-family:'Space Mono',monospace;">A1</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:20px; height:80px; border-radius:2px; background:#222; border:2px solid #444; margin-bottom:4px;"></div>
+          <div style="font-size:0.6rem; color:var(--muted); font-family:'Space Mono',monospace;">A2</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:20px; height:80px; border-radius:2px; background:rgba(0,255,156,0.4); border:2px solid var(--green); margin-bottom:4px;"></div>
+          <div style="font-size:0.6rem; color:var(--green); font-family:'Space Mono',monospace;">B1</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:20px; height:80px; border-radius:2px; background:#222; border:2px solid #444; margin-bottom:4px;"></div>
+          <div style="font-size:0.6rem; color:var(--muted); font-family:'Space Mono',monospace;">B2</div>
+        </div>
+      </div>
+
+      <div style="flex:1; min-width:200px;">
+        <div style="color:var(--green); font-size:0.85rem; margin-bottom:0.5rem; font-weight:600;">✅ CORRECT — Slots A1 + B1 (matching colors)</div>
+        <div style="color:var(--muted); font-family:'Space Mono',monospace; font-size:0.75rem; line-height:1.8;">
+          Both sticks must match:<br>
+          → Same SIZE (e.g. both 8GB)<br>
+          → Same SPEED (e.g. both 3200MT/s)<br>
+          → Same CAS latency<br>
+          → Same voltage
+        </div>
+        <div style="margin-top:0.8rem; font-size:0.8rem; color:var(--orange);">
+          ⚠ Mismatched? System runs at the SLOWEST module's specs.
+        </div>
+      </div>
+    </div>
+
+    <!-- Flex mode -->
+    <div style="margin-top:1rem; padding:1rem; background:rgba(255,214,0,0.05); border:1px solid rgba(255,214,0,0.2); border-radius:8px;">
+      <div style="font-family:'Orbitron',monospace; font-size:0.75rem; color:var(--yellow); margin-bottom:0.3rem;">FLEX MODE (Unequal sticks)</div>
+      <div style="font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted);">
+        Example: 2GB in A1 + 6GB in B1<br>
+        → 2GB runs <span style="color:var(--green);">dual-channel</span> · 4GB runs <span style="color:var(--orange);">single-channel</span><br>
+        → Still better than pure single channel
+      </div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🛣️</div>
+    <div>
+      <div class="memo-label">RULE LOCK — CHANNELS DON'T MATTER IF THE STICKS DON'T MATCH</div>
+      <div class="memo-text">
+        Dual channel = 2 lanes. But if one lane has a <span class="hl-r">speed limit of 2133</span> and the other <span class="hl-y">3200</span> — <strong>both lanes run at 2133.</strong><br>
+        <span class="hl-o">Slots A1+B1</span> = dual channel. &nbsp;<span class="hl-r">A1+A2</span> = single channel. Check your motherboard manual — color-coded slots tell you the pairs.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 5: VIRTUAL MEMORY        -->
+<!-- ================================ -->
+<div class="section" id="virtual">
+  <div class="section-title orange">05 / VIRTUAL MEMORY — FLOW DIAGRAM</div>
+
+  <div class="vm-diagram fade-in">
+    <div style="font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); margin-bottom:1.5rem; text-align:center;">
+      Follow the flow: What happens as RAM fills up?
+    </div>
+
+    <div class="vm-flow">
+      <!-- Step 1: Normal -->
+      <div class="vm-step normal">
+        <div class="vm-connector">
+          <div class="vm-dot"></div>
+          <div class="vm-line"></div>
+        </div>
+        <div class="vm-content">
+          <div class="vm-title">① NORMAL OPERATION</div>
+          <div class="vm-desc">CPU requests data → Found in RAM → Fast response<br>System runs smoothly. RAM has available space.</div>
+        </div>
+      </div>
+
+      <!-- Step 2: RAM filling -->
+      <div class="vm-step normal">
+        <div class="vm-connector">
+          <div class="vm-dot"></div>
+          <div class="vm-line"></div>
+        </div>
+        <div class="vm-content">
+          <div class="vm-title">② RAM GETTING FULL</div>
+          <div class="vm-desc">Running many apps. RAM utilization rising. OS prepares to swap inactive data out.</div>
+        </div>
+      </div>
+
+      <!-- Step 3: Paging starts -->
+      <div class="vm-step paging">
+        <div class="vm-connector">
+          <div class="vm-dot"></div>
+          <div class="vm-line"></div>
+        </div>
+        <div class="vm-content">
+          <div class="vm-title">③ PAGING BEGINS</div>
+          <div class="vm-desc">OS moves 4KB PAGE blocks from RAM → Storage (page file / swap)<br>
+          Virtual memory = using SSD/HDD space as "fake RAM"<br>
+          Performance DEGRADES — SSD much slower than RAM.</div>
+        </div>
+      </div>
+
+      <!-- Step 4: Thrashing -->
+      <div class="vm-step thrashing">
+        <div class="vm-connector">
+          <div class="vm-dot"></div>
+          <div class="vm-line"></div>
+        </div>
+        <div class="vm-content">
+          <div class="vm-title">④ THRASHING 🚨</div>
+          <div class="vm-desc">
+            System constantly swapping pages in/out.<br>
+            <span style="color:var(--red);">Symptoms: Disk 100% active · System frozen · Programs crash</span><br>
+            Cause: Not enough physical RAM · Fix: ADD MORE RAM
+          </div>
+        </div>
+      </div>
+
+      <!-- Fix -->
+      <div class="vm-step normal" style="margin-top:0.5rem;">
+        <div class="vm-connector">
+          <div class="vm-dot"></div>
+        </div>
+        <div class="vm-content">
+          <div class="vm-title">✅ FIX: ADD MORE RAM</div>
+          <div class="vm-desc">More physical RAM → less paging → back to floor 1 of the building.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paging detail -->
+  <div style="background:var(--surface); border-radius:12px; padding:1.5rem; border:1px solid #222; margin-top:1.5rem;">
+    <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap;">
+      <div style="text-align:center; flex: 1; min-width:120px;">
+        <div style="font-family:'Orbitron',monospace; font-size:2rem; font-weight:900; color:var(--orange);">4 KB</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--muted);">PAGE SIZE<br>(standard block)</div>
+      </div>
+      <div style="flex:3; min-width:200px;">
+        <div style="font-size:0.9rem; color:var(--text); margin-bottom:0.5rem;"><span class="hl-o">Paging</span> = OS moves data in blocks called <span class="hl-y">pages (4KB)</span> between RAM and the page file on disk.</div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted);">
+          Page file on SSD → slow<br>
+          Page file on HDD → very slow<br>
+          No page file → crash risk if RAM maxed
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🔄</div>
+    <div>
+      <div class="memo-label">SEQUENCE LOCK — "PAGES PILE UP, THEN PANIC"</div>
+      <div class="memo-text">
+        RAM full → OS starts <strong style="color:var(--orange);">paging</strong> (moving 4KB chunks to disk) → disk slows everything → more paging needed → <strong style="color:var(--red);">THRASHING</strong>.<br>
+        Exam tip: <span class="hl-y">"Disk light constantly on + system frozen"</span> = that's thrashing. The answer is always <span class="hl-g">add more RAM</span> — not a bigger page file.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 6: ECC RAM               -->
+<!-- ================================ -->
+<div class="section" id="ecc">
+  <div class="section-title pink">06 / ECC RAM — SERVER MEMORY</div>
+
+  <!-- Block diagram -->
+  <div class="ecc-diagram fade-in">
+    <div style="text-align:center;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); margin-bottom:0.5rem;">NORMAL RAM (Non-ECC)</div>
+      <div class="ecc-block" style="background:rgba(0,198,255,0.1); border:2px solid var(--blue); color:var(--blue); width:200px;">
+        64-bit data bus
+      </div>
+    </div>
+
+    <div class="ecc-arrow">→</div>
+
+    <div style="text-align:center;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); margin-bottom:0.5rem;">ECC RAM</div>
+      <div style="display:flex; border-radius:8px; overflow:hidden; border: 2px solid var(--pink);">
+        <div class="ecc-block" style="background:rgba(255,71,163,0.1); color:var(--pink); width:160px;">
+          64-bit data
+        </div>
+        <div class="ecc-block" style="background:rgba(255,214,0,0.15); color:var(--yellow); width:60px;">
+          +8 ECC bits
+        </div>
+      </div>
+      <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); margin-top:0.3rem;">= 72-bit total bus</div>
+    </div>
+
+    <div class="ecc-arrow">→</div>
+
+    <div style="text-align:center;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); margin-bottom:0.5rem;">RESULT</div>
+      <div style="display:flex; flex-direction:column; gap:0.5rem;">
+        <div class="ecc-block" style="background:rgba(0,255,156,0.1); border:2px solid var(--green); color:var(--green); width:180px; font-size:0.65rem;">
+          ✅ Detects 1-bit errors
+        </div>
+        <div class="ecc-block" style="background:rgba(0,255,156,0.1); border:2px solid var(--green); color:var(--green); width:180px; font-size:0.65rem;">
+          ✅ Corrects 1-bit errors
+        </div>
+        <div class="ecc-block" style="background:rgba(255,45,85,0.1); border:2px solid var(--red); color:var(--red); width:180px; font-size:0.65rem;">
+          🛑 Halts on major error
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <table class="styled-table fade-in">
+      <thead>
+        <tr>
+          <th>COMPATIBILITY RULE</th>
+          <th>STATUS</th>
+          <th>REASON</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CPU must support ECC</td>
+          <td><span class="tag green">REQUIRED</span></td>
+          <td>CPU must handle 72-bit bus</td>
+        </tr>
+        <tr>
+          <td>Motherboard must support ECC</td>
+          <td><span class="tag green">REQUIRED</span></td>
+          <td>Not all boards support ECC</td>
+        </tr>
+        <tr>
+          <td>Mix UDIMM + RDIMM</td>
+          <td><span class="tag red">❌ NO BOOT</span></td>
+          <td>Different buffer designs</td>
+        </tr>
+        <tr>
+          <td>Mix ECC + non-ECC</td>
+          <td><span class="tag red">❌ NO BOOT</span></td>
+          <td>Incompatible bus widths</td>
+        </tr>
+        <tr>
+          <td>DDR5 internal error detection</td>
+          <td><span class="tag orange">⚠ NOT ECC</span></td>
+          <td>Detection only, not full correction</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🏥</div>
+    <div>
+      <div class="memo-label">CONTRAST LOCK — ECC VS NON-ECC</div>
+      <div class="memo-text">
+        Non-ECC: a single flipped bit causes a <span class="hl-r">kernel panic or silent data corruption</span>. Fine for your desktop.<br>
+        ECC: that same flip is <span class="hl-g">detected and fixed in hardware</span>, invisibly, every time.<br>
+        <span class="hl-y">Key exam fact:</span> DDR5 has <em>on-die</em> error detection — but <strong style="color:var(--red);">that is NOT ECC.</strong> It can't correct anything.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 7: DIMM vs SODIMM        -->
+<!-- ================================ -->
+<div class="section" id="dimm">
+  <div class="section-title blue">07 / DIMM vs SO-DIMM — FORM FACTORS</div>
+
+  <div class="dimm-compare fade-in">
+    <div class="dimm-card">
+      <div class="dimm-title">DIMM</div>
+      <div class="dimm-sub">Dual Inline Memory Module</div>
+      <div class="dimm-visual">
+        <div class="chips-row">
+          <div class="chip"></div>
+          <div class="chip"></div>
+          <div class="chip"></div>
+          <div class="chip"></div>
+          <div class="chip"></div>
+          <div class="chip"></div>
+        </div>
+        <div class="notch-indicator"></div>
+      </div>
+      <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); text-align:center;">5.25 inches wide</div>
+      <div class="dimm-tags">
+        <span class="tag blue">Desktop</span>
+        <span class="tag blue">More Capacity</span>
+        <span class="tag blue">Full Size</span>
+      </div>
+    </div>
+
+    <div class="dimm-card">
+      <div class="dimm-title">SO-DIMM</div>
+      <div class="dimm-sub">Small Outline DIMM</div>
+      <div class="dimm-visual" style="width:65%; height:32px; margin: 1rem auto;">
+        <div class="chips-row" style="padding: 0 0.5rem;">
+          <div class="chip" style="width:14px; height:10px;"></div>
+          <div class="chip" style="width:14px; height:10px;"></div>
+          <div class="chip" style="width:14px; height:10px;"></div>
+          <div class="chip" style="width:14px; height:10px;"></div>
+        </div>
+        <div class="notch-indicator" style="left:35%;"></div>
+      </div>
+      <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); text-align:center;">2.66 inches wide · Installs at 45°</div>
+      <div class="dimm-tags">
+        <span class="tag green">Laptop</span>
+        <span class="tag green">Smaller</span>
+        <span class="tag green">Space-Saving</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notch warning -->
+  <div style="background:rgba(255,214,0,0.05); border:2px solid rgba(255,214,0,0.3); border-radius:12px; padding:1.5rem; margin-top:1.5rem;">
+    <div style="font-family:'Orbitron',monospace; font-size:0.9rem; color:var(--yellow); margin-bottom:1rem;">🔒 NOTCHES — PHYSICAL PROTECTION</div>
+
+    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;">
+      <div style="display:flex; gap:0.8rem; align-items:flex-end;">
+        <!-- DDR3 notch -->
+        <div style="text-align:center;">
+          <div style="width:60px; height:40px; background:#1a2a3a; border-radius:3px; border:1px solid #444; position:relative;">
+            <div style="position:absolute; bottom:0; left:30%; width:10px; height:8px; background:var(--bg); border-radius:2px 2px 0 0;"></div>
+          </div>
+          <div style="font-size:0.65rem; font-family:'Space Mono',monospace; color:var(--muted); margin-top:4px;">DDR3</div>
+        </div>
+        <!-- DDR4 notch -->
+        <div style="text-align:center;">
+          <div style="width:60px; height:40px; background:#1a2a3a; border-radius:3px; border:1px solid #555; position:relative;">
+            <div style="position:absolute; bottom:0; left:40%; width:10px; height:8px; background:var(--bg); border-radius:2px 2px 0 0;"></div>
+          </div>
+          <div style="font-size:0.65rem; font-family:'Space Mono',monospace; color:var(--orange); margin-top:4px;">DDR4</div>
+        </div>
+        <!-- DDR5 notch -->
+        <div style="text-align:center;">
+          <div style="width:60px; height:40px; background:#1a2a3a; border-radius:3px; border:1px solid var(--green); position:relative;">
+            <div style="position:absolute; bottom:0; left:48%; width:10px; height:8px; background:var(--bg); border-radius:2px 2px 0 0;"></div>
+          </div>
+          <div style="font-size:0.65rem; font-family:'Space Mono',monospace; color:var(--green); margin-top:4px;">DDR5</div>
+        </div>
+      </div>
+
+      <div style="flex:1; min-width:200px; font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); line-height:1.8;">
+        Each DDR generation has a <span class="hl-y">different notch position</span><br>
+        → Physical key that prevents wrong installation<br>
+        → DDR4 physically cannot fit in DDR5 slot<br>
+        → This is by design — not user error
+      </div>
+    </div>
+  </div>
+
+  <!-- ESD Warning -->
+  <div class="trap-box" style="margin-top:1rem;">
+    <div class="trap-label">⚡ ESD WARNING — STATIC ELECTRICITY DESTROYS RAM</div>
+    <div class="trap-item">Always ground yourself before touching RAM</div>
+    <div class="trap-item">Use anti-static wrist strap connected to chassis</div>
+    <div class="trap-item">Avoid carpet — generates massive static charge</div>
+    <div class="trap-item">Hold RAM by edges, not the chips or gold contacts</div>
+    <div class="trap-item">SODIMM installs at 45° angle, then press down until clip locks</div>
+  </div>
+
+  <div class="memo-box">
+    <div class="memo-icon">🔑</div>
+    <div>
+      <div class="memo-label">PHYSICAL LOCK — THE NOTCH IS THE ANSWER</div>
+      <div class="memo-text">
+        If a student asks "can I put DDR4 in a DDR5 slot?" — the answer isn't "no, they're incompatible."<br>
+        The answer is: <strong style="color:var(--yellow);">"It physically won't go in."</strong> The notch is in a different position. No force needed — the slot stops you.<br>
+        <span class="hl-o">SODIMM installs at 45° then snaps flat</span> — if you're pushing straight down from the start, you'll break it.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 8: TROUBLESHOOTING       -->
+<!-- ================================ -->
+<div class="section" id="troubleshoot">
+  <div class="section-title red">08 / TROUBLESHOOTING MEMORY — SYMPTOMS & FIXES</div>
+
+  <div class="trouble-grid fade-in">
+    <div class="trouble-card boot">
+      <div class="trouble-header">💥 PC WON'T BOOT / NO POST</div>
+      <div class="trouble-body">
+        <div class="cause">POSSIBLE CAUSES:</div>
+        <div class="fix-item">RAM not fully seated in slot</div>
+        <div class="fix-item">RAM in wrong slot (not A1+B1)</div>
+        <div class="fix-item">Incompatible DDR generation</div>
+        <div class="fix-item">Mixed RDIMM + UDIMM</div>
+        <div class="cause" style="margin-top:0.6rem;">FIXES:</div>
+        <div class="fix-item">Reseat RAM (remove and reinsert firmly)</div>
+        <div class="fix-item">Test one stick at a time</div>
+        <div class="fix-item">Check motherboard manual for slot order</div>
+      </div>
+    </div>
+
+    <div class="trouble-card bsod">
+      <div class="trouble-header">💙 RANDOM BLUE SCREENS (BSOD)</div>
+      <div class="trouble-body">
+        <div class="cause">POSSIBLE CAUSES:</div>
+        <div class="fix-item">Faulty RAM stick</div>
+        <div class="fix-item">Mixed RAM speeds (running at slowest)</div>
+        <div class="fix-item">Overclocking instability (XMP/DOCP)</div>
+        <div class="cause" style="margin-top:0.6rem;">FIXES:</div>
+        <div class="fix-item">Run MemTest86 (memory diagnostic tool)</div>
+        <div class="fix-item">Reset BIOS to defaults</div>
+        <div class="fix-item">Test sticks individually to isolate bad one</div>
+      </div>
+    </div>
+
+    <div class="trouble-card slow">
+      <div class="trouble-header">🐢 SLOW + DISK ALWAYS 100%</div>
+      <div class="trouble-body">
+        <div class="cause">POSSIBLE CAUSES:</div>
+        <div class="fix-item">RAM is full → thrashing (paging constantly)</div>
+        <div class="fix-item">Too many programs running simultaneously</div>
+        <div class="cause" style="margin-top:0.6rem;">FIXES:</div>
+        <div class="fix-item">Add more physical RAM</div>
+        <div class="fix-item">Close background applications</div>
+        <div class="fix-item">Check Task Manager → Memory usage</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="memo-box" style="margin-top:1.5rem;">
+    <div class="memo-icon">🔧</div>
+    <div>
+      <div class="memo-label">DECISION LOCK — READ THE SYMPTOM, KNOW THE FIX</div>
+      <div class="memo-text">
+        <span class="hl-r">No POST at all</span> = RAM not seated or wrong type → <strong>reseat first, one stick at a time</strong><br>
+        <span class="hl-b">Boots but random BSOD</span> = bad or mismatched RAM → <strong>MemTest86, then swap sticks</strong><br>
+        <span class="hl-o">Boots, runs, but crawls + disk maxed</span> = thrashing → <strong>buy more RAM, full stop</strong><br>
+        <span class="hl-y">Exam trap:</span> "disk constantly active + slow" is a RAM question, not a storage question.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ================================ -->
+<!-- SECTION 9: EXAM TRAPS + QUICK REF-->
+<!-- ================================ -->
+<div class="section" id="exam">
+  <div class="section-title yellow">09 / EXAM TRAPS + QUICK REFERENCE</div>
+
+  <div class="trap-box fade-in">
+    <div class="trap-label">🚨 CRITICAL EXAM TRAPS — MEMORIZE THESE</div>
+    <div class="trap-item"><span class="hl-r">32-bit CPU = MAX 4GB RAM</span> · 64-bit CPU = up to 256TB (practical)</div>
+    <div class="trap-item"><span class="hl-y">CAS latency is ONLY comparable within same DDR generation AND same speed</span></div>
+    <div class="trap-item"><span class="hl-o">DDR = 2 transfers per clock cycle</span> (rising + falling edge) — NOT 1</div>
+    <div class="trap-item"><span class="hl-p">Transfer Rate (MB/s) = MT/s × 8</span> · DDR-200 = PC-1600</div>
+    <div class="trap-item"><span class="hl-r">Mixing RDIMM + UDIMM = NO BOOT</span> · Mixing ECC + non-ECC = NO BOOT</div>
+    <div class="trap-item"><span class="hl-y">ECC requires CPU AND motherboard support</span> — both must be compatible</div>
+    <div class="trap-item"><span class="hl-o">DDR5 has built-in error detection ≠ ECC</span> · Not the same thing</div>
+    <div class="trap-item"><span class="hl-r">Data bus ≠ Address bus</span> · Different concepts entirely</div>
+    <div class="trap-item"><span class="hl-p">Virtual memory uses storage (SSD/HDD) as RAM — much slower</span></div>
+    <div class="trap-item"><span class="hl-y">DDR4 physically cannot fit in a DDR5 slot</span> — notch prevents it</div>
+  </div>
+
+  <!-- QUICK REFERENCE CARDS -->
+  <div class="quick-ref" style="margin-top:2rem;" class="fade-in">
+    <div class="quick-card">
+      <div class="qc-title">ACRONYMS</div>
+      <div class="quick-item"><div class="qi-key">DDR</div><div>Double Data Rate</div></div>
+      <div class="quick-item"><div class="qi-key">SDRAM</div><div>Synchronous Dynamic RAM</div></div>
+      <div class="quick-item"><div class="qi-key">CAS</div><div>Column Access Strobe</div></div>
+      <div class="quick-item"><div class="qi-key">ECC</div><div>Error Correction Code</div></div>
+      <div class="quick-item"><div class="qi-key">DIMM</div><div>Dual Inline Memory Module</div></div>
+      <div class="quick-item"><div class="qi-key">SODIMM</div><div>Small Outline DIMM (laptop)</div></div>
+      <div class="quick-item"><div class="qi-key">UDIMM</div><div>Unbuffered DIMM (consumer)</div></div>
+      <div class="quick-item"><div class="qi-key">RDIMM</div><div>Registered DIMM (server)</div></div>
+    </div>
+
+    <div class="quick-card">
+      <div class="qc-title">KEY NUMBERS</div>
+      <div class="quick-item"><div class="qi-key">32-bit max RAM</div><div class="hl-r">4 GB</div></div>
+      <div class="quick-item"><div class="qi-key">64-bit max RAM</div><div class="hl-g">256 TB (practical)</div></div>
+      <div class="quick-item"><div class="qi-key">ECC extra bits</div><div class="hl-y">+8 bits (64 → 72-bit)</div></div>
+      <div class="quick-item"><div class="qi-key">Page size</div><div class="hl-o">4 KB</div></div>
+      <div class="quick-item"><div class="qi-key">Single channel bus</div><div>64-bit</div></div>
+      <div class="quick-item"><div class="qi-key">Dual channel bus</div><div class="hl-g">128-bit</div></div>
+      <div class="quick-item"><div class="qi-key">Triple channel bus</div><div>192-bit</div></div>
+      <div class="quick-item"><div class="qi-key">Quad channel bus</div><div class="hl-y">256-bit</div></div>
+    </div>
+
+    <div class="quick-card">
+      <div class="qc-title">DDR GENERATIONS</div>
+      <div class="quick-item"><div class="qi-key">DDR3 voltage</div><div class="hl-r">1.5V · max 16GB</div></div>
+      <div class="quick-item"><div class="qi-key">DDR4 voltage</div><div class="hl-o">1.2V · max 32GB</div></div>
+      <div class="quick-item"><div class="qi-key">DDR5 voltage</div><div class="hl-g">1.1V · max 128GB+</div></div>
+      <div class="quick-item"><div class="qi-key">DDR5 channels/DIMM</div><div class="hl-p">Dual 32-bit sub-channels</div></div>
+      <div class="quick-item"><div class="qi-key">DDR4 speed range</div><div>2133–3200 MT/s</div></div>
+      <div class="quick-item"><div class="qi-key">DIMM width</div><div>5.25 inches</div></div>
+      <div class="quick-item"><div class="qi-key">SODIMM width</div><div>2.66 inches</div></div>
+      <div class="quick-item"><div class="qi-key">SODIMM install angle</div><div class="hl-y">45°</div></div>
+    </div>
+
+    <div class="quick-card">
+      <div class="qc-title">CACHE HIERARCHY</div>
+      <div class="quick-item"><div class="qi-key">L1 Cache</div><div class="hl-b">Inside CPU core · 32–128 KB</div></div>
+      <div class="quick-item"><div class="qi-key">L2 Cache</div><div class="hl-b">Near CPU core · 256 KB–2 MB</div></div>
+      <div class="quick-item"><div class="qi-key">L3 Cache</div><div class="hl-b">Shared all cores · 4–64 MB</div></div>
+      <div class="quick-item"><div class="qi-key">Cache is volatile?</div><div class="hl-r">YES</div></div>
+      <div class="quick-item"><div class="qi-key">Fastest memory?</div><div class="hl-g">L1 Cache</div></div>
+      <div class="quick-item"><div class="qi-key">RAM is volatile?</div><div class="hl-r">YES</div></div>
+      <div class="quick-item"><div class="qi-key">SSD is volatile?</div><div class="hl-g">NO (non-volatile)</div></div>
+      <div class="quick-item"><div class="qi-key">Thrashing fix?</div><div class="hl-y">Add more RAM</div></div>
+    </div>
+  </div>
+
+  <!-- Final memo -->
+  <div class="memo-box" style="margin-top:2rem; background: linear-gradient(135deg, rgba(255,45,85,0.08), rgba(255,71,163,0.08)); border-color: rgba(255,45,85,0.4);">
+    <div class="memo-icon">🎯</div>
+    <div>
+      <div class="memo-label" style="color:var(--red);">MASTER CHEAT — 6 THINGS THAT BREAK EVERYTHING ON THE EXAM</div>
+      <div class="memo-text">
+        <span class="hl-r">①</span> 32-bit CPU → <strong>hard cap at 4GB</strong>, period, no exceptions<br>
+        <span class="hl-y">②</span> CAS comparison → <strong>only valid same DDR gen + same speed</strong><br>
+        <span class="hl-o">③</span> Transfer Rate formula → <strong>MT/s × 8 = MB/s</strong> (DDR-200 = PC-1600)<br>
+        <span class="hl-p">④</span> UDIMM + RDIMM mixed → <strong>no boot, always</strong><br>
+        <span class="hl-b">⑤</span> DDR5 on-die detection → <strong>NOT ECC</strong>, can't correct errors<br>
+        <span class="hl-g">⑥</span> Disk 100% + frozen → <strong>RAM problem</strong> (thrashing), not a disk problem
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; padding:2rem 0; font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--muted);">
+    CompTIA A+ Core 1 · RAM Master Guide · Visual Edition
+  </div>
+</div>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Nav active state
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('nav a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(link => {
+          link.style.color = '';
+          link.style.borderBottomColor = '';
+        });
+        const id = e.target.id;
+        const active = document.querySelector(`nav a[href="#${id}"]`);
+        if (active) {
+          active.style.color = 'var(--yellow)';
+          active.style.borderBottomColor = 'var(--yellow)';
+        }
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
