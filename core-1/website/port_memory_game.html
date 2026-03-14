@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Port Number Driller — CompTIA A+</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060810;
+  --surface: #0d1117;
+  --surface2: #161b27;
+  --border: #1e2738;
+  --text: #e6edf3;
+  --muted: #636e7b;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --red: #ff4757;
+  --orange: #ff9f43;
+  --yellow: #ffd32a;
+  --purple: #a55eea;
+  --pink: #fd79a8;
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-green: 0 0 20px rgba(0,255,136,0.4);
+  --glow-red: 0 0 20px rgba(255,71,87,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Exo 2', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* GRID BG */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; position: relative; z-index: 1; }
+.screen.active { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ══════════════════════════ HOME SCREEN ══════════════════════════ */
+#homeScreen {
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+  gap: 0;
+}
+
+.logo-area { margin-bottom: 32px; }
+.logo-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(26px, 7vw, 42px);
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.logo-sub {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* STATS ROW */
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  justify-content: center;
+}
+.stat-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-chip .val {
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  color: var(--cyan);
+}
+
+/* MODE CARDS */
+.modes-title {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 28px;
+}
+.mode-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.mode-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 14px;
+}
+.mode-card:active { transform: scale(0.96); }
+.mode-card.cyan::before { background: radial-gradient(circle at 50% 0%, rgba(0,212,255,0.15), transparent 70%); }
+.mode-card.green::before { background: radial-gradient(circle at 50% 0%, rgba(0,255,136,0.15), transparent 70%); }
+.mode-card.orange::before { background: radial-gradient(circle at 50% 0%, rgba(255,159,67,0.15), transparent 70%); }
+.mode-card.purple::before { background: radial-gradient(circle at 50% 0%, rgba(165,94,234,0.15), transparent 70%); }
+.mode-card.pink::before { background: radial-gradient(circle at 50% 0%, rgba(253,121,168,0.15), transparent 70%); }
+.mode-card.yellow::before { background: radial-gradient(circle at 50% 0%, rgba(255,211,42,0.15), transparent 70%); }
+.mode-card:hover::before, .mode-card:active::before { opacity: 1; }
+.mode-card.cyan:hover { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+.mode-card.green:hover { border-color: var(--green); box-shadow: var(--glow-green); }
+.mode-card.orange:hover { border-color: var(--orange); box-shadow: 0 0 20px rgba(255,159,67,0.4); }
+.mode-card.purple:hover { border-color: var(--purple); box-shadow: 0 0 20px rgba(165,94,234,0.4); }
+.mode-card.pink:hover { border-color: var(--pink); box-shadow: 0 0 20px rgba(253,121,168,0.4); }
+.mode-card.yellow:hover { border-color: var(--yellow); box-shadow: 0 0 20px rgba(255,211,42,0.4); }
+
+.mode-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+.mode-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 4px;
+}
+.mode-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+.mode-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+.badge-hot { background: rgba(255,71,87,0.2); color: var(--red); border: 1px solid rgba(255,71,87,0.3); }
+.badge-new { background: rgba(0,255,136,0.2); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+
+.view-all-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 10px 24px;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: 'Exo 2', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.view-all-btn:hover { color: var(--text); border-color: var(--cyan); }
+
+/* ══════════════════════════ GAME HEADER ══════════════════════════ */
+.game-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(6,8,16,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 12px;
+}
+.back-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface2);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.game-mode-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  flex: 1;
+}
+.score-display {
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.streak-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+/* TIMER BAR */
+.timer-bar-wrap {
+  height: 3px;
+  background: var(--border);
+}
+.timer-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  transition: width 0.1s linear;
+  width: 100%;
+}
+
+/* GAME BODY */
+.game-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  gap: 20px;
+}
+
+/* ══════════════════════════ FLASH MODE ══════════════════════════ */
+.flash-card-container {
+  width: 100%;
+  max-width: 380px;
+  perspective: 1000px;
+}
+.flash-card {
+  width: 100%;
+  min-height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+.flash-card.flipped { transform: rotateY(180deg); }
+.flash-front, .flash-back {
+  position: absolute;
+  width: 100%;
+  min-height: 200px;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+}
+.flash-front {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.flash-back {
+  background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(165,94,234,0.1));
+  border: 1px solid rgba(0,212,255,0.3);
+  transform: rotateY(180deg);
+}
+.flash-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.flash-main {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(28px, 8vw, 44px);
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+  margin-bottom: 8px;
+}
+.flash-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.flash-hint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--purple);
+  font-style: italic;
+}
+.flash-answer-main {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(18px, 5vw, 26px);
+  font-weight: 900;
+  color: var(--green);
+  text-shadow: var(--glow-green);
+  margin-bottom: 8px;
+}
+.flash-answer-detail { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+.flash-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 380px;
+}
+.flash-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid;
+  cursor: pointer;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  background: transparent;
+}
+.flash-btn:active { transform: scale(0.96); }
+.btn-knew { border-color: var(--green); color: var(--green); }
+.btn-knew:hover { background: rgba(0,255,136,0.1); box-shadow: var(--glow-green); }
+.btn-missed { border-color: var(--red); color: var(--red); }
+.btn-missed:hover { background: rgba(255,71,87,0.1); box-shadow: var(--glow-red); }
+.btn-flip { border-color: var(--cyan); color: var(--cyan); }
+.btn-flip:hover { background: rgba(0,212,255,0.1); box-shadow: var(--glow-cyan); }
+
+.progress-dots {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 380px;
+}
+.pdot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s;
+}
+.pdot.known { background: var(--green); }
+.pdot.missed { background: var(--red); }
+.pdot.current { background: var(--cyan); box-shadow: var(--glow-cyan); }
+
+/* ══════════════════════════ MATCH MODE ══════════════════════════ */
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  max-width: 420px;
+}
+.match-tile {
+  padding: 14px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.3;
+}
+.match-tile:active { transform: scale(0.95); }
+.match-tile.selected { border-color: var(--cyan); background: rgba(0,212,255,0.1); box-shadow: var(--glow-cyan); color: var(--cyan); }
+.match-tile.matched { border-color: var(--green); background: rgba(0,255,136,0.08); color: var(--green); cursor: default; opacity: 0.6; }
+.match-tile.wrong { border-color: var(--red); background: rgba(255,71,87,0.1); animation: shake 0.3s; }
+.match-tile.port { font-family: 'Orbitron', monospace; font-size: 15px; font-weight: 900; color: var(--cyan); }
+.match-tile.port.selected { color: var(--cyan); }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.match-info {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+.match-pairs-left {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+}
+
+/* ══════════════════════════ BLITZ MODE ══════════════════════════ */
+.blitz-question {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+.blitz-tag {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.blitz-q {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(20px, 6vw, 32px);
+  font-weight: 900;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.blitz-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+.blitz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+}
+.blitz-opt {
+  padding: 16px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  transition: all 0.15s;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.blitz-opt:active { transform: scale(0.95); }
+.blitz-opt.correct { border-color: var(--green); background: rgba(0,255,136,0.12); color: var(--green); box-shadow: var(--glow-green); animation: correctPop 0.3s; }
+.blitz-opt.wrong { border-color: var(--red); background: rgba(255,71,87,0.12); color: var(--red); animation: shake 0.3s; }
+.blitz-opt.reveal { border-color: var(--green); background: rgba(0,255,136,0.06); color: var(--green); }
+.blitz-opt:hover:not(:disabled) { border-color: var(--cyan); background: rgba(0,212,255,0.06); }
+
+@keyframes correctPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.blitz-feedback {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+  line-height: 1.5;
+}
+.blitz-feedback.correct { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); color: var(--green); }
+.blitz-feedback.wrong { background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: #ffb3b3; }
+
+.next-btn {
+  padding: 14px 32px;
+  border-radius: 12px;
+  border: 1px solid var(--cyan);
+  background: rgba(0,212,255,0.08);
+  color: var(--cyan);
+  font-family: 'Orbitron', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.next-btn:hover { background: rgba(0,212,255,0.15); box-shadow: var(--glow-cyan); }
+.next-btn:active { transform: scale(0.96); }
+
+/* ══════════════════════════ IMPOSTER MODE ══════════════════════════ */
+.imposter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+}
+.imposter-tile {
+  padding: 16px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.imposter-tile:active { transform: scale(0.95); }
+.imposter-tile:hover { border-color: var(--muted); }
+.imposter-tile .it-port {
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--cyan);
+  display: block;
+  margin-bottom: 4px;
+}
+.imposter-tile .it-proto {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+}
+.imposter-tile.correct { border-color: var(--green); background: rgba(0,255,136,0.08); }
+.imposter-tile.wrong { border-color: var(--red); background: rgba(255,71,87,0.08); animation: shake 0.3s; }
+.imposter-tile.reveal-correct { border-color: var(--green); background: rgba(0,255,136,0.06); }
+.imposter-question {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--orange);
+  max-width: 380px;
+  line-height: 1.4;
+}
+
+/* ══════════════════════════ SCENARIO MODE ══════════════════════════ */
+.scenario-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  max-width: 380px;
+}
+.scenario-tag {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--orange);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.scenario-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.scenario-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+}
+.scenario-opt {
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  color: var(--text);
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+.scenario-opt:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+.scenario-opt.correct { border-color: var(--green); background: rgba(0,255,136,0.1); color: var(--green); }
+.scenario-opt.wrong { border-color: var(--red); background: rgba(255,71,87,0.1); color: var(--red); animation: shake 0.3s; }
+.scenario-opt.reveal { border-color: var(--green); background: rgba(0,255,136,0.05); color: var(--green); }
+
+/* ══════════════════════════ TYPE-IT MODE ══════════════════════════ */
+.typeit-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+.typeit-prompt { font-size: 11px; letter-spacing: 3px; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
+.typeit-protocol {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(22px, 7vw, 36px);
+  font-weight: 900;
+  color: var(--yellow);
+  text-shadow: 0 0 20px rgba(255,211,42,0.4);
+  margin-bottom: 6px;
+}
+.typeit-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+.typeit-input {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 900;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  text-align: center;
+  width: 100%;
+  padding: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: 4px;
+}
+.typeit-input:focus { border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+.typeit-input.correct { border-color: var(--green); color: var(--green); box-shadow: var(--glow-green); }
+.typeit-input.wrong { border-color: var(--red); color: var(--red); animation: shake 0.3s; }
+.typeit-submit {
+  margin-top: 14px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--cyan);
+  background: rgba(0,212,255,0.08);
+  color: var(--cyan);
+  font-family: 'Orbitron', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.typeit-submit:hover { background: rgba(0,212,255,0.15); box-shadow: var(--glow-cyan); }
+.typeit-hint { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+/* ══════════════════════════ RESULTS ══════════════════════════ */
+#resultScreen {
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  text-align: center;
+  gap: 20px;
+}
+.result-emoji { font-size: 64px; display: block; margin-bottom: 8px; animation: bounceIn 0.5s; }
+@keyframes bounceIn {
+  0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); }
+}
+.result-score {
+  font-family: 'Orbitron', monospace;
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+  line-height: 1;
+}
+.result-label { font-size: 13px; color: var(--muted); margin-top: 6px; letter-spacing: 2px; text-transform: uppercase; }
+.result-msg { font-size: 16px; font-weight: 600; max-width: 300px; line-height: 1.5; }
+.result-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+.result-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 1px solid;
+  cursor: pointer;
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  background: transparent;
+  transition: all 0.2s;
+}
+.result-btn.primary { border-color: var(--cyan); color: var(--cyan); }
+.result-btn.primary:hover { background: rgba(0,212,255,0.1); box-shadow: var(--glow-cyan); }
+.result-btn.secondary { border-color: var(--border); color: var(--muted); }
+.result-btn.secondary:hover { border-color: var(--muted); color: var(--text); }
+
+/* PARTICLES */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  border-radius: 50%;
+  animation: particleFly 0.8s forwards;
+}
+@keyframes particleFly {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-80px) scale(0); opacity: 0; }
+}
+
+/* MISC */
+.section-label {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ HOME ══════════════════════════ -->
+<div id="homeScreen" class="screen active">
+  <div class="logo-area">
+    <div class="logo-title">PORT DRILLER</div>
+    <div class="logo-sub">CompTIA A+ 220-1201 · Domain 2.0</div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-chip">🔥 Best Streak <span class="val" id="homeStreak">0</span></div>
+    <div class="stat-chip">⭐ High Score <span class="val" id="homeScore">0</span></div>
+  </div>
+
+  <div class="modes-title">Choose Your Game Mode</div>
+
+  <div class="mode-grid">
+    <div class="mode-card cyan" onclick="startMode('flash')">
+      <span class="mode-icon">⚡</span>
+      <span class="mode-name" style="color:var(--cyan)">FLASH</span>
+      <span class="mode-desc">Flip cards, mark if you knew it. Build mastery.</span>
+      <span class="mode-badge badge-hot">CLASSIC</span>
+    </div>
+    <div class="mode-card green" onclick="startMode('match')">
+      <span class="mode-icon">🔗</span>
+      <span class="mode-name" style="color:var(--green)">MATCH</span>
+      <span class="mode-desc">Connect ports to their protocols. Race the clock.</span>
+    </div>
+    <div class="mode-card orange" onclick="startMode('blitz')">
+      <span class="mode-icon">⚡</span>
+      <span class="mode-name" style="color:var(--orange)">BLITZ</span>
+      <span class="mode-desc">4 choices, 8 seconds. Fast-fire recognition.</span>
+      <span class="mode-badge badge-hot">HOT</span>
+    </div>
+    <div class="mode-card purple" onclick="startMode('imposter')">
+      <span class="mode-icon">🕵️</span>
+      <span class="mode-name" style="color:var(--purple)">IMPOSTER</span>
+      <span class="mode-desc">4 pairs shown — find the WRONG one.</span>
+      <span class="mode-badge badge-new">NEW</span>
+    </div>
+    <div class="mode-card pink" onclick="startMode('scenario')">
+      <span class="mode-icon">🔍</span>
+      <span class="mode-name" style="color:var(--pink)">SCENARIO</span>
+      <span class="mode-desc">Real exam scenarios. What port or protocol?</span>
+    </div>
+    <div class="mode-card yellow" onclick="startMode('typeit')">
+      <span class="mode-icon">⌨️</span>
+      <span class="mode-name" style="color:var(--yellow)">TYPE IT</span>
+      <span class="mode-desc">No hints. Type the port number from memory.</span>
+      <span class="mode-badge badge-new">HARD</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ GAME SCREEN ══════════════════════════ -->
+<div id="gameScreen" class="screen">
+  <div class="game-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="game-mode-name" id="modeLabel">FLASH</div>
+    <div class="streak-display">🔥 <span id="streakCount">0</span></div>
+    <div class="score-display">⭐ <span id="scoreCount" style="color:var(--yellow)">0</span></div>
+  </div>
+  <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar"></div></div>
+  <div class="game-body" id="gameBody"></div>
+</div>
+
+<!-- ══════════════════════════ RESULTS ══════════════════════════ -->
+<div id="resultScreen" class="screen">
+  <span class="result-emoji" id="resultEmoji">🎉</span>
+  <div class="result-score" id="resultScore">0</div>
+  <div class="result-label" id="resultLabel">Score</div>
+  <div class="result-msg" id="resultMsg">Great work!</div>
+  <div class="result-btns">
+    <button class="result-btn primary" onclick="restartMode()">PLAY AGAIN</button>
+    <button class="result-btn secondary" onclick="goHome()">HOME</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════ DATA ══════════════════════════
+const PORTS = [
+  { port:"20/21", proto:"FTP", full:"File Transfer Protocol", desc:"Transfers files. 20=data, 21=commands.", tcp:"TCP", memory:"20 data / 21 control" },
+  { port:"22",    proto:"SSH", full:"Secure Shell", desc:"Encrypted remote command-line access. Replaced Telnet.", tcp:"TCP", memory:"22 = SSH = Secure" },
+  { port:"23",    proto:"Telnet", full:"Telnet", desc:"Old unsecured remote access. NOT encrypted. Legacy.", tcp:"TCP", memory:"23 = Telnet = NOT secure" },
+  { port:"25",    proto:"SMTP", full:"Simple Mail Transfer Protocol", desc:"SENDS email out. Server-to-server email.", tcp:"TCP", memory:"SMTP Sends" },
+  { port:"53",    proto:"DNS", full:"Domain Name System", desc:"Translates domain names to IP addresses. Internet phonebook.", tcp:"Both", memory:"53 = DNS = name lookup" },
+  { port:"67/68", proto:"DHCP", full:"Dynamic Host Configuration Protocol", desc:"Auto-assigns IP addresses. 67=server, 68=client.", tcp:"UDP", memory:"67/68 = DHCP = auto-IP" },
+  { port:"80",    proto:"HTTP", full:"Hypertext Transfer Protocol", desc:"Regular unencrypted web browsing.", tcp:"TCP", memory:"80 = HTTP = no lock" },
+  { port:"110",   proto:"POP3", full:"Post Office Protocol 3", desc:"Downloads email and DELETES from server.", tcp:"TCP", memory:"POP3 = picks up mail (gone from server)" },
+  { port:"137-139",proto:"NetBIOS",full:"NetBIOS/NetBT", desc:"Windows name resolution on local networks. Legacy.", tcp:"Both", memory:"137-139 = Windows legacy" },
+  { port:"143",   proto:"IMAP", full:"Internet Mail Access Protocol", desc:"Gets email but KEEPS on server. Multi-device sync.", tcp:"TCP", memory:"IMAP = stays on server" },
+  { port:"389",   proto:"LDAP", full:"Lightweight Directory Access Protocol", desc:"Queries directory services like Active Directory.", tcp:"TCP", memory:"389 = LDAP = Active Directory" },
+  { port:"443",   proto:"HTTPS", full:"HTTP Secure", desc:"Encrypted web browsing. The lock icon in your browser.", tcp:"TCP", memory:"443 = HTTPS = lock icon" },
+  { port:"445",   proto:"SMB", full:"Server Message Block", desc:"Windows file sharing and network drives.", tcp:"TCP", memory:"445 = SMB = Windows shares" },
+  { port:"3389",  proto:"RDP", full:"Remote Desktop Protocol", desc:"Graphical remote access to Windows desktops.", tcp:"TCP", memory:"3389 = RDP = remote desktop" },
+];
+
+// Scenario questions
+const SCENARIOS = [
+  { text:"A user reports they can't browse websites but can ping 8.8.8.8 by IP. Which service is failing?", opts:["DHCP (67/68)","DNS (53)","HTTP (80)","SMTP (25)"], correct:1, explain:"Can ping by IP = network works. Can't resolve names = DNS failure. Port 53." },
+  { text:"You need to remotely access a Windows machine's desktop from across the office. Which port must be open?", opts:["SSH — 22","Telnet — 23","RDP — 3389","HTTPS — 443"], correct:2, explain:"RDP (3389) provides graphical remote desktop access to Windows." },
+  { text:"A new employee's computer shows IP 169.254.22.5. Which service is unreachable?", opts:["DNS — 53","HTTP — 80","DHCP — 67/68","SMTP — 25"], correct:2, explain:"169.254.x.x = APIPA = couldn't reach DHCP (67/68). The device self-assigned." },
+  { text:"Email is being sent FROM your mail server TO another mail server. Which protocol and port handles this?", opts:["IMAP — 143","POP3 — 110","SMTP — 25","FTP — 21"], correct:2, explain:"SMTP (25) sends email between servers. IMAP/POP3 are for receiving email." },
+  { text:"A user wants email to sync across their phone AND laptop — both show the same inbox. Which protocol?", opts:["SMTP — 25","POP3 — 110","IMAP — 143","SMB — 445"], correct:2, explain:"IMAP (143) keeps email on server — all devices stay in sync. POP3 deletes after download." },
+  { text:"A tech needs to connect to a Linux server's command line securely over the network. Which port?", opts:["23 (Telnet)","22 (SSH)","3389 (RDP)","443 (HTTPS)"], correct:1, explain:"SSH (22) = encrypted remote command-line. Telnet (23) is the same but NOT encrypted — wrong answer." },
+  { text:"You're accessing a Windows shared folder (network drive). Which port is being used?", opts:["FTP — 21","HTTPS — 443","SMB — 445","LDAP — 389"], correct:2, explain:"SMB (445) handles Windows file sharing and network drives." },
+  { text:"A computer can't get an IP address automatically and shows 169.254.x.x. What command fixes this?", opts:["ipconfig /flushdns","ping 127.0.0.1","ipconfig /release then /renew","tracert 8.8.8.8"], correct:2, explain:"Release current DHCP lease then renew forces a new request to the DHCP server (port 67/68)." },
+  { text:"Your browser shows a padlock icon. Your connection is encrypted. What port is being used?", opts:["80 (HTTP)","443 (HTTPS)","53 (DNS)","22 (SSH)"], correct:1, explain:"HTTPS (443) = encrypted web. HTTP (80) = unencrypted. Lock icon = HTTPS = port 443." },
+  { text:"An FTP client is transferring an actual file. Which specific port carries the DATA?", opts:["21","20","22","25"], correct:1, explain:"FTP: Port 21 = control/commands. Port 20 = actual data transfer. Exam loves this trap!" },
+];
+
+// State
+let currentMode = '';
+let score = 0;
+let streak = 0;
+let bestStreak = parseInt(localStorage.getItem('bestStreak') || 0);
+let highScore = parseInt(localStorage.getItem('highScore') || 0);
+let timerInterval = null;
+let currentAnswer = null;
+let answered = false;
+
+// Flash state
+let flashDeck = [];
+let flashIndex = 0;
+let flashKnown = 0;
+let flashMissed = 0;
+
+// Match state
+let matchSelected = null;
+let matchPairs = [];
+let matchMatched = 0;
+let matchTotal = 0;
+
+// Blitz state
+let blitzQ = 0;
+let blitzCorrect = 0;
+let blitzTimer = null;
+let blitzTimeLeft = 0;
+let blitzUsed = [];
+
+// Imposter state
+let imposterQ = 0;
+let imposterCorrect = 0;
+
+// Scenario state
+let scenarioQ = 0;
+let scenarioCorrect = 0;
+
+// Typeit state
+let typeitQ = 0;
+let typeitCorrect = 0;
+let typeitDeck = [];
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+function pick(arr, n) { return shuffle(arr).slice(0, n); }
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// ══════════════════════════ HOME ══════════════════════════
+function updateHome() {
+  document.getElementById('homeStreak').textContent = bestStreak;
+  document.getElementById('homeScore').textContent = highScore;
+}
+
+function goHome() {
+  clearInterval(blitzTimer);
+  clearInterval(timerInterval);
+  showScreen('homeScreen');
+  updateHome();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════ START MODE ══════════════════════════
+function startMode(mode) {
+  currentMode = mode;
+  score = 0; streak = 0; answered = false;
+  document.getElementById('streakCount').textContent = 0;
+  document.getElementById('scoreCount').textContent = 0;
+  clearInterval(blitzTimer);
+
+  const labels = { flash:'FLASH CARDS', match:'MATCH UP', blitz:'BLITZ QUIZ', imposter:'FIND THE IMPOSTER', scenario:'SCENARIO DRILL', typeit:'TYPE IT' };
+  document.getElementById('modeLabel').textContent = labels[mode];
+  document.getElementById('timerBar').style.width = '100%';
+  showScreen('gameScreen');
+
+  if (mode === 'flash') startFlash();
+  else if (mode === 'match') startMatch();
+  else if (mode === 'blitz') startBlitz();
+  else if (mode === 'imposter') startImposter();
+  else if (mode === 'scenario') startScenario();
+  else if (mode === 'typeit') startTypeIt();
+}
+
+function restartMode() { startMode(currentMode); }
+
+function addScore(pts) {
+  score += pts;
+  streak++;
+  if (streak > bestStreak) { bestStreak = streak; localStorage.setItem('bestStreak', bestStreak); }
+  document.getElementById('streakCount').textContent = streak;
+  document.getElementById('scoreCount').textContent = score;
+  if (score > highScore) { highScore = score; localStorage.setItem('highScore', highScore); }
+}
+
+function breakStreak() {
+  streak = 0;
+  document.getElementById('streakCount').textContent = 0;
+}
+
+function spawnParticles(color = '#00d4ff') {
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 6 + Math.random() * 8;
+    p.style.cssText = `width:${size}px;height:${size}px;background:${color};left:${30+Math.random()*40}%;top:${40+Math.random()*20}%;animation-delay:${Math.random()*0.2}s;`;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1000);
+  }
+}
+
+function showResult(sc, total, mode) {
+  const pct = Math.round((sc / total) * 100);
+  let emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 50 ? '💪' : '🔁';
+  let msg = pct >= 90 ? "You're locked in! That's exam-ready." : pct >= 70 ? "Solid work. Review the ones you missed." : pct >= 50 ? "Getting there! Keep drilling." : "More reps needed — you've got this!";
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultScore').textContent = `${sc}/${total}`;
+  document.getElementById('resultLabel').textContent = `${pct}% — ${mode}`;
+  document.getElementById('resultMsg').textContent = msg;
+  showScreen('resultScreen');
+}
+
+// ══════════════════════════ FLASH MODE ══════════════════════════
+function startFlash() {
+  flashDeck = shuffle(PORTS);
+  flashIndex = 0; flashKnown = 0; flashMissed = 0;
+  renderFlash();
+}
+
+function renderFlash() {
+  const gb = document.getElementById('gameBody');
+  if (flashIndex >= flashDeck.length) {
+    showResult(flashKnown, flashDeck.length, 'FLASH CARDS');
+    return;
+  }
+  const card = flashDeck[flashIndex];
+  const dots = flashDeck.map((_, i) => {
+    let cls = 'pdot';
+    if (i < flashIndex) cls += i < flashKnown ? ' known' : ' missed';
+    if (i === flashIndex) cls += ' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  gb.innerHTML = `
+    <div class="progress-dots">${dots}</div>
+    <div class="section-label">${flashIndex + 1} of ${flashDeck.length}</div>
+    <div class="flash-card-container">
+      <div class="flash-card" id="fc" onclick="flipFlash()">
+        <div class="flash-front">
+          <div class="flash-label">What port is this?</div>
+          <div class="flash-main">${card.proto}</div>
+          <div class="flash-sub">${card.full}</div>
+          <div class="flash-hint">${card.memory}</div>
+        </div>
+        <div class="flash-back">
+          <div class="flash-label">Answer</div>
+          <div class="flash-answer-main">PORT ${card.port}</div>
+          <div class="flash-answer-detail">${card.desc}<br><strong style="color:var(--cyan)">${card.tcp}</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="flash-actions" id="flashActions" style="display:none">
+      <button class="flash-btn btn-missed" onclick="flashAnswer(false)">✗ MISSED</button>
+      <button class="flash-btn btn-knew" onclick="flashAnswer(true)">✓ KNEW IT</button>
+    </div>
+    <button class="flash-btn btn-flip" style="max-width:380px;width:100%" onclick="flipFlash()">FLIP CARD</button>
+  `;
+}
+
+function flipFlash() {
+  const fc = document.getElementById('fc');
+  fc.classList.add('flipped');
+  document.getElementById('flashActions').style.display = 'flex';
+}
+
+function flashAnswer(knew) {
+  if (knew) { flashKnown++; addScore(10); spawnParticles('#00ff88'); }
+  else { breakStreak(); }
+  flashIndex++;
+  renderFlash();
+}
+
+// ══════════════════════════ MATCH MODE ══════════════════════════
+function startMatch() {
+  const subset = pick(PORTS, 5);
+  matchPairs = subset;
+  matchMatched = 0;
+  matchTotal = subset.length;
+  matchSelected = null;
+  renderMatch();
+  startMatchTimer(90);
+}
+
+function startMatchTimer(sec) {
+  clearInterval(timerInterval);
+  let left = sec;
+  const bar = document.getElementById('timerBar');
+  timerInterval = setInterval(() => {
+    left--;
+    bar.style.width = (left / sec * 100) + '%';
+    if (left <= 0) { clearInterval(timerInterval); endMatch(false); }
+  }, 1000);
+}
+
+function endMatch(won) {
+  clearInterval(timerInterval);
+  const sc = matchMatched;
+  const total = matchTotal;
+  if (won) { addScore(matchTotal * 20); spawnParticles('#00ff88'); }
+  showResult(sc, total, 'MATCH UP');
+}
+
+function renderMatch() {
+  const gb = document.getElementById('gameBody');
+  const ports = shuffle(matchPairs.map(p => ({ val: p.port, type: 'port', id: p.proto })));
+  const protos = shuffle(matchPairs.map(p => ({ val: p.proto, type: 'proto', id: p.proto })));
+  const all = shuffle([...ports, ...protos]);
+
+  gb.innerHTML = `
+    <div class="match-pairs-left" id="pairsLeft">${matchTotal - matchMatched}</div>
+    <div class="section-label">pairs remaining</div>
+    <div class="match-grid" id="matchGrid">
+      ${all.map((item, i) => `
+        <div class="match-tile ${item.type === 'port' ? 'port' : ''}" 
+             id="mt-${i}" 
+             data-val="${item.val}" 
+             data-type="${item.type}" 
+             data-id="${item.id}"
+             data-idx="${i}"
+             onclick="matchClick(this)">
+          ${item.val}
+        </div>
+      `).join('')}
+    </div>
+    <div class="match-info">Tap a port number, then its protocol — or vice versa</div>
+  `;
+}
+
+function matchClick(el) {
+  if (el.classList.contains('matched')) return;
+  if (matchSelected === null) {
+    matchSelected = el;
+    el.classList.add('selected');
+    return;
+  }
+  if (matchSelected === el) {
+    el.classList.remove('selected');
+    matchSelected = null;
+    return;
+  }
+  // Check match
+  const a = matchSelected, b = el;
+  const sameId = a.dataset.id === b.dataset.id;
+  const diffType = a.dataset.type !== b.dataset.type;
+  if (sameId && diffType) {
+    // Correct!
+    a.classList.remove('selected');
+    a.classList.add('matched');
+    b.classList.add('matched');
+    matchMatched++;
+    addScore(20);
+    spawnParticles('#00ff88');
+    document.getElementById('pairsLeft').textContent = matchTotal - matchMatched;
+    matchSelected = null;
+    if (matchMatched >= matchTotal) { clearInterval(timerInterval); setTimeout(() => endMatch(true), 500); }
+  } else {
+    // Wrong
+    a.classList.remove('selected');
+    a.classList.add('wrong');
+    b.classList.add('wrong');
+    breakStreak();
+    matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong'); b.classList.remove('wrong'); }, 600);
+  }
+}
+
+// ══════════════════════════ BLITZ MODE ══════════════════════════
+function startBlitz() {
+  blitzQ = 0; blitzCorrect = 0; blitzUsed = [];
+  nextBlitz();
+}
+
+function nextBlitz() {
+  if (blitzQ >= 12) { showResult(blitzCorrect, 12, 'BLITZ QUIZ'); return; }
+  const gb = document.getElementById('gameBody');
+  answered = false;
+
+  // Pick question type randomly: port→proto or proto→port
+  const available = PORTS.filter(p => !blitzUsed.includes(p.proto));
+  if (!available.length) blitzUsed = [];
+  const correct = rand(available.length ? available : PORTS);
+  blitzUsed.push(correct.proto);
+
+  const mode = Math.random() > 0.5 ? 'p2n' : 'n2p'; // port-to-name or name-to-port
+  let question, correctAns, distractors;
+
+  if (mode === 'p2n') {
+    question = correct.port;
+    correctAns = correct.proto;
+    distractors = shuffle(PORTS.filter(p => p.proto !== correct.proto)).slice(0, 3).map(p => p.proto);
+  } else {
+    question = correct.proto;
+    correctAns = correct.port;
+    distractors = shuffle(PORTS.filter(p => p.proto !== correct.proto)).slice(0, 3).map(p => p.port);
+  }
+
+  const allOpts = shuffle([correctAns, ...distractors]);
+  const qLabel = mode === 'p2n' ? 'What protocol uses port:' : 'What port does this use:';
+  const subLabel = mode === 'p2n' ? '' : correct.full;
+
+  gb.innerHTML = `
+    <div class="section-label">${blitzQ + 1} / 12</div>
+    <div class="blitz-question">
+      <div class="blitz-tag">${qLabel}</div>
+      <div class="blitz-q">${question}</div>
+      <div class="blitz-sub">${subLabel}</div>
+    </div>
+    <div class="blitz-options" id="blitzOpts">
+      ${allOpts.map((opt, i) => `
+        <button class="blitz-opt" id="bo${i}" onclick="blitzAnswer(this, '${opt}', '${correctAns}')">${opt}</button>
+      `).join('')}
+    </div>
+    <div id="blitzFb" style="display:none"></div>
+    <button class="next-btn" id="blitzNext" style="display:none" onclick="blitzQ++;nextBlitz()">NEXT →</button>
+  `;
+
+  // Timer
+  blitzTimeLeft = 8;
+  clearInterval(blitzTimer);
+  const bar = document.getElementById('timerBar');
+  bar.style.width = '100%';
+  blitzTimer = setInterval(() => {
+    blitzTimeLeft -= 0.1;
+    bar.style.width = (blitzTimeLeft / 8 * 100) + '%';
+    if (blitzTimeLeft <= 0) {
+      clearInterval(blitzTimer);
+      if (!answered) blitzAnswer(null, '__timeout__', correctAns);
+    }
+  }, 100);
+}
+
+function blitzAnswer(el, chosen, correct) {
+  if (answered) return;
+  answered = true;
+  clearInterval(blitzTimer);
+  const isCorrect = chosen === correct;
+  if (isCorrect) { blitzCorrect++; addScore(15); spawnParticles('#00d4ff'); }
+  else breakStreak();
+
+  // Disable all opts
+  document.querySelectorAll('.blitz-opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent.trim() === correct) b.classList.add('reveal');
+  });
+  if (el) el.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  const portData = PORTS.find(p => p.proto === correct || p.port === correct);
+  const fb = document.getElementById('blitzFb');
+  fb.style.display = 'block';
+  fb.className = `blitz-feedback ${isCorrect ? 'correct' : 'wrong'}`;
+  fb.innerHTML = isCorrect ? `✅ Correct! ${portData ? portData.memory : ''}` : `❌ Correct answer: <strong>${correct}</strong>. ${portData ? portData.memory : ''}`;
+
+  const nextBtn = document.getElementById('blitzNext');
+  nextBtn.style.display = 'block';
+  setTimeout(() => { blitzQ++; nextBlitz(); }, isCorrect ? 1200 : 2000);
+}
+
+// ══════════════════════════ IMPOSTER MODE ══════════════════════════
+function startImposter() {
+  imposterQ = 0; imposterCorrect = 0;
+  nextImposter();
+}
+
+function nextImposter() {
+  if (imposterQ >= 10) { showResult(imposterCorrect, 10, 'FIND THE IMPOSTER'); return; }
+  const gb = document.getElementById('gameBody');
+
+  // Pick 3 correct pairs and 1 wrong pair
+  const selected = pick(PORTS, 4);
+  const wrongIndex = Math.floor(Math.random() * 4);
+  const wrongCard = selected[wrongIndex];
+  // Make a wrong pair: swap port with another protocol's port
+  const otherPorts = PORTS.filter(p => p.proto !== wrongCard.proto);
+  const fakePort = rand(otherPorts).port;
+
+  const tiles = selected.map((p, i) => ({
+    port: i === wrongIndex ? fakePort : p.port,
+    proto: p.proto,
+    isWrong: i === wrongIndex,
+    idx: i
+  }));
+
+  gb.innerHTML = `
+    <div class="section-label">${imposterQ + 1} / 10</div>
+    <div class="imposter-question">🕵️ Find the WRONG port-protocol pair!</div>
+    <div class="imposter-grid">
+      ${tiles.map((t, i) => `
+        <div class="imposter-tile" id="it${i}" onclick="imposterAnswer(${i}, ${t.isWrong}, this)">
+          <span class="it-port">${t.port}</span>
+          <span class="it-proto">${t.proto}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div id="impFb" style="display:none" class="blitz-feedback"></div>
+  `;
+}
+
+function imposterAnswer(idx, isWrong, el) {
+  if (answered) return;
+  answered = true;
+
+  if (isWrong) {
+    el.classList.add('correct');
+    imposterCorrect++;
+    addScore(20);
+    spawnParticles('#00ff88');
+    const fb = document.getElementById('impFb');
+    fb.style.display = 'block';
+    fb.className = 'blitz-feedback correct';
+    fb.textContent = '✅ Correct! You found the imposter!';
+  } else {
+    el.classList.add('wrong');
+    breakStreak();
+    // Reveal wrong
+    document.querySelectorAll('.imposter-tile').forEach((t, i) => {
+      // We need to check the original wrong index
+    });
+    const fb = document.getElementById('impFb');
+    fb.style.display = 'block';
+    fb.className = 'blitz-feedback wrong';
+    fb.textContent = '❌ Wrong choice! Look for the mismatched pair.';
+  }
+  setTimeout(() => { answered = false; imposterQ++; nextImposter(); }, 1500);
+}
+
+// ══════════════════════════ SCENARIO MODE ══════════════════════════
+function startScenario() {
+  scenarioQ = 0; scenarioCorrect = 0;
+  nextScenario();
+}
+
+function nextScenario() {
+  if (scenarioQ >= SCENARIOS.length) { showResult(scenarioCorrect, SCENARIOS.length, 'SCENARIO DRILL'); return; }
+  const gb = document.getElementById('gameBody');
+  const q = SCENARIOS[scenarioQ];
+
+  gb.innerHTML = `
+    <div class="scenario-card">
+      <div class="scenario-tag">📋 SCENARIO ${scenarioQ + 1} of ${SCENARIOS.length}</div>
+      <div class="scenario-text">${q.text}</div>
+    </div>
+    <div class="scenario-opts">
+      ${q.opts.map((opt, i) => `
+        <button class="scenario-opt" onclick="scenarioAnswer(${i}, ${q.correct}, this, '${q.explain.replace(/'/g, "\\'")}')">
+          ${opt}
+        </button>
+      `).join('')}
+    </div>
+    <div id="scenFb" style="display:none" class="blitz-feedback"></div>
+  `;
+}
+
+function scenarioAnswer(chosen, correct, el, explain) {
+  if (answered) return;
+  answered = true;
+  const isCorrect = chosen === correct;
+
+  document.querySelectorAll('.scenario-opt').forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('reveal');
+  });
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  if (isCorrect) { scenarioCorrect++; addScore(25); spawnParticles('#fd79a8'); }
+  else breakStreak();
+
+  const fb = document.getElementById('scenFb');
+  fb.style.display = 'block';
+  fb.className = `blitz-feedback ${isCorrect ? 'correct' : 'wrong'}`;
+  fb.textContent = (isCorrect ? '✅ ' : '❌ ') + explain;
+
+  setTimeout(() => { answered = false; scenarioQ++; nextScenario(); }, 2200);
+}
+
+// ══════════════════════════ TYPE IT MODE ══════════════════════════
+function startTypeIt() {
+  typeitDeck = shuffle(PORTS);
+  typeitQ = 0; typeitCorrect = 0;
+  nextTypeIt();
+}
+
+function nextTypeIt() {
+  if (typeitQ >= typeitDeck.length) { showResult(typeitCorrect, typeitDeck.length, 'TYPE IT'); return; }
+  const gb = document.getElementById('gameBody');
+  const card = typeitDeck[typeitQ];
+
+  gb.innerHTML = `
+    <div class="typeit-card">
+      <div class="typeit-prompt">Type the port number</div>
+      <div class="typeit-protocol">${card.proto}</div>
+      <div class="typeit-desc">${card.full}<br><span style="color:var(--muted);font-size:11px">${card.desc}</span></div>
+      <input class="typeit-input" id="typeInput" type="text" inputmode="numeric" maxlength="8" placeholder="____" autocomplete="off" onkeydown="if(event.key==='Enter')checkTypeIt()" />
+      <button class="typeit-submit" onclick="checkTypeIt()">CHECK →</button>
+      <div class="typeit-hint" id="typeHint">&nbsp;</div>
+    </div>
+  `;
+  document.getElementById('typeInput').focus();
+}
+
+function checkTypeIt() {
+  const input = document.getElementById('typeInput');
+  const card = typeitDeck[typeitQ];
+  const userVal = input.value.trim().replace(/\s/g,'');
+  const correctPort = card.port.replace(/\s/g,'').toLowerCase();
+  const isCorrect = userVal === correctPort ||
+    (card.port.includes('/') && (userVal === card.port.split('/')[0] || userVal === card.port.split('/')[1])) ||
+    (card.port.includes('-') && userVal === card.port.split('-')[0]);
+
+  input.className = `typeit-input ${isCorrect ? 'correct' : 'wrong'}`;
+  const hint = document.getElementById('typeHint');
+
+  if (isCorrect) {
+    typeitCorrect++;
+    addScore(20);
+    spawnParticles('#ffd32a');
+    hint.style.color = 'var(--green)';
+    hint.textContent = `✅ Correct! ${card.memory}`;
+  } else {
+    breakStreak();
+    hint.style.color = 'var(--red)';
+    hint.textContent = `❌ Answer: ${card.port} — ${card.memory}`;
+  }
+  input.disabled = true;
+  setTimeout(() => { typeitQ++; nextTypeIt(); }, isCorrect ? 1200 : 2200);
+}
+
+// Init
+updateHome();
+</script>
+</body>
+</html>
