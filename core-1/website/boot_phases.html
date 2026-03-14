@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompTIA A+ Core 1 — Boot Phases</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;
+  --border:#30363d;--border2:#484f58;
+  --text:#e6edf3;--text2:#8b949e;--text3:#484f58;
+  --red:#f85149;--red-bg:#3d0000;--red-dim:#2a0000;
+  --orange:#f0883e;--orange-bg:#2d1a00;
+  --yellow:#d29922;--yellow-bg:#2a1f00;
+  --green:#3fb950;--green-bg:#0d2818;
+  --blue:#58a6ff;--blue-bg:#0d1f3c;
+  --purple:#a5a0f5;--purple-bg:#1e1a3d;
+  --gray:#8b949e;--gray-bg:#1c2128;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.wrap{max-width:1400px;margin:0 auto;padding:1rem 1rem 2rem}
+h1{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+.subtitle{font-size:12px;color:var(--text3);margin-bottom:14px}
+
+/* COMPARE FILTER */
+.cmp-bar{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cmp-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);white-space:nowrap}
+.cmp-hint{font-size:11px;color:var(--text3);font-style:italic}
+.cmp-btn{font-size:11px;padding:4px 11px;border-radius:16px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;font-weight:500;transition:all .15s}
+.cmp-btn:hover{border-color:var(--text2);color:var(--text)}
+.cmp-btn.sel0{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.cmp-btn.sel1{background:var(--orange-bg);border-color:var(--orange);color:var(--orange)}
+.cmp-btn.sel2{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.cmp-btn.sel3{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.cmp-btn.sel4{background:var(--purple-bg);border-color:var(--purple);color:var(--purple)}
+.cmp-btn.sel5{background:var(--gray-bg);border-color:var(--gray);color:var(--gray)}
+.cmp-clear{font-size:11px;padding:4px 10px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;margin-left:auto}
+.cmp-clear:hover{color:var(--text);border-color:var(--text2)}
+
+/* PI DIAGRAM */
+.pi-diagram{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:4px}
+.pi-cols{display:flex;min-height:160px}
+.pi-col{flex:1;border-right:1px dashed var(--border2);padding:10px 8px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all .2s;position:relative;min-width:0}
+.pi-col:last-child{border-right:none}
+.pi-col:hover{background:var(--bg3)}
+.pi-col.active{background:var(--bg3)}
+.pi-col.blurred{opacity:.18;pointer-events:none}
+.col-icon{font-size:20px;line-height:1}
+.col-name{font-size:12px;font-weight:700;text-align:center;letter-spacing:.02em}
+.col-pi{font-size:8px;text-align:center;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;line-height:1.3;margin-top:1px}
+.col-job{font-size:9px;text-align:center;color:var(--text2);line-height:1.35;margin-top:3px;font-style:italic}
+.col-divider{width:100%;height:1px;background:var(--border);margin:4px 0}
+.pi-block{border-radius:4px;padding:3px 7px;font-size:9px;text-align:center;line-height:1.35;font-weight:500;width:100%;margin:1px 0}
+.pi-arrow{font-size:11px;color:var(--text3);text-align:center;line-height:1}
+.col-sym{font-size:8px;text-align:center;color:var(--text3);line-height:1.3;margin-top:4px;font-style:italic}
+.active-pip{width:6px;height:6px;border-radius:50%;margin:3px auto 0;opacity:0;transition:opacity .2s}
+.pi-col.active .active-pip{opacity:1}
+.pi-timeline{display:flex;border-top:1px solid var(--border)}
+.pi-tl{flex:1;padding:5px 6px;text-align:center;font-size:9px;color:var(--text2);border-right:1px dashed var(--border);font-weight:600}
+.pi-tl:last-child{border-right:none}
+.pi-span-bar{display:flex;border-top:1px solid var(--border)}
+.pi-span{text-align:center;font-size:8px;color:var(--text3);padding:3px 4px;border-right:1px dashed var(--border)}
+.pi-span:last-child{border-right:none}
+.click-hint{font-size:10px;color:var(--text3);text-align:center;margin-bottom:10px;font-style:italic}
+
+/* CARDS */
+.detail-wrap{margin-bottom:14px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.card-hdr{display:flex;align-items:flex-start;gap:12px;padding:13px 16px 11px;border-bottom:1px solid var(--border)}
+.hicon{font-size:26px;flex-shrink:0}
+.htitle{font-size:16px;font-weight:700;line-height:1.1}
+.hbadge{display:inline-block;font-size:9px;font-weight:500;padding:2px 8px;border-radius:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);margin-top:4px;letter-spacing:.03em}
+.hdesc{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.55}
+.hclose{font-size:11px;color:var(--text3);cursor:pointer;padding:4px 10px;border:1px solid var(--border);border-radius:6px;flex-shrink:0;background:var(--bg3)}
+.hclose:hover{color:var(--text);border-color:var(--text2)}
+.sec-grid{display:grid;gap:0}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.sec{padding:12px 14px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.sec:last-child{border-right:none}
+.sec.nobb{border-bottom:none}
+.sec-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:inline-block}
+.hw-row{display:flex;align-items:flex-start;gap:7px;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
+.hw-row:last-child{border-bottom:none}
+.hw-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:1px;min-width:22px;text-align:center}
+.b1{background:var(--red-dim);color:var(--red);border:1px solid var(--red-bg)}
+.b2{background:var(--orange-bg);color:var(--orange);border:1px solid #3d2400}
+.b3{background:var(--yellow-bg);color:var(--yellow);border:1px solid #362800}
+.hw-name{color:var(--text);font-weight:500}
+.hw-sub{font-size:10px;color:var(--text3);display:block;margin-top:1px}
+.smock{border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.smock-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 9px;border-bottom:1px solid var(--border)}
+.lbl-ok{background:#0d2818;color:#3fb950}
+.lbl-fail{background:#3d0000;color:#f85149}
+.smock-body{background:#010409;padding:8px 10px;font-size:10px;font-family:'Courier New',monospace;line-height:1.7;min-height:54px}
+.tok{color:#3fb950}.tfail{color:#f85149}.tdim{color:#484f58}
+.scf-row{padding:6px 0;border-bottom:1px solid var(--border)}
+.scf-row:last-child{border-bottom:none}
+.scf-sym{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
+.scf-c{font-size:11px;color:var(--text2);margin-top:2px;padding-left:18px}
+.scf-f{font-size:11px;color:var(--blue);margin-top:1px;padding-left:18px;font-weight:500}
+.pbq-row{background:var(--bg3);border:1px solid #3d2a00;border-left:3px solid var(--orange);border-radius:6px;padding:8px 10px;margin-bottom:6px}
+.pbq-row:last-child{margin-bottom:0}
+.pbq-q{font-size:12px;font-weight:600;color:var(--orange);margin-bottom:4px;display:flex;gap:6px}
+.pbq-a{font-size:11px;color:var(--text2);padding-left:16px;line-height:1.5}
+
+/* BOTTOM TOGGLES */
+.btog{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.btog-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;user-select:none}
+.btog-hdr:hover{background:var(--bg3)}
+.btog-icon{font-size:18px}
+.btog-title{font-size:13px;font-weight:700;flex:1;color:var(--text)}
+.btog-sub{font-size:11px;color:var(--text3)}
+.btog-arr{font-size:11px;color:var(--text3);transition:transform .2s}
+.btog-arr.open{transform:rotate(180deg)}
+.btog-body{display:none;padding:14px;border-top:1px solid var(--border)}
+.btog-body.open{display:block}
+.err-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.err-row:last-child{border-bottom:none}
+.err-num{width:24px;height:24px;border-radius:50%;background:var(--red-dim);color:var(--red);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--red-bg)}
+.err-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.err-why{font-size:11px;color:var(--text2);line-height:1.5}
+.err-fix{font-size:11px;color:var(--blue);margin-top:3px;font-weight:500}
+.notes-ta{width:100%;min-height:100px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:13px;resize:vertical;font-family:inherit}
+.notes-ta:focus{outline:none;border-color:var(--blue)}
+.notes-hint{font-size:11px;color:var(--text3);margin-top:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>⚡ CompTIA A+ Core 1 — Boot Phases</h1>
+<p class="subtitle">Click a phase column to expand · Use Compare to view 2 phases side by side</p>
+
+<div class="cmp-bar">
+  <span class="cmp-label">🔍 Compare:</span>
+  <span class="cmp-hint">Select up to 2 phases</span>
+  <button class="cmp-btn" id="cb0" onclick="cmpToggle(0)">⚡ POST</button>
+  <button class="cmp-btn" id="cb1" onclick="cmpToggle(1)">🔧 UEFI/BIOS</button>
+  <button class="cmp-btn" id="cb2" onclick="cmpToggle(2)">📋 Boot Record</button>
+  <button class="cmp-btn" id="cb3" onclick="cmpToggle(3)">🚀 Bootloader</button>
+  <button class="cmp-btn" id="cb4" onclick="cmpToggle(4)">💾 OS Load</button>
+  <button class="cmp-btn" id="cb5" onclick="cmpToggle(5)">🖥 Runtime</button>
+  <button class="cmp-clear" onclick="cmpClear()">✕ clear</button>
+</div>
+
+<div class="pi-diagram">
+  <div class="pi-cols" id="picols">
+    <div class="pi-col" id="col0" onclick="colClick(0)" style="border-top:3px solid var(--red)">
+      <div class="col-icon">⚡</div>
+      <div class="col-name" style="color:var(--red)">POST</div>
+      <div class="col-pi">SEC — Security</div>
+      <div class="col-job">Is hardware physically alive?</div>
+      <div class="col-divider"></div>
+      <div class="pi-block" style="background:var(--red-dim);color:var(--red)">CPU self-test</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:var(--red-dim);color:var(--red)">RAM presence check</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:#3d0f00;color:#ff6b6b">Video init</div>
+      <div class="col-sym">Beeps · blank screen · no video</div>
+      <div class="active-pip" style="background:var(--red)"></div>
+    </div>
+    <div class="pi-col" id="col1" onclick="colClick(1)" style="border-top:3px solid var(--orange)">
+      <div class="col-icon">🔧</div>
+      <div class="col-name" style="color:var(--orange)">UEFI / BIOS</div>
+      <div class="col-pi">PEI + BDS</div>
+      <div class="col-job">Firmware inventory &amp; boot pick</div>
+      <div class="col-divider"></div>
+      <div class="pi-block" style="background:var(--orange-bg);color:var(--orange)">Read CMOS settings</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:var(--orange-bg);color:var(--orange)">Scan all drives</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:#3d2800;color:#ffb347">Boot order → pick device</div>
+      <div class="col-sym">Date resets · Secure Boot error</div>
+      <div class="active-pip" style="background:var(--orange)"></div>
+    </div>
+    <div class="pi-col" id="col2" onclick="colClick(2)" style="border-top:3px solid var(--blue)">
+      <div class="col-icon">📋</div>
+      <div class="col-name" style="color:var(--blue)">Boot Record</div>
+      <div class="col-pi">BDS — Boot Device Select</div>
+      <div class="col-job">Find the map to the bootloader</div>
+      <div class="col-divider"></div>
+      <div class="pi-block" style="background:var(--blue-bg);color:var(--blue)">Read sector 0 of drive</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:var(--blue-bg);color:var(--blue)">MBR or GPT header</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:#0a1f40;color:#79c0ff">Points to bootloader files</div>
+      <div class="col-sym">No bootable device · blinking cursor</div>
+      <div class="active-pip" style="background:var(--blue)"></div>
+    </div>
+    <div class="pi-col" id="col3" onclick="colClick(3)" style="border-top:3px solid var(--green)">
+      <div class="col-icon">🚀</div>
+      <div class="col-name" style="color:var(--green)">Bootloader</div>
+      <div class="col-pi">TSL — Transient System Load</div>
+      <div class="col-job">Load OS kernel into RAM</div>
+      <div class="col-divider"></div>
+      <div class="pi-block" style="background:var(--green-bg);color:var(--green)">bootmgr / GRUB runs</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:var(--green-bg);color:var(--green)">Reads BCD store</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:#0a2a14;color:#56d364">Kernel loads into RAM</div>
+      <div class="col-sym">Bootmgr missing · BSOD at logo</div>
+      <div class="active-pip" style="background:var(--green)"></div>
+    </div>
+    <div class="pi-col" id="col4" onclick="colClick(4)" style="border-top:3px solid var(--purple)">
+      <div class="col-icon">💾</div>
+      <div class="col-name" style="color:var(--purple)">OS Load</div>
+      <div class="col-pi">RT — Runtime (init)</div>
+      <div class="col-job">Drivers initialize one by one</div>
+      <div class="col-divider"></div>
+      <div class="pi-block" style="background:var(--purple-bg);color:var(--purple)">HAL loads</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:var(--purple-bg);color:var(--purple)">Device drivers (.sys)</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:#180f40;color:#c8c0ff">BitLocker / TPM check</div>
+      <div class="col-sym">BSOD · BitLocker prompt · driver crash</div>
+      <div class="active-pip" style="background:var(--purple)"></div>
+    </div>
+    <div class="pi-col" id="col5" onclick="colClick(5)" style="border-top:3px solid var(--gray)">
+      <div class="col-icon">🖥</div>
+      <div class="col-name" style="color:var(--gray)">Runtime</div>
+      <div class="col-pi">RT — Runtime (running)</div>
+      <div class="col-job">OS fully running under load</div>
+      <div class="col-divider"></div>
+      <div class="pi-block" style="background:var(--gray-bg);color:var(--gray)">Apps executing</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:var(--gray-bg);color:var(--gray)">Storage R/W active</div>
+      <div class="pi-arrow">↓</div>
+      <div class="pi-block" style="background:#141a21;color:#adbac7">SMART / thermal monitor</div>
+      <div class="col-sym">Freeze · overheat · SMART fail</div>
+      <div class="active-pip" style="background:var(--gray)"></div>
+    </div>
+  </div>
+  <div class="pi-timeline">
+    <div class="pi-tl" style="color:var(--red)">POST</div>
+    <div class="pi-tl" style="color:var(--orange)">UEFI / BIOS</div>
+    <div class="pi-tl" style="color:var(--blue)">Boot Record</div>
+    <div class="pi-tl" style="color:var(--green)">Bootloader</div>
+    <div class="pi-tl" style="color:var(--purple)">OS Load</div>
+    <div class="pi-tl" style="color:var(--gray)">Runtime</div>
+  </div>
+  <div class="pi-span-bar">
+    <div class="pi-span" style="flex:3;color:#f85149">← POWER ON · Platform Initialization (SEC · PEI · DXE) →</div>
+    <div class="pi-span" style="flex:2;color:#58a6ff">← OS Boot (BDS · TSL) →</div>
+    <div class="pi-span" style="flex:1;color:#8b949e">← Runtime (RT) →</div>
+  </div>
+</div>
+
+<p class="click-hint">Click any phase column to expand details below</p>
+<div class="detail-wrap" id="detail"></div>
+
+<div class="btog">
+  <div class="btog-hdr" onclick="togBot('se')">
+    <span class="btog-icon">🚨</span>
+    <span class="btog-title">Student Errors</span>
+    <span class="btog-sub">Most common exam mistakes and why they happen</span>
+    <span class="btog-arr" id="arr-se">▼</span>
+  </div>
+  <div class="btog-body" id="body-se">
+    <div class="err-row"><div class="err-num">1</div><div><div class="err-title">"Bootmgr missing" → student runs bootrec /fixmbr</div><div class="err-why">Wrong command. fixmbr fixes the MBR map — but the map already worked. The problem is the file it pointed to is gone. You need /rebuildbcd.</div><div class="err-fix">🔧 Fix: bootrec /rebuildbcd</div></div></div>
+    <div class="err-row"><div class="err-num">2</div><div><div class="err-title">"No Bootable Device" → student checks cables first</div><div class="err-why">Cables are only the answer if the drive doesn't appear in UEFI at all. If the drive IS listed but won't boot — MBR is corrupt. Cables are fine.</div><div class="err-fix">🔧 First: does the drive appear in UEFI list? Yes → bootrec. No → check cable.</div></div></div>
+    <div class="err-row"><div class="err-num">3</div><div><div class="err-title">Linux fails "Security Violation" → student reinstalls</div><div class="err-why">Reinstalling does nothing. Secure Boot is rejecting the unsigned bootloader. One UEFI setting fixes it.</div><div class="err-fix">🔧 Fix: UEFI → Secure Boot → Disabled</div></div></div>
+    <div class="err-row"><div class="err-num">4</div><div><div class="err-title">BSOD 0x0000007B → student replaces the drive</div><div class="err-why">The drive is fine. SATA mode was changed AHCI↔IDE in UEFI. Replacing the drive changes nothing.</div><div class="err-fix">🔧 Fix: UEFI → SATA Mode → AHCI</div></div></div>
+    <div class="err-row"><div class="err-num">5</div><div><div class="err-title">"No Bootable Device" with Secure Boot/Legacy mismatch → student runs bootrec</div><div class="err-why">The drive and MBR are fine. UEFI sees the drive but refuses it because of a mode conflict. bootrec fixes nothing here.</div><div class="err-fix">🔧 Fix: Match UEFI mode to drive format — enable UEFI mode or convert to GPT</div></div></div>
+    <div class="err-row"><div class="err-num">6</div><div><div class="err-title">Date resets every boot → student clears CMOS</div><div class="err-why">Clearing CMOS wipes settings but doesn't replace the dead battery. Date resets again next boot.</div><div class="err-fix">🔧 Fix: Physically replace the CR2032 coin battery</div></div></div>
+  </div>
+</div>
+
+<div class="btog">
+  <div class="btog-hdr" onclick="togBot('notes')">
+    <span class="btog-icon">📝</span>
+    <span class="btog-title">My Notes</span>
+    <span class="btog-sub">Personal notes, mnemonics, things to remember — saves automatically</span>
+    <span class="btog-arr" id="arr-notes">▼</span>
+  </div>
+  <div class="btog-body" id="body-notes">
+    <textarea class="notes-ta" id="notes-ta" placeholder="Type your notes here..." oninput="saveNotes()"></textarea>
+    <div class="notes-hint">Notes save automatically in your browser.</div>
+  </div>
+</div>
+
+</div>
+<script>
+const COLS=6;
+const openSet=new Set();
+const cmpSet=new Set();
+const COLORS=['var(--red)','var(--orange)','var(--blue)','var(--green)','var(--purple)','var(--gray)'];
+
+const phases=[
+{n:'POST',full:'Power-On Self-Test',pi:'SEC — Security Phase',icon:'⚡',
+desc:'The motherboard runs a hardware roll-call before any software loads. CPU checks itself first, then confirms RAM is present, then initializes video. No firmware, no OS — pure silicon and electricity.',
+hw:[{l:'CPU',r:1,s:'Checked first — no CPU, nothing runs'},{l:'RAM / DIMM slots',r:1,s:'Missing = beep codes'},{l:'GPU / integrated graphics',r:2,s:'No video if unseated'},{l:'Motherboard chipset',r:2,s:'Dead board = nothing'},{l:'PSU voltage rails',r:3,s:'Bad voltage = no boot'},{l:'POST speaker',r:3,s:'Required to hear beep codes'}],
+comp:[],
+sok:'Manufacturer splash/logo. Some boards flash RAM count. "Press DEL/F2 for setup."',
+smok:'[ASUS / MSI logo]\nRAM: 16384 MB OK\nPress DEL to enter BIOS',
+sfail:'Blank screen + beeps, or completely dead — no display, no sound.',
+smfail:'[BLACK SCREEN]\n[BEEP ... BEEP ... BEEP]\n_',
+scf:[{si:'💀',s:'No display, no beeps',c:'CPU not seated or dead motherboard',f:'Reseat CPU · check PSU · test mobo'},{si:'🔔',s:'Repeating beep codes',c:'RAM not seated or failed',f:'Reseat RAM — try 1 stick at a time'},{si:'🔔',s:'1 long + 2–3 short beeps',c:'GPU not seated or failed',f:'Reseat GPU · try integrated graphics'},{si:'⏳',s:'Fans spin, nothing else',c:'POST stuck — no Q-code progress',f:'Clear CMOS jumper · reseat all hardware'}],
+pbq:[{q:'PC powers on, 3 repeating beeps, no display. First step?',a:'Reseat RAM. Multiple beeps = RAM on CompTIA. Try one stick at a time.'},{q:'What tool reads POST codes without a working screen?',a:'POST diagnostic card (Q-code card) inserted in PCIe slot.'},{q:'Fans spin, drives spin, no display, no beeps. First check?',a:'CPU seating first, then GPU, then clear CMOS.'}]},
+{n:'UEFI / BIOS',full:'Firmware Initialization',pi:'PEI (Pre-EFI Init) + BDS (Boot Device Select)',icon:'🔧',
+desc:'Firmware reads saved settings from the CMOS chip, inventories every connected drive, applies Secure Boot and TPM policies, then picks a boot device from the boot order list. UEFI is the gatekeeper — it reports errors for anything it cannot hand off to.',
+hw:[{l:'CMOS chip + CR2032 battery',r:1,s:'Dead = settings lost every boot'},{l:'Storage drives (SATA/NVMe)',r:1,s:'Must appear in UEFI drive list'},{l:'TPM chip (PTT / fTPM)',r:2,s:'Required for Windows 11'},{l:'GPU (UEFI display)',r:3,s:'Needed to show UEFI screen'},{l:'Network card',r:3,s:'PXE boot only'}],
+comp:[{l:'Boot order list',r:1,s:'Wrong order = wrong device boots'},{l:'Secure Boot keys (DB/DBX)',r:1,s:'Mismatch = Security Violation'},{l:'CMOS settings store',r:1,s:'Wiped when battery dies'},{l:'TPM / BitLocker keys',r:2,s:'Disabled = Win 11 incompatible'}],
+sok:'UEFI GUI or splash. Drive list visible. "Press F2/DEL for setup." Correct date/time shown.',
+smok:'[Firmware Setup]\nBoot Order: 1.NVMe  2.USB\nSecure Boot: ON\nDate: correct',
+sfail:'"CMOS checksum error" · wrong date · drive missing · "Security Violation."',
+smfail:'CMOS Checksum Error\nDate/Time: 01/01/2000\nPress F1 to continue...',
+scf:[{si:'🔋',s:'Date/time resets every boot',c:'CR2032 CMOS battery dead',f:'Replace CR2032 coin battery on motherboard'},{si:'🔌',s:'Drive not in UEFI boot list',c:'Bad SATA cable, bad power, or failed drive',f:'Check cable first, reseat, test in another port'},{si:'🔒',s:'"Security Violation" / "Invalid Signature"',c:'Secure Boot blocking unsigned OS',f:'UEFI → Secure Boot → Disabled'},{si:'⚠️',s:'"No Bootable Device" — healthy drive',c:'Secure Boot / Legacy mode mismatch',f:'Enable UEFI mode or convert drive to GPT'},{si:'🔑',s:'Win 11 install: "This PC is incompatible"',c:'TPM 2.0 disabled in UEFI',f:'UEFI → Enable TPM (PTT for Intel · fTPM for AMD)'}],
+pbq:[{q:'Windows 11 install says "This PC is incompatible." What UEFI settings?',a:'Enable TPM 2.0 (PTT or fTPM). Also verify UEFI mode is on, not Legacy.'},{q:'Linux install gives "Security Violation." Fix?',a:'Disable Secure Boot in UEFI. Classic Linux install trap.'},{q:'"No Bootable Device" but drive in UEFI list AND Secure Boot ON AND drive is MBR.',a:'Secure Boot/Legacy mismatch. UEFI refuses the drive. Fix: disable Secure Boot or convert to GPT.'},{q:'Date resets to 2000 every boot. What part?',a:'CR2032 CMOS battery. Settings wipe on every power-off.'}]},
+{n:'Boot Record',full:'MBR / GPT Partition Map',pi:'BDS — Boot Device Select (continued)',icon:'📋',
+desc:'UEFI picked a drive and reads its very first data — the 512-byte Master Boot Record (MBR) or GPT header. This tiny map is the only thing pointing to where bootloader files are on the disk. Corrupt or missing = UEFI has nowhere to send control.',
+hw:[{l:'Storage drive (HDD/SSD/NVMe)',r:1,s:'The drive being read'},{l:'SATA / NVMe controller',r:2,s:'Must be in correct mode (AHCI)'},{l:'Motherboard bus (PCIe/SATA)',r:3,s:'Path to the drive'}],
+comp:[{l:'MBR — Master Boot Record',r:1,s:'First 512 bytes of drive'},{l:'GPT header + partition table',r:1,s:'UEFI-native, replaces MBR'},{l:'Active / bootable partition flag',r:2,s:'Tells UEFI which partition'},{l:'Partition layout',r:2,s:'Must match UEFI or Legacy mode'}],
+sok:'No visible output. Brief black screen then control passes silently to bootloader.',
+smok:'[brief black]\n[→ passes to bootloader\n   silently]',
+sfail:'"No Bootable Device" · "Insert Boot Media" · "Missing Operating System" · blinking cursor.',
+smfail:'No bootable device found.\nInsert boot media and\npress any key to restart_',
+scf:[{si:'🗺',s:'"No Bootable Device" — drive IS in UEFI list',c:'MBR / GPT corrupt or overwritten',f:'Boot WinRE USB → bootrec /fixmbr → bootrec /fixboot'},{si:'▌',s:'Blinking cursor, nothing loads',c:'Boot record unreadable — MBR zeroed',f:'bootrec /fixmbr from Windows Recovery USB'},{si:'❌',s:'"Missing Operating System"',c:'Active partition not flagged or GPT corrupt',f:'diskpart → active · or bootrec /fixboot'},{si:'↩',s:'Boots wrong drive or wrong OS',c:'Wrong partition flagged as active',f:'Fix boot order in UEFI · check diskpart active flag'}],
+pbq:[{q:'"No bootable device" but drive appears in UEFI list. What do you do?',a:'MBR/GPT is corrupt. Boot WinRE USB → bootrec /fixmbr · /fixboot. Not a cable issue.'},{q:'MBR vs GPT — what does CompTIA want you to know?',a:'MBR = legacy, max 2TB, 4 primary partitions. GPT = UEFI, >2TB, up to 128 partitions.'},{q:'Blinking cursor on black screen after UEFI logo. What phase?',a:'Boot Record phase. MBR read but corrupt. Bootloader was never reached.'},{q:'GPT disk on Legacy/CSM-only BIOS. Symptom?',a:'"No bootable device." Fix: switch UEFI mode on, or convert disk to MBR.'}]},
+{n:'Bootloader',full:'bootmgr / GRUB / winload.efi',pi:'TSL — Transient System Load',icon:'🚀',
+desc:'The boot record pointed to files on disk. bootmgr (Windows) or GRUB (Linux) runs, reads the BCD store to find the OS, then loads the OS kernel into RAM. This is the first actual software that executes.',
+hw:[{l:'RAM',r:1,s:'Kernel loads into RAM here'},{l:'Storage drive',r:2,s:'bootmgr files must exist on disk'},{l:'CPU',r:3,s:'Executes bootloader instructions'}],
+comp:[{l:'bootmgr file',r:1,s:'Core Windows bootloader file'},{l:'BCD store (Boot Config Data)',r:1,s:'List of OSes and their disk paths'},{l:'winload.exe / winload.efi',r:2,s:'Loads the Windows kernel'},{l:'GRUB (Linux)',r:2,s:'Linux equivalent of bootmgr'},{l:'OS kernel files',r:3,s:'Final target of this phase'}],
+sok:'Windows logo with spinner, or GRUB menu (Linux). Startup Repair prompt if previous boot failed.',
+smok:'[Windows logo]\n[spinner...]\nStarting Windows...',
+sfail:'"Bootmgr is missing" · Startup Repair loop · BSOD immediately at logo.',
+smfail:'BOOTMGR is missing\nPress Ctrl+Alt+Del\nto restart_',
+scf:[{si:'📁',s:'"Bootmgr is missing"',c:'bootmgr file deleted or corrupt',f:'WinRE USB → bootrec /rebuildbcd'},{si:'🔄',s:'Startup Repair loop — never boots',c:'BCD store corrupt or wrong entries',f:'bootrec /rebuildbcd · bootsect /nt60'},{si:'💥',s:'BSOD 0x0000007B at Windows logo',c:'SATA mode changed AHCI↔IDE in UEFI',f:'Revert SATA mode in UEFI — do not replace drive'},{si:'🐧',s:'GRUB rescue prompt',c:'GRUB config corrupt or partition changed',f:'Boot live USB → grub-install · update-grub'}],
+pbq:[{q:'"Bootmgr is missing" after deleting a partition. Fix?',a:'WinRE USB → bootrec /rebuildbcd. BCD pointed to a partition that no longer exists.'},{q:'BSOD 0x0000007B at Windows logo. What changed?',a:'SATA mode flipped AHCI↔IDE in UEFI. Change it back — drive is fine.'},{q:'KEY DISTINCTION: "No Bootable Device" vs "Bootmgr is missing."',a:'"No Bootable Device" = Phase 3 Boot Record failed. "Bootmgr is missing" = Phase 4 Bootloader — boot record worked, file is gone.'},{q:'Dual boot: Windows works, Linux gives GRUB error.',a:'Boot Linux live USB → update-grub. GRUB lost its config.'}]},
+{n:'OS Load',full:'Kernel + Driver Initialization',pi:'RT — Runtime (initialization)',icon:'💾',
+desc:'Kernel is in RAM. Windows loads HAL (Hardware Abstraction Layer) then initializes device drivers one by one — GPU, storage, chipset. A crashing driver = BSOD. BitLocker and TPM do their final hardware integrity check here.',
+hw:[{l:'RAM',r:1,s:'Kernel must fit — bad RAM = BSOD'},{l:'GPU (driver loads here)',r:1,s:'Black screen if GPU driver crashes'},{l:'Storage controller',r:2,s:'Must match SATA mode in UEFI'},{l:'CPU',r:2,s:'Executing kernel and HAL'},{l:'All PCIe devices',r:3,s:'Each driver initializes in sequence'}],
+comp:[{l:'Device drivers (.sys files)',r:1,s:'Bad driver = stop code BSOD'},{l:'Windows Registry (HKLM\\SYSTEM)',r:1,s:'Corrupt hive = boot fails'},{l:'HAL (Hardware Abstraction Layer)',r:2,s:'Bridge between kernel and hardware'},{l:'Kernel (ntoskrnl.exe)',r:2,s:'Core OS executable'},{l:'BitLocker / TPM integrity check',r:2,s:'Hardware change = recovery key prompt'}],
+sok:'Windows logo spinner → Welcome screen → Desktop.',
+smok:'[Windows logo + spinner]\n→ Welcome\n→ Desktop loading...',
+sfail:'BSOD stop code · BitLocker recovery prompt · Safe Mode loop · black screen after login.',
+smfail:'Your PC ran into a problem\nSTOP CODE:\nDRIVER_IRQL_NOT_LESS_OR_EQUAL',
+scf:[{si:'💥',s:'BSOD with driver stop code',c:'Corrupt or incompatible .sys driver file',f:'Boot Safe Mode → roll back or uninstall driver'},{si:'🔑',s:'BitLocker recovery key prompt',c:'TPM detected hardware change',f:'Enter 48-digit key · disable BitLocker before hardware changes'},{si:'🖥',s:'Black screen after login',c:'GPU driver crash on load',f:'Safe Mode → DDU → reinstall GPU driver'},{si:'🔁',s:'Spontaneous reboot during OS load',c:'RAM instability or CPU overheating',f:'MemTest86 for RAM · check thermal paste'}],
+pbq:[{q:'BSOD every normal boot but Safe Mode works. Why?',a:'A 3rd-party driver crashes in normal mode. Safe Mode loads only essential drivers. Roll back last driver.'},{q:'After RAM upgrade, BitLocker recovery key prompt.',a:'TPM detected hardware change. Enter recovery key. Disable BitLocker before hardware changes next time.'},{q:'Black screen after Windows logo, cursor visible. Phase?',a:'OS Load. GPU driver failing to initialize. Safe Mode → reinstall GPU driver.'}]},
+{n:'Runtime',full:'OS Running — Post-Boot',pi:'RT — Runtime (full operation)',icon:'🖥',
+desc:'OS is fully loaded. Problems here are NOT boot problems — they are hardware instability, thermal failure, driver conflicts, or storage degradation under sustained load.',
+hw:[{l:'CPU (thermal throttling)',r:1,s:'Overheating = shutdown under load'},{l:'RAM (stability under load)',r:1,s:'Random BSOD if unstable'},{l:'Storage drive',r:2,s:'SMART failures · slow R/W'},{l:'GPU',r:2,s:'Driver crash · artifacts'},{l:'PSU (load stability)',r:3,s:'Insufficient wattage = shutoffs'}],
+comp:[{l:'File system (NTFS/FAT32)',r:2,s:'Corruption = file access errors'},{l:'SMART data (drive health)',r:2,s:'Predicts failure before it happens'},{l:'Running OS services',r:3,s:'Service crash = app-level errors'},{l:'Application processes',r:3,s:'Not hardware — app layer'}],
+sok:'Normal desktop. Apps open and run. Consistent performance. No errors.',
+smok:'[Desktop]\n[Apps running normally]\n_',
+sfail:'Random BSOD mid-use · freeze · thermal shutdown · SMART warning.',
+smfail:'[Random BSOD mid-use]\nSTOP CODE: MEMORY_MANAGEMENT\nor: [hard freeze, no error]',
+scf:[{si:'💥',s:'Random BSOD only during use — not at boot',c:'RAM instability or driver conflict under load',f:'MemTest86 · Event Viewer for driver errors'},{si:'🌡',s:'Shuts off after ~20 min of use',c:'CPU/GPU overheating or PSU insufficient',f:'Check thermal paste · clean fans · verify PSU wattage'},{si:'💾',s:'SMART warning, PC still boots fine',c:'Drive predicting failure',f:'Back up immediately · replace drive — do not wait'},{si:'🧊',s:'Freeze with no BSOD, hard reset needed',c:'GPU driver hang or failing hardware',f:'Check GPU temps · reinstall driver · check PSU'}],
+pbq:[{q:'System BSODs randomly only during gaming. Boot is fine.',a:'Runtime phase. GPU overheating or PSU insufficient. Not a boot problem.'},{q:'PC runs fine for 20 min then shuts off.',a:'Thermal shutdown. CPU fan clogged or thermal paste dried. Check with HWMonitor.'},{q:'SMART warning on drive but PC boots fine.',a:'Back up immediately. Replace the drive. SMART predicts failure — do not wait.'},{q:'Freeze with no BSOD, hard reset required.',a:'Hardware hang. GPU driver, overheating, or failing RAM. Run MemTest and check temps.'}]}
+];
+
+function cardHTML(i){
+  const p=phases[i];const col=COLORS[i];
+  const hasComp=p.comp.length>0;
+  const hwS=hasComp
+    ?`<div class="sec" style="border-right:1px solid var(--border)"><div class="sec-title"><span class="dot" style="background:${col}"></span>Hardware</div>${p.hw.map(h=>`<div class="hw-row"><span class="hw-badge ${h.r===1?'b1':h.r===2?'b2':'b3'}">${h.r===1?'▲1':h.r===2?'▸2':'◦3'}</span><div><span class="hw-name">${h.l}</span><span class="hw-sub">${h.s}</span></div></div>`).join('')}</div><div class="sec" style="border-right:1px solid var(--border)"><div class="sec-title"><span class="dot" style="background:${col}"></span>Components / Software</div>${p.comp.map(h=>`<div class="hw-row"><span class="hw-badge ${h.r===1?'b1':h.r===2?'b2':'b3'}">${h.r===1?'▲1':h.r===2?'▸2':'◦3'}</span><div><span class="hw-name">${h.l}</span><span class="hw-sub">${h.s}</span></div></div>`).join('')}</div>`
+    :`<div class="sec" style="grid-column:span 2;border-right:1px solid var(--border)"><div class="sec-title"><span class="dot" style="background:${col}"></span>Hardware</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">${p.hw.map(h=>`<div class="hw-row"><span class="hw-badge ${h.r===1?'b1':h.r===2?'b2':'b3'}">${h.r===1?'▲1':h.r===2?'▸2':'◦3'}</span><div><span class="hw-name">${h.l}</span><span class="hw-sub">${h.s}</span></div></div>`).join('')}</div></div>`;
+  return `<div class="card" id="card${i}" style="border-top:3px solid ${col};border-left:4px solid ${col}">
+<div class="card-hdr"><div class="hicon">${p.icon}</div><div style="flex:1"><div class="htitle" style="color:${col}">${p.n} — ${p.full}</div><div class="hbadge">${p.pi}</div><div class="hdesc">${p.desc}</div></div><div class="hclose" onclick="colClick(${i})">✕ close</div></div>
+<div class="sec-grid g3" style="border-bottom:1px solid var(--border)">${hwS}<div class="sec nobb"><div class="sec-title"><span class="dot" style="background:#3fb950"></span>Normal screen</div><div style="font-size:11px;color:var(--text2);margin-bottom:6px;line-height:1.5">${p.sok}</div><div class="smock"><div class="smock-lbl lbl-ok">✓ Normal output</div><div class="smock-body"><span class="tdim">${p.smok.replace(/\n/g,'<br>')}</span></div></div></div></div>
+<div style="padding:12px 14px;border-bottom:1px solid var(--border)"><div class="sec-title" style="margin-bottom:8px"><span class="dot" style="background:var(--red)"></span>Failure screen</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="font-size:12px;color:var(--text2);line-height:1.6">${p.sfail}</div><div class="smock"><div class="smock-lbl lbl-fail">✕ Error output</div><div class="smock-body"><span class="tfail">${p.smfail.replace(/\n/g,'<br>')}</span></div></div></div></div>
+<div class="sec-grid g2"><div class="sec nobb" style="border-right:1px solid var(--border)"><div class="sec-title"><span class="dot" style="background:var(--orange)"></span>Symptom · Cause · Fix</div>${p.scf.map(f=>`<div class="scf-row"><div class="scf-sym">${f.si} <strong>${f.s}</strong></div><div class="scf-c">Cause: ${f.c}</div><div class="scf-f">🔧 ${f.f}</div></div>`).join('')}</div><div class="sec nobb"><div class="sec-title"><span class="dot" style="background:var(--orange)"></span>PBQ · Exam traps</div>${p.pbq.map(q=>`<div class="pbq-row"><div class="pbq-q">⚑ ${q.q}</div><div class="pbq-a">→ ${q.a}</div></div>`).join('')}</div></div>
+</div>`;
+}
+
+function colClick(i){
+  if(cmpSet.size>0)return;
+  if(openSet.has(i)){openSet.delete(i);document.getElementById('col'+i).classList.remove('active');}
+  else{openSet.add(i);document.getElementById('col'+i).classList.add('active');}
+  renderDetail();
+}
+function renderDetail(){document.getElementById('detail').innerHTML=Array.from(openSet).sort((a,b)=>a-b).map(i=>cardHTML(i)).join('');}
+function cmpToggle(i){
+  if(cmpSet.has(i)){cmpSet.delete(i);document.getElementById('cb'+i).className='cmp-btn';document.getElementById('col'+i).classList.remove('active');}
+  else{if(cmpSet.size>=2){alert('Max 2 phases. Clear one first.');return;}cmpSet.add(i);document.getElementById('cb'+i).className='cmp-btn sel'+i;document.getElementById('col'+i).classList.add('active');}
+  for(let j=0;j<COLS;j++){const c=document.getElementById('col'+j);cmpSet.size===0?c.classList.remove('blurred'):(cmpSet.has(j)?c.classList.remove('blurred'):c.classList.add('blurred'));}
+  if(cmpSet.size>0){openSet.clear();cmpSet.forEach(i=>openSet.add(i));}else openSet.clear();
+  renderDetail();
+}
+function cmpClear(){cmpSet.clear();openSet.clear();for(let i=0;i<COLS;i++){document.getElementById('cb'+i).className='cmp-btn';document.getElementById('col'+i).classList.remove('blurred','active');}document.getElementById('detail').innerHTML='';}
+function togBot(id){const b=document.getElementById('body-'+id);const a=document.getElementById('arr-'+id);const o=b.classList.contains('open');b.classList.toggle('open',!o);a.classList.toggle('open',!o);}
+try{const s=localStorage.getItem('boot_notes_v2');if(s)document.getElementById('notes-ta').value=s;}catch(e){}
+function saveNotes(){try{localStorage.setItem('boot_notes_v2',document.getElementById('notes-ta').value);}catch(e){}}
+</script>
+</body>
+</html>
