@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Printer Mastery — CompTIA A+ Core 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Barlow:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07060e;--surface:#0e0c1c;--surface2:#131327;--border:#261e42;--border2:#3a2d60;--violet:#9d7fe8;--lavender:#c4b5fd;--magenta:#d946a8;--mint:#4ecca3;--rose:#c9956c;--amber:#f0a500;--text:#ede8f8;--dim:#6b5f8a;--dim2:#9d91bc;}
+*{margin:0;padding:0;box-sizing:border-box;}html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:#07060e;}::-webkit-scrollbar-thumb{background:#3a2d60;border-radius:2px;}
+
+/* GALAXY */
+.galaxy{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.neb{position:absolute;border-radius:50%;filter:blur(90px);}
+.n1{width:700px;height:500px;background:radial-gradient(ellipse,rgba(100,40,200,0.22) 0%,transparent 70%);top:-150px;right:-100px;}
+.n2{width:600px;height:600px;background:radial-gradient(ellipse,rgba(70,20,160,0.15) 0%,transparent 70%);bottom:0;left:-200px;}
+.n3{width:400px;height:400px;background:radial-gradient(ellipse,rgba(160,80,240,0.1) 0%,transparent 70%);top:45%;left:38%;}
+.stars{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 18% 35%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 28% 8%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 42% 55%,rgba(255,255,255,0.3) 0%,transparent 100%),radial-gradient(1px 1px at 63% 68%,rgba(255,255,255,0.35) 0%,transparent 100%),radial-gradient(1px 1px at 74% 18%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 91% 78%,rgba(255,255,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 34% 88%,rgba(200,180,255,0.35) 0%,transparent 100%),radial-gradient(1px 1px at 57% 44%,rgba(200,180,255,0.3) 0%,transparent 100%),radial-gradient(1px 1px at 88% 33%,rgba(255,255,255,0.35) 0%,transparent 100%),radial-gradient(1px 1px at 14% 72%,rgba(200,180,255,0.4) 0%,transparent 100%),radial-gradient(1px 1px at 76% 90%,rgba(255,255,255,0.25) 0%,transparent 100%);}
+.grain{position:absolute;inset:0;opacity:0.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* NAV */
+.topnav{position:sticky;top:0;z-index:100;background:rgba(7,6,14,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;}
+.topnav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(157,127,232,0.5),rgba(217,70,168,0.4),rgba(157,127,232,0.5),transparent);}
+.nav-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;height:60px;gap:8px;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-size:0.85em;font-weight:900;letter-spacing:3px;color:var(--text);margin-right:24px;white-space:nowrap;flex-shrink:0;}
+.nav-logo span{color:var(--violet);}
+.nav-tabs{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:7px;cursor:pointer;transition:all 0.2s;white-space:nowrap;border:1px solid transparent;font-size:0.8em;font-weight:500;color:var(--dim2);flex-shrink:0;user-select:none;}
+.nav-tab:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.nav-tab.active{background:rgba(157,127,232,0.1);border-color:rgba(157,127,232,0.3);color:var(--lavender);}
+.tab-num{font-family:'DM Mono',monospace;font-size:0.68em;color:var(--dim);}
+.nav-badge{font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:1px;padding:3px 10px;border-radius:20px;border:1px solid rgba(157,127,232,0.3);color:var(--violet);background:rgba(157,127,232,0.06);margin-left:auto;flex-shrink:0;}
+
+/* LAYOUT */
+.page-wrap{max-width:1300px;margin:0 auto;padding:28px 24px 80px;position:relative;z-index:1;}
+.section-panel{display:none;}
+.section-panel.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.sec-head{margin-bottom:20px;}
+.sec-eyebrow{font-family:'DM Mono',monospace;font-size:0.62em;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-bottom:5px;}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:1.5em;font-weight:800;letter-spacing:2px;color:var(--text);margin-bottom:5px;line-height:1.2;}
+.sec-title span{color:var(--violet);}
+.sec-desc{font-size:0.9em;color:var(--dim2);line-height:1.6;max-width:640px;}
+.div{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:20px 0;}
+
+/* SIDEBAR */
+.with-sidebar{display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:start;}
+@media(max-width:900px){.with-sidebar{grid-template-columns:1fr;}}
+.sidebar{position:sticky;top:76px;display:flex;flex-direction:column;gap:12px;}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px;}
+.s-card-title{font-family:'Orbitron',sans-serif;font-size:0.6em;font-weight:700;letter-spacing:3px;color:var(--dim2);text-transform:uppercase;margin-bottom:12px;}
+.key-row{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:0.78em;}
+.key-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.key-label{color:var(--dim2);}
+.key-label b{color:var(--text);font-weight:600;}
+.cd-days{font-family:'Orbitron',sans-serif;font-size:2em;font-weight:900;color:var(--magenta);text-shadow:0 0 18px rgba(217,70,168,0.3);line-height:1;text-align:center;margin:6px 0 2px;}
+.cd-sub{font-size:0.75em;color:var(--dim2);text-align:center;}
+.prog-row-sb{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.prog-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.prog-name{font-size:0.78em;font-weight:500;flex:1;color:var(--dim2);}
+.prog-track{width:54px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;flex-shrink:0;}
+.prog-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
+.prog-pct-sb{font-family:'DM Mono',monospace;font-size:0.6em;width:26px;text-align:right;flex-shrink:0;}
+
+/* ══════════ #1 DIAGRAM + EP CHAIN ══════════ */
+.diag-ep-wrap{display:flex;flex-direction:column;gap:16px;}
+
+/* Diagram controls */
+.diag-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.ctrl-btn{padding:7px 16px;border-radius:7px;font-family:'DM Mono',monospace;font-size:0.68em;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;}
+.ctrl-btn:hover,.ctrl-btn.active{border-color:var(--violet);color:var(--lavender);background:rgba(157,127,232,0.08);}
+.toggle-wrap{display:flex;align-items:center;gap:8px;}
+.toggle-label{font-family:'DM Mono',monospace;font-size:0.65em;letter-spacing:2px;color:var(--dim2);}
+.toggle-switch{position:relative;width:36px;height:20px;cursor:pointer;}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{position:absolute;inset:0;border-radius:10px;background:var(--border2);transition:background 0.2s;}
+.toggle-switch input:checked ~ .toggle-track{background:var(--violet);}
+.toggle-thumb{position:absolute;width:14px;height:14px;top:3px;left:3px;border-radius:50%;background:#fff;transition:transform 0.2s;}
+.toggle-switch input:checked ~ .toggle-thumb{transform:translateX(16px);}
+
+/* SVG diagram */
+.svg-wrap{background:#06050d;border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative;}
+.svg-wrap svg{width:100%;height:auto;display:block;}
+
+/* anchor circles */
+.anchor{cursor:pointer;}
+.anc-outer{transition:fill 0.2s,r 0.2s;}
+.anchor:hover .anc-outer{r:12;}
+.anchor.active-anchor .anc-outer{fill:var(--lavender) !important;filter:drop-shadow(0 0 8px rgba(196,181,253,0.8));}
+.anc-inner{pointer-events:none;}
+.anc-text{fill:#000;font-family:'Orbitron',monospace;font-size:8px;font-weight:800;pointer-events:none;}
+.label-text{transition:opacity 0.3s;}
+.label-text.blind{opacity:0 !important;}
+
+/* quiz banner */
+.quiz-banner{display:none;background:rgba(157,127,232,0.1);border:1px solid rgba(157,127,232,0.3);border-radius:10px;padding:14px 18px;margin-top:10px;}
+.quiz-banner.visible{display:block;animation:fadeIn 0.3s ease;}
+.quiz-prompt{font-family:'DM Mono',monospace;font-size:0.62em;letter-spacing:2px;color:var(--dim2);margin-bottom:6px;text-transform:uppercase;}
+.quiz-component{font-family:'Orbitron',sans-serif;font-size:1.1em;font-weight:800;color:var(--lavender);margin-bottom:8px;}
+.quiz-feedback{font-size:0.9em;font-weight:600;min-height:20px;margin-bottom:6px;}
+.quiz-feedback.win{color:var(--mint);}
+.quiz-feedback.lose{color:var(--magenta);}
+.quiz-skip{padding:5px 14px;border-radius:6px;font-family:'DM Mono',monospace;font-size:0.65em;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;margin-right:10px;}
+.quiz-skip:hover{border-color:var(--violet);color:var(--lavender);}
+.quiz-score{font-family:'DM Mono',monospace;font-size:0.65em;color:var(--dim2);display:inline-block;}
+.quiz-score span{color:var(--mint);font-weight:700;}
+
+/* comp info panel */
+.comp-info{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:16px;margin-top:10px;min-height:80px;}
+.ci-num{font-family:'Orbitron',sans-serif;font-size:0.62em;font-weight:700;letter-spacing:2px;color:var(--amber);margin-bottom:4px;}
+.ci-name{font-family:'Orbitron',sans-serif;font-size:1em;font-weight:800;color:var(--lavender);margin-bottom:6px;}
+.ci-stage{display:inline-block;margin-bottom:8px;padding:3px 10px;border-radius:5px;font-family:'DM Mono',monospace;font-size:0.6em;letter-spacing:1px;border:1px solid rgba(196,181,253,0.3);color:var(--lavender);background:rgba(196,181,253,0.07);}
+.ci-fn{font-size:0.88em;line-height:1.7;color:var(--dim2);margin-bottom:8px;}
+.ci-fn strong{color:var(--text);font-weight:600;}
+.ci-tip{padding:8px 12px;background:rgba(201,149,108,0.06);border:1px solid rgba(201,149,108,0.2);border-left:3px solid var(--rose);border-radius:6px;font-size:0.8em;color:#b8906a;line-height:1.6;}
+.ci-tip strong{color:var(--rose);}
+
+/* placeholder */
+.ci-placeholder{font-family:'DM Mono',monospace;font-size:0.72em;color:var(--dim);letter-spacing:1px;text-align:center;padding:20px;}
+
+/* EP Chain toggle */
+.chain-wrap{position:relative;padding-left:0;}
+.chain-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.cc-btn{padding:6px 16px;border-radius:20px;font-family:'DM Mono',monospace;font-size:0.65em;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;}
+.cc-btn:hover{border-color:var(--lavender);color:var(--lavender);}
+
+.stage-item{margin-bottom:8px;}
+.stage-hdr{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid transparent;border-radius:10px;padding:12px 16px;cursor:pointer;transition:all 0.2s;user-select:none;}
+.stage-hdr:hover{border-color:var(--border2);}
+.stage-item.open .stage-hdr{border-radius:10px 10px 0 0;border-bottom-color:transparent;}
+.stage-num-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:0.75em;font-weight:800;color:#000;flex-shrink:0;}
+.stage-lbl{font-family:'Orbitron',sans-serif;font-size:0.9em;font-weight:700;letter-spacing:1px;}
+.stage-tagline{font-size:0.76em;color:var(--dim2);margin-top:2px;}
+.stage-flow{font-family:'DM Mono',monospace;font-size:0.62em;color:var(--dim2);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:4px;padding:3px 8px;white-space:nowrap;margin-left:auto;flex-shrink:0;}
+.stage-chev{color:var(--dim);font-size:0.8em;transition:transform 0.2s;margin-left:8px;}
+.stage-item.open .stage-chev{transform:rotate(180deg);}
+
+.stage-body{display:none;background:var(--surface2);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;}
+.stage-item.open .stage-body{display:block;}
+
+.sub-sec{border-bottom:1px solid var(--border);}
+.sub-sec:last-child{border-bottom:none;}
+.sub-hdr{display:flex;align-items:center;gap:8px;padding:10px 16px;cursor:pointer;transition:background 0.15s;user-select:none;}
+.sub-hdr:hover{background:rgba(255,255,255,0.02);}
+.sub-title{font-family:'Orbitron',sans-serif;font-size:0.72em;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.sub-chev{margin-left:auto;font-size:0.7em;color:var(--dim);transition:transform 0.2s;}
+.sub-sec.open .sub-chev{transform:rotate(180deg);}
+.sub-body{display:none;padding:4px 16px 14px 16px;}
+.sub-sec.open .sub-body{display:block;}
+
+.what-text{font-size:0.9em;line-height:1.75;color:var(--dim2);}
+.what-text strong{color:var(--text);font-weight:600;}
+
+/* comp list with photos INSIDE */
+.comp-list{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.comp-item{display:flex;gap:12px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.comp-photo-wrap{flex-shrink:0;width:80px;}
+.comp-ph{width:80px;height:60px;border:1.5px dashed var(--border2);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:border-color 0.2s;background:rgba(255,255,255,0.01);overflow:hidden;position:relative;}
+.comp-ph:hover{border-color:var(--violet);}
+.comp-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:6px;}
+.comp-ph-icon{font-size:1.3em;opacity:0.4;}
+.comp-ph-txt{font-family:'DM Mono',monospace;font-size:0.45em;color:var(--dim);letter-spacing:0.5px;text-align:center;}
+.comp-ph-label{font-family:'DM Mono',monospace;font-size:0.52em;color:var(--dim);letter-spacing:1px;text-align:center;margin-top:4px;}
+.comp-info-wrap{flex:1;}
+.comp-name{font-family:'Orbitron',sans-serif;font-size:0.85em;font-weight:700;margin-bottom:4px;}
+.comp-desc{font-size:0.83em;line-height:1.6;color:var(--dim2);}
+
+.defect-list,.maint-list{display:flex;flex-direction:column;gap:6px;margin-top:4px;}
+.defect-item{padding:8px 12px;background:rgba(217,70,168,0.04);border:1px solid rgba(217,70,168,0.12);border-left:3px solid var(--magenta);border-radius:6px;}
+.defect-sym{font-size:0.86em;font-weight:600;color:var(--text);}
+.defect-why{font-size:0.78em;color:var(--dim2);margin-top:2px;line-height:1.4;}
+.maint-item{padding:8px 12px;background:rgba(78,204,163,0.04);border:1px solid rgba(78,204,163,0.12);border-left:3px solid var(--mint);border-radius:6px;}
+.maint-action{font-size:0.86em;font-weight:600;color:var(--mint);}
+.maint-note{font-size:0.78em;color:var(--dim2);margin-top:2px;line-height:1.4;}
+.kit-badge{display:inline-block;margin-top:3px;padding:2px 7px;border-radius:4px;font-family:'DM Mono',monospace;font-size:0.6em;letter-spacing:1px;background:rgba(240,165,0,0.1);color:var(--amber);border:1px solid rgba(240,165,0,0.25);}
+.exam-tip-strip{margin:10px 16px 12px;padding:9px 13px;background:rgba(201,149,108,0.05);border:1px solid rgba(201,149,108,0.15);border-left:3px solid var(--rose);border-radius:6px;font-size:0.82em;line-height:1.6;color:#b8906a;}
+.exam-tip-strip strong{color:var(--rose);}
+
+/* ══════════ #2 DIAGNOSTIC TRAINER ══════════ */
+.trainer-wrap{display:flex;flex-direction:column;gap:16px;}
+.pattern-bar{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+.pb-label{font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:3px;color:var(--dim);text-transform:uppercase;width:100%;margin-bottom:4px;}
+.pat{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-family:'DM Mono',monospace;font-size:0.63em;letter-spacing:0.5px;border:1px solid;white-space:nowrap;}
+
+/* mode toggle */
+.mode-toggle{display:flex;gap:6px;align-items:center;margin-bottom:4px;}
+.mode-btn{padding:8px 20px;border-radius:8px;font-family:'Orbitron',sans-serif;font-size:0.72em;font-weight:700;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;}
+.mode-btn:hover{border-color:var(--lavender);color:var(--lavender);}
+.mode-btn.active{background:rgba(157,127,232,0.12);border-color:var(--violet);color:var(--lavender);}
+.mode-label{font-family:'DM Mono',monospace;font-size:0.65em;color:var(--dim);letter-spacing:1px;}
+
+/* scenario card */
+.scenario-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;}
+.sc-score-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.sc-score-item{font-family:'DM Mono',monospace;font-size:0.68em;color:var(--dim2);}
+.sc-score-item span{font-weight:700;}
+.sc-score-item .s-r{color:var(--mint);}
+.sc-score-item .s-w{color:var(--magenta);}
+.sc-phase{font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;}
+.sc-report{background:rgba(217,70,168,0.05);border:1px solid rgba(217,70,168,0.15);border-left:3px solid var(--magenta);border-radius:9px;padding:14px;margin-bottom:18px;}
+.sc-report-label{font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:3px;color:var(--magenta);margin-bottom:6px;text-transform:uppercase;}
+.sc-report-text{font-size:1em;font-weight:600;color:var(--text);line-height:1.5;}
+.sc-question{font-family:'Orbitron',sans-serif;font-size:0.92em;font-weight:700;color:var(--lavender);margin-bottom:14px;letter-spacing:0.5px;line-height:1.4;}
+.sc-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+@media(max-width:600px){.sc-opts{grid-template-columns:1fr;}}
+.sc-opt{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;font-size:0.88em;font-weight:500;color:var(--text);cursor:pointer;transition:all 0.2s;text-align:left;}
+.sc-opt:hover:not(.disabled){border-color:var(--violet);color:var(--lavender);}
+.sc-opt.correct{border-color:var(--mint);background:rgba(78,204,163,0.07);color:var(--mint);}
+.sc-opt.wrong{border-color:rgba(217,70,168,0.3);background:rgba(217,70,168,0.04);opacity:0.5;cursor:default;}
+.sc-opt.disabled{cursor:default;}
+.opt-letter{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:0.7em;font-weight:800;background:var(--border2);color:var(--dim2);flex-shrink:0;}
+.sc-opt.correct .opt-letter{background:var(--mint);color:#000;}
+.sc-opt.wrong .opt-letter{background:rgba(217,70,168,0.2);color:var(--magenta);}
+
+.sc-feedback{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:14px;margin-bottom:12px;display:none;}
+.sc-feedback.show{display:block;animation:fadeIn 0.3s ease;}
+.fb-result{font-weight:700;font-size:0.9em;margin-bottom:6px;}
+.fb-result.win{color:var(--mint);}
+.fb-result.lose{color:var(--magenta);}
+.fb-explain{font-size:0.84em;color:var(--dim2);line-height:1.7;}
+.fb-explain strong{color:var(--text);}
+.fb-hint{margin-top:8px;padding:8px 12px;background:rgba(201,149,108,0.06);border:1px solid rgba(201,149,108,0.2);border-left:3px solid var(--rose);border-radius:6px;font-size:0.8em;color:#b8906a;line-height:1.6;}
+.fb-hint strong{color:var(--rose);}
+
+/* chain display */
+.chain-trail{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+.chain-tag{font-family:'DM Mono',monospace;font-size:0.62em;font-weight:500;padding:3px 10px;border-radius:4px;border:1px solid;letter-spacing:0.5px;}
+.chain-arr{color:var(--dim);font-size:0.7em;}
+
+.sc-next-btn{padding:10px 28px;border-radius:8px;font-family:'Orbitron',sans-serif;font-size:0.76em;font-weight:700;letter-spacing:1px;border:1px solid var(--mint);color:var(--mint);background:none;cursor:pointer;transition:all 0.2s;}
+.sc-next-btn:hover{background:var(--mint);color:#000;}
+
+.sc-complete{text-align:center;padding:40px 20px;}
+.scc-title{font-family:'Orbitron',sans-serif;font-size:1.4em;font-weight:800;color:var(--lavender);margin-bottom:8px;}
+.scc-score{font-size:3em;font-weight:700;color:var(--mint);font-family:'Orbitron',sans-serif;margin:12px 0;}
+.scc-sub{font-size:0.9em;color:var(--dim2);margin-bottom:20px;}
+.scc-restart{padding:10px 28px;border-radius:8px;font-family:'Orbitron',sans-serif;font-size:0.76em;font-weight:700;letter-spacing:1px;border:1px solid var(--violet);color:var(--violet);background:none;cursor:pointer;transition:all 0.2s;}
+.scc-restart:hover{background:var(--violet);color:#000;}
+
+/* phase steps indicator */
+.phase-steps{display:flex;gap:6px;margin-bottom:16px;align-items:center;}
+.phase-step{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:0.62em;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim);transition:all 0.2s;}
+.phase-step.active{border-color:var(--violet);color:var(--lavender);background:rgba(157,127,232,0.08);}
+.phase-step.done{border-color:var(--mint);color:var(--mint);background:rgba(78,204,163,0.06);}
+.phase-step-num{width:18px;height:18px;border-radius:50%;background:var(--border2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9em;}
+.phase-step.active .phase-step-num{background:var(--violet);color:#000;}
+.phase-step.done .phase-step-num{background:var(--mint);color:#000;}
+
+/* ══════════ #3 PRINTER TYPES ══════════ */
+.types-wrap{display:flex;flex-direction:column;gap:16px;}
+
+/* Sub-mode tabs */
+.pt-mode-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.pt-mode-btn{padding:9px 20px;border-radius:8px;font-family:'Orbitron',sans-serif;font-size:0.72em;font-weight:700;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;}
+.pt-mode-btn:hover{border-color:var(--lavender);color:var(--lavender);}
+.pt-mode-btn.active{background:rgba(157,127,232,0.12);border-color:var(--violet);color:var(--lavender);}
+.pt-sub-panel{display:none;}
+.pt-sub-panel.active{display:block;animation:fadeIn 0.3s ease;}
+
+/* Memory hooks */
+.hooks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px;}
+.hook-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;}
+.hook-card:hover{transform:translateY(-2px);border-color:var(--border2);}
+.hook-card.expanded{border-color:var(--violet);}
+.hook-emoji{font-size:2.8em;margin-bottom:10px;display:block;}
+.hook-name{font-family:'Orbitron',sans-serif;font-size:0.9em;font-weight:800;letter-spacing:2px;margin-bottom:6px;}
+.hook-anchor{font-family:'DM Mono',monospace;font-size:0.75em;letter-spacing:1px;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:10px;border:1px solid;}
+.hook-detail{display:none;text-align:left;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;}
+.hook-card.expanded .hook-detail{display:block;}
+.hook-row{display:flex;gap:6px;margin-bottom:5px;font-size:0.8em;align-items:flex-start;}
+.hook-lbl{font-family:'DM Mono',monospace;font-size:0.72em;letter-spacing:1px;color:var(--dim);width:80px;flex-shrink:0;padding-top:1px;}
+.hook-val{color:var(--dim2);line-height:1.5;}
+.hook-val strong{color:var(--text);font-weight:600;}
+
+/* Process animation */
+.proc-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.proc-tab{padding:7px 16px;border-radius:7px;font-family:'Orbitron',sans-serif;font-size:0.7em;font-weight:700;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;}
+.proc-tab:hover{border-color:var(--lavender);color:var(--lavender);}
+.proc-tab.active{background:rgba(157,127,232,0.1);border-color:var(--violet);color:var(--lavender);}
+.proc-panel{display:none;}
+.proc-panel.active{display:block;animation:fadeIn 0.3s ease;}
+.proc-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.proc-steps{display:flex;flex-direction:column;gap:0;}
+.proc-step{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);opacity:0.3;transition:all 0.4s;position:relative;}
+.proc-step:last-child{border-bottom:none;}
+.proc-step.lit{opacity:1;}
+.proc-step.lit .proc-icon{box-shadow:0 0 14px currentColor;}
+.proc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3em;flex-shrink:0;border:1px solid;transition:box-shadow 0.4s;}
+.proc-content{flex:1;}
+.proc-step-title{font-family:'Orbitron',sans-serif;font-size:0.82em;font-weight:700;margin-bottom:3px;}
+.proc-step-desc{font-size:0.82em;color:var(--dim2);line-height:1.5;}
+.proc-controls{display:flex;gap:8px;margin-top:14px;align-items:center;}
+.proc-btn{padding:7px 18px;border-radius:7px;font-family:'DM Mono',monospace;font-size:0.68em;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;}
+.proc-btn:hover{border-color:var(--lavender);color:var(--lavender);}
+.proc-progress{font-family:'DM Mono',monospace;font-size:0.62em;color:var(--dim);margin-left:6px;}
+
+/* Quick compare table */
+.compare-table{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;border-collapse:collapse;}
+.compare-table th{background:rgba(157,127,232,0.1);padding:12px 14px;font-family:'Orbitron',sans-serif;font-size:0.68em;font-weight:700;letter-spacing:1px;color:var(--lavender);text-align:left;border-bottom:1px solid var(--border2);}
+.compare-table td{padding:10px 14px;font-size:0.82em;color:var(--dim2);border-bottom:1px solid var(--border);vertical-align:top;}
+.compare-table tr:last-child td{border-bottom:none;}
+.compare-table td:first-child{font-weight:600;color:var(--text);}
+.compare-table tr:nth-child(even) td{background:rgba(255,255,255,0.01);}
+.compare-table td.hl-mint{color:var(--mint);font-weight:700;}
+.compare-table td.hl-magenta{color:var(--magenta);font-weight:700;}
+
+/* Identify drill */
+.pt-drill-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;}
+.pt-drill-score{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.pt-drill-score-item{font-family:'DM Mono',monospace;font-size:0.68em;color:var(--dim2);}
+.pt-drill-score-item span{font-weight:700;}
+.pt-scenario{background:rgba(157,127,232,0.05);border:1px solid rgba(157,127,232,0.15);border-left:3px solid var(--violet);border-radius:9px;padding:16px;margin-bottom:18px;font-size:1em;line-height:1.6;color:var(--text);font-weight:500;}
+.pt-scenario-label{font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:3px;color:var(--violet);margin-bottom:6px;text-transform:uppercase;}
+.pt-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+@media(max-width:550px){.pt-opts{grid-template-columns:1fr;}}
+.pt-opt{display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--surface2);border:1px solid var(--border2);border-radius:9px;cursor:pointer;transition:all 0.2s;font-size:0.9em;font-weight:500;}
+.pt-opt:hover:not(.disabled){border-color:var(--violet);color:var(--lavender);}
+.pt-opt.correct{border-color:var(--mint);background:rgba(78,204,163,0.08);color:var(--mint);}
+.pt-opt.wrong{border-color:rgba(217,70,168,0.3);opacity:0.45;cursor:default;}
+.pt-opt.disabled{cursor:default;}
+.pt-opt-icon{font-size:1.4em;flex-shrink:0;}
+.pt-opt-letter{font-family:'Orbitron',sans-serif;font-size:0.7em;font-weight:800;width:26px;height:26px;border-radius:7px;background:var(--border2);color:var(--dim2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pt-opt.correct .pt-opt-letter{background:var(--mint);color:#000;}
+.pt-opt.wrong .pt-opt-letter{background:rgba(217,70,168,0.2);color:var(--magenta);}
+.pt-feedback{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:14px;margin-bottom:12px;display:none;}
+.pt-feedback.show{display:block;animation:fadeIn 0.3s ease;}
+.pt-fb-result{font-weight:700;font-size:0.9em;margin-bottom:5px;}
+.pt-fb-result.win{color:var(--mint);}
+.pt-fb-result.lose{color:var(--magenta);}
+.pt-fb-reason{font-size:0.84em;color:var(--dim2);line-height:1.7;}
+.pt-fb-reason strong{color:var(--text);}
+.pt-fb-hook{margin-top:7px;padding:7px 11px;background:rgba(157,127,232,0.06);border:1px solid rgba(157,127,232,0.2);border-left:3px solid var(--violet);border-radius:6px;font-family:'DM Mono',monospace;font-size:0.72em;color:var(--lavender);letter-spacing:0.5px;}
+.pt-next-btn{padding:9px 26px;border-radius:8px;font-family:'Orbitron',sans-serif;font-size:0.76em;font-weight:700;letter-spacing:1px;border:1px solid var(--mint);color:var(--mint);background:none;cursor:pointer;transition:all 0.2s;}
+.pt-next-btn:hover{background:var(--mint);color:#000;}
+
+/* Speed drill */
+.speed-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;}
+.speed-timer{font-family:'Orbitron',sans-serif;font-size:3.5em;font-weight:900;color:var(--mint);transition:color 0.3s;line-height:1;margin-bottom:8px;}
+.speed-timer.warning{color:var(--rose);}
+.speed-timer.danger{color:var(--magenta);}
+.speed-q{font-size:1.15em;font-weight:600;color:var(--text);margin:12px 0 18px;line-height:1.5;}
+.speed-opts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+.speed-opt{padding:11px 22px;border-radius:9px;font-family:'Orbitron',sans-serif;font-size:0.78em;font-weight:700;letter-spacing:1px;border:1px solid var(--border2);color:var(--dim2);background:none;cursor:pointer;transition:all 0.2s;}
+.speed-opt:hover:not(.disabled){border-color:var(--violet);background:rgba(157,127,232,0.08);color:var(--lavender);}
+.speed-opt.correct{border-color:var(--mint);background:rgba(78,204,163,0.1);color:var(--mint);}
+.speed-opt.wrong{border-color:rgba(217,70,168,0.3);opacity:0.4;cursor:default;}
+.speed-opt.disabled{cursor:default;}
+.speed-result{font-family:'DM Mono',monospace;font-size:0.78em;min-height:22px;margin-bottom:10px;}
+.speed-result.win{color:var(--mint);}
+.speed-result.lose{color:var(--magenta);}
+.speed-score-bar{display:flex;gap:16px;justify-content:center;font-family:'DM Mono',monospace;font-size:0.68em;color:var(--dim2);}
+.speed-score-bar span{font-weight:700;color:var(--text);}
+.speed-complete{padding:20px;}
+.speed-complete-title{font-family:'Orbitron',sans-serif;font-size:1.2em;font-weight:800;color:var(--lavender);margin-bottom:8px;}
+.speed-complete-score{font-size:2.5em;font-weight:700;color:var(--mint);font-family:'Orbitron',sans-serif;margin:8px 0;}
+.speed-restart{padding:9px 24px;border-radius:8px;font-family:'Orbitron',sans-serif;font-size:0.74em;font-weight:700;border:1px solid var(--violet);color:var(--violet);background:none;cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.speed-restart:hover{background:var(--violet);color:#000;}
+
+/* ══════════ #4 PROGRESS ══════════ */
+.progress-wrap{display:flex;flex-direction:column;gap:16px;}
+.progress-big-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;}
+.pb-title{font-family:'Orbitron',sans-serif;font-size:0.8em;font-weight:700;letter-spacing:3px;color:var(--dim2);text-transform:uppercase;margin-bottom:18px;}
+.pb-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.pb-label{font-size:0.9em;font-weight:600;width:160px;flex-shrink:0;}
+.pb-track{flex:1;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+.pb-fill{height:100%;border-radius:4px;transition:width 0.8s ease;}
+.pb-pct{font-family:'DM Mono',monospace;font-size:0.72em;width:36px;text-align:right;flex-shrink:0;}
+.pb-status{font-family:'DM Mono',monospace;font-size:0.58em;padding:2px 8px;border-radius:8px;border:1px solid;letter-spacing:1px;flex-shrink:0;}
+.exam-tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+.et-card{background:var(--surface);border:1px solid rgba(201,149,108,0.2);border-left:3px solid var(--rose);border-radius:9px;padding:14px;}
+.et-trap{font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:2px;color:var(--rose);margin-bottom:5px;text-transform:uppercase;}
+.et-symptom{font-size:0.86em;font-weight:600;color:var(--text);margin-bottom:4px;}
+.et-wrong{font-size:0.78em;color:var(--dim);margin-bottom:3px;}
+.et-correct{font-size:0.86em;font-weight:700;color:var(--mint);}
+.et-why{font-size:0.76em;color:var(--dim2);margin-top:4px;line-height:1.4;}
+
+/* STATUS BAR */
+.statusbar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(7,6,14,0.92);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:6px 24px;display:flex;align-items:center;gap:14px;}
+.sb-item{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:0.58em;color:var(--dim);letter-spacing:1px;}
+.sb-dot{width:5px;height:5px;border-radius:50%;}
+.sb-sep{width:1px;height:12px;background:var(--border2);}
+</style>
+</head>
+<body>
+<div class="galaxy"><div class="neb n1"></div><div class="neb n2"></div><div class="neb n3"></div><div class="stars"></div><div class="grain"></div></div>
+
+<nav class="topnav">
+  <div class="nav-inner">
+    <div class="nav-logo">PRINTER<span>·</span>MASTERY</div>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="switchTab(0)"><span>🖨</span> Diagram + EP Chain <span class="tab-num">#1</span></div>
+      <div class="nav-tab" onclick="switchTab(1)"><span>🎯</span> Diagnostic Trainer <span class="tab-num">#2</span></div>
+      <div class="nav-tab" onclick="switchTab(2)"><span>📋</span> Printer Types <span class="tab-num">#3</span></div>
+      <div class="nav-tab" onclick="switchTab(3)"><span>📊</span> Progress <span class="tab-num">#4</span></div>
+    </div>
+    <div class="nav-badge">220-1101</div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+<!-- ═══ TAB 1: DIAGRAM + EP CHAIN ═══ -->
+<div class="section-panel active" id="panel-0">
+  <div class="with-sidebar">
+    <div>
+      <div class="sec-head">
+        <div class="sec-eyebrow">Section 1</div>
+        <div class="sec-title">Diagram + <span>EP Chain</span></div>
+        <div class="sec-desc">Click amber circles to inspect components. Toggle blind mode to test yourself. Use Quiz mode to identify components by name.</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="diag-controls" style="margin-bottom:12px;">
+        <div class="toggle-wrap">
+          <span class="toggle-label">BLIND MAP</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="blind-toggle">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <button class="ctrl-btn" id="quiz-btn" onclick="toggleQuiz()">🎯 CLICK-QUIZ</button>
+        <button class="ctrl-btn" onclick="resetDiagram()">↺ RESET</button>
+      </div>
+
+      <!-- Quiz Banner -->
+      <div class="quiz-banner" id="quiz-banner">
+        <div class="quiz-prompt">CLICK-QUIZ MODE — Find the numbered circle on the diagram</div>
+        <div class="quiz-component" id="quiz-comp-name">—</div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <button class="quiz-skip" onclick="nextQuiz()">Skip →</button>
+        <span class="quiz-score">Score: <span id="quiz-score-val">0</span> correct</span>
+      </div>
+
+      <!-- SVG Diagram -->
+      <div class="svg-wrap">
+        <svg id="printer-svg" viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow-cyan"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="glow-amber"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="glow-gold"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <radialGradient id="drumGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0d3060"/><stop offset="100%" stop-color="#061428"/></radialGradient>
+            <radialGradient id="fuserHeat" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#ff8c00" stop-opacity="0.5"/><stop offset="100%" stop-color="#ff8c00" stop-opacity="0"/></radialGradient>
+            <linearGradient id="tonerGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1e1e2e"/><stop offset="100%" stop-color="#0e0e1a"/></linearGradient>
+            <linearGradient id="paperGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#dce8f8"/><stop offset="100%" stop-color="#b8ccec"/></linearGradient>
+            <marker id="arr-cyan" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#00d8ff"/></marker>
+          </defs>
+          <!-- chassis -->
+          <rect x="30" y="20" width="800" height="510" rx="18" fill="#0c1525" stroke="#1a2d4a" stroke-width="1.5"/>
+          <rect x="44" y="34" width="772" height="482" rx="12" fill="#08101e" stroke="#152038" stroke-width="1"/>
+          <rect x="120" y="10" width="380" height="18" rx="5" fill="#0f1a2e" stroke="#1a2d4a" stroke-width="1"/>
+          <text x="310" y="22" text-anchor="middle" fill="#2a4060" font-size="9" font-family="Share Tech Mono">OUTPUT TRAY</text>
+          <!-- controller -->
+          <rect x="58" y="48" width="155" height="90" rx="6" fill="#0d1e3a" stroke="#1e3880" stroke-width="1.2"/>
+          <line x1="66" y1="62" x2="200" y2="62" stroke="#0a2850" stroke-width="1"/><line x1="66" y1="72" x2="185" y2="72" stroke="#0a2850" stroke-width="1"/><line x1="66" y1="82" x2="195" y2="82" stroke="#0a2850" stroke-width="1"/><line x1="66" y1="92" x2="178" y2="92" stroke="#0a2850" stroke-width="1"/>
+          <rect x="105" y="66" width="52" height="42" rx="3" fill="#091830" stroke="#1a3a8a" stroke-width="1.5"/><rect x="110" y="71" width="42" height="32" rx="2" fill="#040e20" stroke="#0e2a60" stroke-width="1"/>
+          <text x="131" y="91" text-anchor="middle" fill="#1a4aaa" font-size="9" font-family="Share Tech Mono" font-weight="bold">CPU</text>
+          <rect x="66" y="68" width="30" height="16" rx="2" fill="#0a1e38" stroke="#1a3060" stroke-width="1"/>
+          <text x="81" y="79" text-anchor="middle" fill="#1a3060" font-size="7" font-family="Share Tech Mono">RAM</text>
+          <text class="anc-label label-text" x="135" y="152" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="10" font-family="Barlow" font-weight="600">Controller</text>
+          <!-- laser -->
+          <rect x="520" y="44" width="100" height="38" rx="6" fill="#0d2040" stroke="#00d8ff" stroke-width="1.5" filter="url(#glow-cyan)"/>
+          <text x="570" y="67" text-anchor="middle" fill="#00d8ff" font-size="9" font-family="Share Tech Mono" font-weight="bold">LASER UNIT</text>
+          <polygon points="490,115 515,98 530,122 505,139" fill="#1a2e48" stroke="#c084fc" stroke-width="1.5"/>
+          <line x1="490" y1="115" x2="530" y2="122" stroke="#c084fc" stroke-width="2" opacity="0.7"/>
+          <line x1="520" y1="72" x2="508" y2="112" stroke="#00d8ff" stroke-width="2.5" stroke-dasharray="6 3" filter="url(#glow-cyan)" marker-end="url(#arr-cyan)"/>
+          <line x1="498" y1="130" x2="448" y2="210" stroke="#00d8ff" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-cyan)" marker-end="url(#arr-cyan)"/>
+          <text class="anc-label label-text" x="570" y="92" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Laser</text>
+          <text class="anc-label label-text" x="548" y="148" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Mirror</text>
+          <!-- toner hopper -->
+          <rect x="430" y="155" width="105" height="95" rx="8" fill="url(#tonerGrad)" stroke="#f02080" stroke-width="1.5"/>
+          <rect x="436" y="200" width="93" height="46" rx="4" fill="#0e0e1a" opacity="0.8"/>
+          <circle cx="460" cy="228" r="2.5" fill="#2a2a40"/><circle cx="476" cy="224" r="2" fill="#2a2a40"/><circle cx="492" cy="230" r="2.5" fill="#2a2a40"/>
+          <text x="483" y="186" text-anchor="middle" fill="#f02080" font-size="9" font-family="Barlow" font-weight="700">TONER</text>
+          <text class="anc-label label-text" x="483" y="264" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Toner Hopper</text>
+          <!-- drum -->
+          <ellipse cx="368" cy="278" rx="72" ry="72" fill="url(#drumGrad)" stroke="#1e5a9a" stroke-width="2"/>
+          <ellipse cx="368" cy="278" rx="62" ry="62" fill="#07152a" stroke="#0d3560" stroke-width="1"/>
+          <ellipse cx="368" cy="278" rx="46" ry="46" fill="#050f20" stroke="#0a2540" stroke-width="1"/>
+          <ellipse cx="368" cy="278" rx="10" ry="10" fill="#081828" stroke="#0e2e50" stroke-width="1"/>
+          <text x="368" y="275" text-anchor="middle" fill="#1e5888" font-size="9" font-family="Share Tech Mono">DRUM</text>
+          <text x="368" y="286" text-anchor="middle" fill="#122840" font-size="7" font-family="Share Tech Mono">PHOTOCOND.</text>
+          <circle cx="417" cy="250" r="3" fill="#2a2a40" opacity="0.9"/><circle cx="425" cy="264" r="2.5" fill="#2a2a40" opacity="0.9"/>
+          <!-- PCR -->
+          <rect x="265" y="260" width="34" height="34" rx="17" fill="#1a2840" stroke="#ff8c00" stroke-width="1.5"/>
+          <circle cx="282" cy="277" r="12" fill="#0d1e30" stroke="#e67800" stroke-width="1"/>
+          <line x1="282" y1="261" x2="282" y2="256" stroke="#ff8c00" stroke-width="1.5"/><line x1="289" y1="264" x2="294" y2="259" stroke="#ff8c00" stroke-width="1.5"/>
+          <text class="anc-label label-text" x="245" y="314" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">PCR</text>
+          <!-- developer -->
+          <rect x="408" y="295" width="32" height="56" rx="16" fill="#1a2840" stroke="#4dd0e1" stroke-width="1.5"/>
+          <circle cx="424" cy="323" r="11" fill="#0d1e30" stroke="#3ab8c8" stroke-width="1"/>
+          <text class="anc-label label-text" x="460" y="340" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Developer</text>
+          <!-- transfer roller -->
+          <rect x="340" y="348" width="58" height="26" rx="13" fill="#1a2840" stroke="#ffd600" stroke-width="1.5"/>
+          <circle cx="369" cy="361" r="9" fill="#0d1e30" stroke="#d4b000" stroke-width="1"/>
+          <text x="355" y="360" fill="#ffd600" font-size="9" font-family="Share Tech Mono">+</text>
+          <text class="anc-label label-text" x="369" y="390" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Transfer Roller</text>
+          <!-- cleaning blade -->
+          <polygon points="306,218 334,230 328,258 300,246" fill="#1a2840" stroke="#ef9a9a" stroke-width="1.5"/>
+          <rect x="268" y="256" width="42" height="24" rx="3" fill="#0f0f1e" stroke="#ef9a9a" stroke-width="0.8" opacity="0.7"/>
+          <text x="289" y="270" text-anchor="middle" fill="#ef9a9a" font-size="7" font-family="Share Tech Mono" opacity="0.7">WASTE</text>
+          <text class="anc-label label-text" x="285" y="218" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Cleaning Blade</text>
+          <!-- fuser -->
+          <ellipse cx="610" cy="335" rx="58" ry="32" fill="url(#fuserHeat)"/>
+          <rect x="562" y="316" width="98" height="24" rx="12" fill="#1a2030" stroke="#ffaa00" stroke-width="2" filter="url(#glow-amber)"/>
+          <rect x="562" y="342" width="98" height="24" rx="12" fill="#1a2030" stroke="#ff8c00" stroke-width="1.5"/>
+          <line x1="582" y1="310" x2="578" y2="302" stroke="#ffaa00" stroke-width="1.5" opacity="0.8"/><line x1="596" y1="308" x2="596" y2="300" stroke="#ffaa00" stroke-width="1.5" opacity="0.8"/><line x1="610" y1="310" x2="614" y2="302" stroke="#ffaa00" stroke-width="1.5" opacity="0.8"/>
+          <rect x="562" y="339" width="98" height="5" rx="1" fill="url(#paperGrad)" opacity="0.85"/>
+          <text x="611" y="330" text-anchor="middle" fill="#ffaa00" font-size="8" font-family="Share Tech Mono" font-weight="bold">∿ HEAT ∿</text>
+          <text x="611" y="352" text-anchor="middle" fill="#ff8c00" font-size="8" font-family="Share Tech Mono">PRESSURE</text>
+          <text class="anc-label label-text" x="611" y="380" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Fuser Assembly</text>
+          <!-- paper tray -->
+          <rect x="58" y="400" width="190" height="64" rx="8" fill="#0d1c30" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="67" y="406" width="172" height="7" rx="1" fill="#c8d8f8" opacity="0.9"/><rect x="67" y="414" width="172" height="7" rx="1" fill="#c8d8f8" opacity="0.7"/><rect x="67" y="422" width="172" height="7" rx="1" fill="#c8d8f8" opacity="0.55"/>
+          <text x="153" y="458" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Barlow" font-weight="700">PAPER TRAY</text>
+          <!-- pickup roller -->
+          <ellipse cx="185" cy="396" rx="24" ry="11" fill="#0d2038" stroke="#80deea" stroke-width="1.5"/>
+          <rect x="163" y="393" width="44" height="9" rx="3" fill="#0a2830" stroke="#c5e1a5" stroke-width="1"/>
+          <text class="anc-label label-text" x="185" y="430" text-anchor="middle" fill="rgba(220,232,248,0.6)" font-size="9" font-family="Barlow" font-weight="600">Pickup / Sep. Pad</text>
+          <!-- paper path -->
+          <path d="M 190,400 L 190,370 L 250,348 L 340,348 L 440,340 L 560,337" stroke="rgba(196,181,253,0.35)" stroke-width="2" fill="none" stroke-dasharray="10 5" filter="url(#glow-cyan)"/>
+          <path d="M 660,328 L 720,318 L 740,100 L 400,80 L 310,28" stroke="rgba(196,181,253,0.2)" stroke-width="1.5" fill="none" stroke-dasharray="8 4"/>
+          <circle id="particle-dot" cx="368" cy="278" r="7" fill="#ffd600" filter="url(#glow-gold)" style="display:none;transition:cx 0.7s ease,cy 0.7s ease;"/>
+
+          <!-- ANCHOR CIRCLES ① - ⑭ -->
+          <g class="anchor" id="anc-1" data-id="1" onclick="selectAnchor(1)"><circle cx="70" cy="52" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="70" cy="52" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="70" cy="52" r="7" class="anc-inner" fill="#000"/><text x="70" y="56" class="anc-text" text-anchor="middle">1</text></g>
+          <g class="anchor" id="anc-2" data-id="2" onclick="selectAnchor(2)"><circle cx="560" cy="52" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="560" cy="52" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="560" cy="52" r="7" class="anc-inner" fill="#000"/><text x="560" y="56" class="anc-text" text-anchor="middle">2</text></g>
+          <g class="anchor" id="anc-3" data-id="3" onclick="selectAnchor(3)"><circle cx="348" cy="220" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="348" cy="220" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="348" cy="220" r="7" class="anc-inner" fill="#000"/><text x="348" y="224" class="anc-text" text-anchor="middle">3</text></g>
+          <g class="anchor" id="anc-4" data-id="4" onclick="selectAnchor(4)"><circle cx="258" cy="258" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="258" cy="258" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="258" cy="258" r="7" class="anc-inner" fill="#000"/><text x="258" y="262" class="anc-text" text-anchor="middle">4</text></g>
+          <g class="anchor" id="anc-5" data-id="5" onclick="selectAnchor(5)"><circle cx="545" cy="165" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="545" cy="165" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="545" cy="165" r="7" class="anc-inner" fill="#000"/><text x="545" y="169" class="anc-text" text-anchor="middle">5</text></g>
+          <g class="anchor" id="anc-6" data-id="6" onclick="selectAnchor(6)"><circle cx="452" cy="294" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="452" cy="294" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="452" cy="294" r="7" class="anc-inner" fill="#000"/><text x="452" y="298" class="anc-text" text-anchor="middle">6</text></g>
+          <g class="anchor" id="anc-7" data-id="7" onclick="selectAnchor(7)"><circle cx="412" cy="350" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="412" cy="350" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="412" cy="350" r="7" class="anc-inner" fill="#000"/><text x="412" y="354" class="anc-text" text-anchor="middle">7</text></g>
+          <g class="anchor" id="anc-8" data-id="8" onclick="selectAnchor(8)"><circle cx="72" cy="404" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="72" cy="404" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="72" cy="404" r="7" class="anc-inner" fill="#000"/><text x="72" y="408" class="anc-text" text-anchor="middle">8</text></g>
+          <g class="anchor" id="anc-9" data-id="9" onclick="selectAnchor(9)"><circle cx="296" cy="214" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="296" cy="214" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="296" cy="214" r="7" class="anc-inner" fill="#000"/><text x="296" y="218" class="anc-text" text-anchor="middle" font-size="9">9</text></g>
+          <g class="anchor" id="anc-10" data-id="10" onclick="selectAnchor(10)"><circle cx="672" cy="318" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="672" cy="318" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="672" cy="318" r="7" class="anc-inner" fill="#000"/><text x="672" y="322" class="anc-text" text-anchor="middle" font-size="8">10</text></g>
+          <g class="anchor" id="anc-11" data-id="11" onclick="selectAnchor(11)"><circle cx="672" cy="346" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="672" cy="346" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="672" cy="346" r="7" class="anc-inner" fill="#000"/><text x="672" y="350" class="anc-text" text-anchor="middle" font-size="8">11</text></g>
+          <g class="anchor" id="anc-12" data-id="12" onclick="selectAnchor(12)"><circle cx="222" cy="384" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="222" cy="384" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="222" cy="384" r="7" class="anc-inner" fill="#000"/><text x="222" y="388" class="anc-text" text-anchor="middle" font-size="8">12</text></g>
+          <g class="anchor" id="anc-13" data-id="13" onclick="selectAnchor(13)"><circle cx="540" cy="100" r="13" fill="rgba(255,170,0,0.15)"/><circle cx="540" cy="100" r="10" class="anc-outer" fill="#ffaa00" filter="url(#glow-amber)"/><circle cx="540" cy="100" r="7" class="anc-inner" fill="#000"/><text x="540" y="104" class="anc-text" text-anchor="middle" font-size="8">13</text></g>
+        </svg>
+      </div>
+
+      <!-- Component Info Panel -->
+      <div class="comp-info" id="comp-info">
+        <div class="ci-placeholder">Click any <strong style="color:var(--amber)">① amber circle</strong> to inspect a component</div>
+      </div>
+
+      <div class="div"></div>
+
+      <!-- EP CHAIN -->
+      <div class="sec-head" style="margin-top:8px;">
+        <div class="sec-eyebrow">EP Stages</div>
+        <div class="sec-title" style="font-size:1.2em;">Electrophotographic <span>Process</span></div>
+        <div class="sec-desc">Click a stage to expand. Photos live inside each component. Upload your own.</div>
+      </div>
+      <div class="chain-controls">
+        <button class="cc-btn" onclick="expandAll()">▼ EXPAND ALL</button>
+        <button class="cc-btn" onclick="collapseAll()">▲ COLLAPSE ALL</button>
+        <button class="cc-btn" onclick="expandSub('defects')">⚠ ALL DEFECTS</button>
+        <button class="cc-btn" onclick="expandSub('maint')">🔧 ALL MAINTENANCE</button>
+      </div>
+      <div id="chain-wrap"></div>
+    </div>
+    <div class="sidebar" id="sb-0"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB 2: DIAGNOSTIC TRAINER ═══ -->
+<div class="section-panel" id="panel-1">
+  <div class="with-sidebar">
+    <div>
+      <div class="sec-head">
+        <div class="sec-eyebrow">Section 2</div>
+        <div class="sec-title">Diagnostic <span>Trainer</span></div>
+        <div class="sec-desc">3-phase scenario training. Symptom → Category → Component → Fix. Study Mode shows hints. Exam Mode does not.</div>
+      </div>
+      <div class="trainer-wrap">
+        <div class="pattern-bar" id="pattern-bar"></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="mode-btn active" id="mode-study" onclick="setTrainerMode('study',this)">📖 STUDY MODE</button>
+          <button class="mode-btn" id="mode-exam" onclick="setTrainerMode('exam',this)">🎯 EXAM MODE</button>
+          <span class="mode-label" id="mode-desc">Study Mode: explanations shown after each answer</span>
+        </div>
+        <div id="trainer-card"></div>
+      </div>
+    </div>
+    <div class="sidebar" id="sb-1"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB 3: PRINTER TYPES ═══ -->
+<div class="section-panel" id="panel-2">
+  <div class="with-sidebar">
+    <div>
+      <div class="sec-head">
+        <div class="sec-eyebrow">Section 3</div>
+        <div class="sec-title">Printer <span>Types</span></div>
+        <div class="sec-desc">Memory hooks, process animations, identification drills, speed test. Train recognition — not just reading.</div>
+      </div>
+      <div class="types-wrap">
+        <!-- Sub-mode buttons -->
+        <div class="pt-mode-row">
+          <button class="pt-mode-btn active" onclick="switchPTMode('hooks',this)">🧠 Memory Hooks</button>
+          <button class="pt-mode-btn" onclick="switchPTMode('process',this)">⚙️ How It Works</button>
+          <button class="pt-mode-btn" onclick="switchPTMode('compare',this)">📊 Compare All</button>
+          <button class="pt-mode-btn" onclick="switchPTMode('drill',this)">🎯 Identify Drill</button>
+          <button class="pt-mode-btn" onclick="switchPTMode('speed',this)">⚡ Speed Test</button>
+        </div>
+
+        <!-- HOOKS -->
+        <div class="pt-sub-panel active" id="pt-hooks">
+          <div class="hooks-grid" id="hooks-grid"></div>
+        </div>
+
+        <!-- PROCESS ANIMATIONS -->
+        <div class="pt-sub-panel" id="pt-process">
+          <div class="proc-tabs">
+            <button class="proc-tab active" onclick="switchProc('laser',this)">🖨 Laser</button>
+            <button class="proc-tab" onclick="switchProc('inkjet',this)">💧 Inkjet</button>
+            <button class="proc-tab" onclick="switchProc('thermal',this)">🌡 Thermal</button>
+            <button class="proc-tab" onclick="switchProc('impact',this)">⚡ Impact</button>
+          </div>
+          <div id="proc-container"></div>
+        </div>
+
+        <!-- COMPARE TABLE -->
+        <div class="pt-sub-panel" id="pt-compare">
+          <div style="overflow-x:auto;">
+            <table class="compare-table">
+              <thead><tr>
+                <th>Feature</th>
+                <th style="color:var(--violet)">🖨 Laser</th>
+                <th style="color:var(--lavender)">💧 Inkjet</th>
+                <th style="color:var(--rose)">🌡 Thermal</th>
+                <th style="color:var(--amber)">⚡ Impact</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>Print Method</td><td>Electrostatic + toner powder</td><td>Liquid ink spray</td><td>Heat on thermal paper</td><td>Pins strike ink ribbon</td></tr>
+                <tr><td>Key Component</td><td class="hl-mint">Fuser + Drum</td><td class="hl-mint">Print head / Nozzles</td><td class="hl-mint">Thermal print head</td><td class="hl-mint">Pin mechanism</td></tr>
+                <tr><td>Consumable</td><td>Toner cartridge</td><td>Ink cartridges (C/M/Y/K)</td><td>Thermal paper roll</td><td>Ink ribbon</td></tr>
+                <tr><td>Uses Heat?</td><td class="hl-mint">Yes — fuser (200°C)</td><td>No</td><td class="hl-mint">Yes — print head</td><td>No</td></tr>
+                <tr><td>Noise Level</td><td>Quiet</td><td>Quiet</td><td>Very quiet</td><td class="hl-magenta">LOUD</td></tr>
+                <tr><td>Multi-part Forms</td><td>No</td><td>No</td><td>No</td><td class="hl-mint">Yes ✓ only one</td></tr>
+                <tr><td>Output Durability</td><td>Permanent (heat-bonded)</td><td>Can smear if wet</td><td class="hl-magenta">Fades over time</td><td>Permanent</td></tr>
+                <tr><td>Speed (bulk)</td><td class="hl-mint">Fastest</td><td>Moderate</td><td>Fast (receipts)</td><td>Slowest</td></tr>
+                <tr><td>Common Use</td><td>Office printing</td><td>Photos / home</td><td>Receipts / POS</td><td>Invoices / forms</td></tr>
+                <tr><td>#1 Defect</td><td>Toner smears → fuser</td><td>Lines → clogged nozzle</td><td>Blank → wrong paper</td><td>Missing dots → broken pin</td></tr>
+                <tr><td>Maintenance Kit?</td><td class="hl-mint">Yes (fuser + rollers)</td><td>No</td><td>No</td><td>No</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- IDENTIFY DRILL -->
+        <div class="pt-sub-panel" id="pt-drill">
+          <div class="pt-drill-card" id="pt-drill-card"></div>
+        </div>
+
+        <!-- SPEED TEST -->
+        <div class="pt-sub-panel" id="pt-speed">
+          <div class="speed-card" id="speed-card"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar" id="sb-2"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB 4: PROGRESS ═══ -->
+<div class="section-panel" id="panel-3">
+  <div class="sec-head">
+    <div class="sec-eyebrow">Section 4</div>
+    <div class="sec-title">Progress <span>Tracker</span></div>
+    <div class="sec-desc">Your mastery score + exam trap cards.</div>
+  </div>
+  <div class="progress-wrap" id="progress-wrap"></div>
+</div>
+
+</div><!-- /page-wrap -->
+
+<div class="statusbar">
+  <div class="sb-item"><div class="sb-dot" style="background:#4ecca3"></div>CompTIA A+ Core 1</div>
+  <div class="sb-sep"></div>
+  <div class="sb-item" id="sb-score">Score: 0/0</div>
+  <div class="sb-sep"></div>
+  <div class="sb-item" id="sb-section">Diagram + EP Chain</div>
+</div>
+
+<script>
+/* ═══════════ STATE ═══════════ */
+const S={drillRight:0,drillWrong:0,trainerRight:0,trainerWrong:0,epProgress:0,trainerProgress:0};
+function save(){try{localStorage.setItem('pm2_s',JSON.stringify(S));}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('pm2_s')||'{}');Object.assign(S,d);}catch(e){}}
+load();
+
+/* ═══════════ TAB ═══════════ */
+const TAB_NAMES=['Diagram + EP Chain','Diagnostic Trainer','Printer Types','Progress'];
+function switchTab(i){
+  document.querySelectorAll('.section-panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+  document.querySelectorAll('.nav-tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.getElementById('sb-section').textContent=TAB_NAMES[i];
+}
+
+/* ═══════════ SIDEBAR ═══════════ */
+function buildSB(id){
+  const el=document.getElementById(id); if(!el||el.innerHTML.trim()) return;
+  const now=new Date(); const exam=new Date(now); exam.setDate(exam.getDate()+(now.getDay()<=1?1-now.getDay():8-now.getDay())); exam.setHours(9,0,0,0);
+  const diff=Math.max(0,Math.ceil((exam-now)/(1000*60*60*24)));
+  el.innerHTML=`<div class="s-card"><div class="s-card-title">⚠ Exam</div>
+    <div style="border:1px solid rgba(217,70,168,0.2);border-radius:8px;padding:12px;text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:2px;color:var(--dim);margin-bottom:4px;">DAYS TO EXAM</div>
+      <div class="cd-days">${diff||'TODAY'}</div>
+      <div class="cd-sub">CompTIA A+ 220-1101</div>
+    </div></div>
+  <div class="s-card"><div class="s-card-title">Color Key</div>
+    <div class="key-row"><div class="key-dot" style="background:var(--violet)"></div><div class="key-label"><b>Violet</b> = Component</div></div>
+    <div class="key-row"><div class="key-dot" style="background:var(--lavender)"></div><div class="key-label"><b>Lavender</b> = EP Stage</div></div>
+    <div class="key-row"><div class="key-dot" style="background:var(--magenta)"></div><div class="key-label"><b>Magenta</b> = Defect</div></div>
+    <div class="key-row"><div class="key-dot" style="background:var(--mint)"></div><div class="key-label"><b>Mint</b> = Fix</div></div>
+    <div class="key-row"><div class="key-dot" style="background:var(--rose)"></div><div class="key-label"><b>Rose</b> = Exam Tip</div></div>
+    <div class="key-row"><div class="key-dot" style="background:var(--amber)"></div><div class="key-label"><b>Amber</b> = Wrong / Trap</div></div>
+  </div>
+  <div class="s-card"><div class="s-card-title">Progress</div>
+    <div class="prog-row-sb"><div class="prog-dot" style="background:var(--lavender)"></div><div class="prog-name">EP Chain</div><div class="prog-track"><div class="prog-fill" style="width:${S.epProgress}%;background:var(--lavender)"></div></div><div class="prog-pct-sb" style="color:var(--lavender)">${S.epProgress}%</div></div>
+    <div class="prog-row-sb"><div class="prog-dot" style="background:var(--mint)"></div><div class="prog-name">Trainer</div><div class="prog-track"><div class="prog-fill" style="width:${S.trainerProgress}%;background:var(--mint)"></div></div><div class="prog-pct-sb" style="color:var(--mint)">${S.trainerProgress}%</div></div>
+  </div>`;
+}
+for(let i=0;i<4;i++) setTimeout(()=>buildSB('sb-'+i),200);
+
+/* ═══════════ DIAGRAM DATA ═══════════ */
+const COMPS={
+  1:{name:'Controller Circuitry',stage:'EP Stage 1 — Processing',fn:'Logic board — converts document to raster/bitmap image. Stores <strong>full page in RAM</strong> before printing begins. Unlike inkjet, laser must render the entire page first.',tip:'<strong>★ EXAM:</strong> Half-page output = insufficient printer RAM. Garbled symbols = wrong driver.'},
+  2:{name:'Laser Unit',stage:'EP Stage 3 — Exposing',fn:'Emits the laser beam that <strong>selectively neutralizes</strong> (removes negative charge from) specific drum areas, creating the invisible latent image.',tip:'<strong>★ EXAM:</strong> Laser REMOVES charge — does not add. Laser failure = completely blank page.'},
+  3:{name:'Imaging Drum',stage:'Stages 2–7 (central)',fn:'Photosensitive cylinder. Core component used in all EP stages 2–7. Holds the electrostatic latent image created by the laser.',tip:'<strong>★ EXAM:</strong> Ghost image = drum not cleaned. Drum lifespan ≈ 10,000 pages.'},
+  4:{name:'Primary Charge Roller (PCR)',stage:'EP Stage 2 — Charging',fn:'Applies a uniform high negative charge of approximately <strong>−600V</strong> across the entire drum surface before the laser writes.',tip:'<strong>★ EXAM:</strong> PCR failure → entirely BLACK page. Charging ADDS charge; Exposing REMOVES it. Most confused pair.'},
+  5:{name:'Toner Hopper',stage:'EP Stage 4 — Developing',fn:'Reservoir storing dry plastic/carbon toner powder. Feeds toner to the developer roller. Toner is negatively charged.',tip:'<strong>★ EXAM:</strong> Faded output = low toner. Lifespan ≈ 2,500 pages. Rock gently before replacing.'},
+  6:{name:'Developer Roller',stage:'EP Stage 4 — Developing',fn:'Applies negatively charged toner to the drum. Toner sticks <strong>only to −100V neutralized areas</strong> (image), not the −600V background.',tip:'<strong>★ EXAM:</strong> Developing = toner on DRUM. Transferring = toner on PAPER. Do not confuse.'},
+  7:{name:'Transfer Roller',stage:'EP Stage 5 — Transferring',fn:'Applies a <strong>positive (+) charge</strong> to paper, attracting negatively charged toner off the drum and onto the page.',tip:'<strong>★ EXAM:</strong> Image on drum but NOT on paper = transfer roller failure.'},
+  8:{name:'Paper Tray',stage:'Pre-print (input feed)',fn:'Input source for blank paper. Guides must match paper size for tray detection. Store paper in low humidity.',tip:'<strong>★ EXAM:</strong> Tray not recognized = guides not set correctly. Never exceed tray capacity.'},
+  9:{name:'Cleaning Blade',stage:'EP Stage 7 — Cleaning',fn:'Scrapes all <strong>residual toner</strong> off the drum into a waste container after each cycle. Resets the drum for the next page.',tip:'<strong>★ EXAM:</strong> Ghost image (faint repeat) = cleaning blade failure.'},
+  10:{name:'Fuser — Heat Roller',stage:'EP Stage 6 — Fusing',fn:'Heated roller (≈<strong>200°C</strong>) that melts toner plastic particles into paper fibers, permanently bonding the image.',tip:'<strong>★ EXAM:</strong> Toner smears/rubs off = FUSER failure. #1 most tested. Extremely hot.'},
+  11:{name:'Fuser — Pressure Roller',stage:'EP Stage 6 — Fusing',fn:'Applies <strong>mechanical pressure</strong> alongside the heat roller to press melted toner permanently into paper fibers. Both heat AND pressure required.',tip:'<strong>★ EXAM:</strong> Both rollers are part of fuser assembly. Replaced together in maintenance kit.'},
+  12:{name:'Pickup Roller / Sep. Pad',stage:'Pre-print — Paper feed',fn:'Pickup roller grabs one sheet from tray. Separation pad prevents multi-sheet feeding. Both wear out over time and lose friction.',tip:'<strong>★ EXAM:</strong> Multi-feed OR no-feed = worn pickup rollers. Part of maintenance kit.'},
+  13:{name:'Rotation Mirror',stage:'EP Stage 3 — Exposing',fn:'Rapidly rotating mirror that <strong>directs the laser beam</strong> across the full drum width, ensuring the entire page is exposed.',tip:'<strong>★ EXAM:</strong> Mirror failure = image never forms correctly across full drum width.'},
+};
+
+/* ═══════════ DIAGRAM INTERACTIONS ═══════════ */
+let diagState={active:null,blind:false,quizMode:false,quizTarget:null,quizScore:0,quizTotal:0};
+
+document.getElementById('blind-toggle').addEventListener('change',e=>{
+  diagState.blind=e.target.checked;
+  document.querySelectorAll('.label-text').forEach(el=>el.classList.toggle('blind',diagState.blind));
+});
+
+function selectAnchor(id){
+  if(diagState.quizMode){checkQuiz(id);return;}
+  document.querySelectorAll('.anchor').forEach(a=>a.classList.remove('active-anchor'));
+  document.getElementById('anc-'+id).classList.add('active-anchor');
+  diagState.active=id;
+  const c=COMPS[id];
+  document.getElementById('comp-info').innerHTML=`
+    <div class="ci-num">COMPONENT ⑦ ${String(id).padStart(2,'0')}</div>
+    <div class="ci-name">${c.name}</div>
+    <span class="ci-stage">${c.stage}</span>
+    <div class="ci-fn">${c.fn}</div>
+    <div class="ci-tip">${c.tip}</div>`;
+}
+
+function resetDiagram(){
+  document.querySelectorAll('.anchor').forEach(a=>a.classList.remove('active-anchor'));
+  diagState.active=null;
+  document.getElementById('comp-info').innerHTML='<div class="ci-placeholder">Click any <strong style="color:var(--amber)">① amber circle</strong> to inspect a component</div>';
+  if(diagState.quizMode){diagState.quizMode=false;document.getElementById('quiz-banner').classList.remove('visible');document.getElementById('quiz-btn').classList.remove('active');}
+  diagState.blind=false;document.getElementById('blind-toggle').checked=false;
+  document.querySelectorAll('.label-text').forEach(el=>el.classList.remove('blind'));
+}
+
+function toggleQuiz(){
+  diagState.quizMode=!diagState.quizMode;
+  document.getElementById('quiz-btn').classList.toggle('active',diagState.quizMode);
+  const banner=document.getElementById('quiz-banner');
+  if(diagState.quizMode){
+    banner.classList.add('visible');
+    diagState.blind=true; document.getElementById('blind-toggle').checked=true;
+    document.querySelectorAll('.label-text').forEach(el=>el.classList.add('blind'));
+    document.querySelectorAll('.anchor').forEach(a=>a.classList.remove('active-anchor'));
+    diagState.quizScore=0; diagState.quizTotal=0;
+    document.getElementById('quiz-score-val').textContent='0';
+    nextQuiz();
+  } else {
+    banner.classList.remove('visible');
+  }
+}
+
+function nextQuiz(){
+  const ids=Object.keys(COMPS).map(Number);
+  diagState.quizTarget=ids[Math.floor(Math.random()*ids.length)];
+  document.getElementById('quiz-comp-name').textContent=COMPS[diagState.quizTarget].name;
+  document.getElementById('quiz-feedback').textContent='';
+  document.getElementById('quiz-feedback').className='quiz-feedback';
+  document.querySelectorAll('.anchor').forEach(a=>a.classList.remove('active-anchor'));
+}
+
+function checkQuiz(clickedId){
+  diagState.quizTotal++;
+  const fb=document.getElementById('quiz-feedback');
+  if(clickedId===diagState.quizTarget){
+    diagState.quizScore++;
+    fb.textContent='✅ CORRECT!'; fb.className='quiz-feedback win';
+    document.getElementById('quiz-score-val').textContent=diagState.quizScore;
+    document.getElementById('anc-'+clickedId).classList.add('active-anchor');
+    setTimeout(nextQuiz,1000);
+  } else {
+    fb.textContent=`✗ That's #${clickedId}: ${COMPS[clickedId].name}. Try again!`;
+    fb.className='quiz-feedback lose';
+    document.getElementById('anc-'+clickedId).classList.add('active-anchor');
+    setTimeout(()=>{ document.getElementById('anc-'+clickedId).classList.remove('active-anchor'); fb.textContent=''; },1200);
+  }
+}
+
+/* ═══════════ EP CHAIN DATA ═══════════ */
+const STAGES=[
+  {num:1,name:'Processing',tagline:'Page built in memory',color:'#c4b5fd',flow:'Computer → RAM → Bitmap',
+   what:'You hit <strong>Print</strong>. The file travels to the printer\'s <strong>Controller Board</strong>. It converts the document to a <strong>raster bitmap image</strong> and stores it in <strong>RAM</strong>. The full page must be ready before a single line prints — this is what makes laser printing different from inkjet.',
+   comps:[{name:'Controller Circuitry',desc:'Logic board. Converts document to printer language (PCL/PostScript) then builds full-page bitmap.',imgKey:'c-1-0'},{name:'Printer RAM',desc:'Short-term memory. Holds the complete page image. More RAM = larger, faster jobs.',imgKey:'c-1-1'}],
+   defects:[{sym:'Only half the page prints',why:'Not enough RAM to hold the full-page bitmap. Printer gives up halfway.'},{sym:'Garbled output / symbols',why:'Wrong or corrupt printer driver — printer misreads page description language.'}],
+   maint:[{action:'Update printer firmware',note:'Improves compatibility and fixes bugs.',kit:false},{action:'Reinstall correct driver',note:'Match exactly — PCL or PostScript. Garbled output = driver fix.',kit:false}],
+   tip:'<strong>★ EXAM TIP:</strong> Laser = full page at once. Inkjet = line by line. Half-page = RAM. Symbols = driver.'},
+  {num:2,name:'Charging',tagline:'Drum gets uniform −600V',color:'#ff8a65',flow:'PCR → −600V → drum',
+   what:'The <strong>Primary Charge Roller (PCR)</strong> rolls across the drum applying a uniform <strong>negative charge of −600V</strong> across every millimeter. The drum is now uniformly charged — a blank slate ready for the laser to write on. Without this step, toner would stick everywhere randomly.',
+   comps:[{name:'Primary Charge Roller (PCR)',desc:'Applies −600V uniform negative charge across drum surface. Often built into the toner cartridge.',imgKey:'c-2-0'},{name:'Imaging Drum (pre-charge)',desc:'Photosensitive cylinder, now uniformly charged and ready for laser writing.',imgKey:'c-2-1'}],
+   defects:[{sym:'Entirely black page',why:'PCR failed — drum never charged, toner sticks everywhere.'},{sym:'Dark vertical streaks',why:'PCR dirty or damaged — uneven charge leaves toner strips.'}],
+   maint:[{action:'Replace toner cartridge',note:'PCR usually built in. New cartridge = new PCR.',kit:false},{action:'Clean PCR gently',note:'Dry lint-free cloth only. Never touch with bare hands.',kit:false}],
+   tip:'<strong>★ EXAM TIP:</strong> Black page = PCR. Charging ADDS charge. Exposing REMOVES it. Most confused pair on exam.'},
+  {num:3,name:'Exposing',tagline:'Laser draws invisible image',color:'#fff176',flow:'Laser + mirror → neutralize → latent image',
+   what:'The <strong>Laser</strong> turns on. A spinning <strong>Rotation Mirror</strong> sweeps the beam left to right across the drum. Wherever the laser hits, it <strong>neutralizes charge from −600V to −100V</strong>. Those lower-charge spots are where toner will stick. The result is an <strong>invisible latent image</strong> — you cannot see it yet, but it is there.',
+   comps:[{name:'Laser Unit',desc:'Emits the beam. Writes the image by selectively removing charge from drum areas.',imgKey:'c-3-0'},{name:'Rotation Mirror',desc:'Spinning mirror that directs laser beam left-to-right across the full drum width.',imgKey:'c-3-1'}],
+   defects:[{sym:'Blank page (no image at all)',why:'Laser failed — no image was ever drawn on the drum.'},{sym:'Missing sections of image',why:'Laser partially blocked or mirror dirty.'}],
+   maint:[{action:'Check laser unit',note:'Usually requires service technician. Not user-replaceable.',kit:false}],
+   tip:'<strong>★ EXAM TIP:</strong> Laser REMOVES charge — does not add. Completely blank page = laser failed.'},
+  {num:4,name:'Developing',tagline:'Toner sticks to image',color:'#a5d6a7',flow:'Developer roller → toner on −100V spots',
+   what:'The <strong>Developer Roller</strong> rolls toner across the drum. Toner is negatively charged. <strong>Negative repels negative</strong> — toner bounces off the −600V background. But it <strong>sticks to the −100V neutralized spots</strong>. Toner is self-sorting by charge difference. The latent image is now visible as a toner pattern on the drum.',
+   comps:[{name:'Toner Hopper',desc:'Stores dry toner powder. Feeds toner to developer roller. Low hopper = faded output.',imgKey:'c-4-0'},{name:'Developer Roller',desc:'Applies negatively charged toner. Sticks to neutralized (image) areas only.',imgKey:'c-4-1'}],
+   defects:[{sym:'Faded or light prints',why:'Toner running low — not enough powder reaching drum.'},{sym:'White vertical stripes',why:'Toner clumped unevenly inside hopper.'}],
+   maint:[{action:'Replace toner cartridge',note:'Main fix for faded output. Lifespan ≈ 2,500 pages.',kit:false},{action:'Shake cartridge gently',note:'Redistributes remaining toner for a few more pages.',kit:false}],
+   tip:'<strong>★ EXAM TIP:</strong> Developing = toner on DRUM. Transferring = toner on PAPER. Faded = low toner.'},
+  {num:5,name:'Transferring',tagline:'Toner jumps to paper',color:'#ce93d8',flow:'Transfer roller (+) → toner off drum → paper',
+   what:'Paper is pulled from the <strong>Paper Tray</strong> by the <strong>Pickup Roller</strong>. The <strong>Transfer Roller</strong> gives the paper a <strong>positive (+) charge</strong>. Positive attracts negative. Toner jumps from drum to paper. The image is now on the page — but still <strong>loose dry powder</strong>. One touch and it smears completely.',
+   comps:[{name:'Transfer Roller',desc:'Applies positive charge to paper, pulling toner off drum. Part of maintenance kit.',imgKey:'c-5-0'},{name:'Pickup Roller + Sep. Pad',desc:'Pickup roller grabs one sheet. Separation pad prevents multi-feed. Both wear out.',imgKey:'c-5-1'}],
+   defects:[{sym:'Blank pages (toner stays on drum)',why:'Transfer roller failed — toner never moves to paper.'},{sym:'Multi-page feed',why:'Worn pickup roller — cannot separate sheets.'},{sym:'Paper not feeding',why:'Worn pickup roller — cannot grab paper.'}],
+   maint:[{action:'Replace transfer roller',note:'Part of maintenance kit. Triggered by page count.',kit:true},{action:'Replace pickup rollers',note:'Also in maintenance kit. Replace when multi-feed or no-feed occurs.',kit:true}],
+   tip:'<strong>★ EXAM TIP:</strong> Blank pages (not faded) = transfer roller. Multi-feed = pickup rollers.'},
+  {num:6,name:'Fusing',tagline:'Toner melted permanently',color:'#f48fb1',flow:'Heat roller (200°C) + pressure → bond',
+   what:'Paper enters the <strong>Fuser Assembly</strong>. The <strong>Heat Roller</strong> runs at ≈<strong>200°C</strong>. The <strong>Pressure Roller</strong> squeezes simultaneously. Melted toner is pressed deep into paper fibers. This is the moment the image becomes <strong>permanently bonded</strong>. Page exits warm to the touch.',
+   comps:[{name:'Fuser — Heat Roller',desc:'Runs at ≈200°C. Melts toner plastic particles so they bond to paper fibers.',imgKey:'c-6-0'},{name:'Fuser — Pressure Roller',desc:'Presses melted toner into paper simultaneously. Both rollers = fuser assembly.',imgKey:'c-6-1'}],
+   defects:[{sym:'Toner smears when touched',why:'Fuser not heating — toner never melted, still loose powder.'},{sym:'Toner rubs off page',why:'Same as smearing. Fuser failure is #1 most tested printer symptom on A+.'}],
+   maint:[{action:'Replace fuser assembly',note:'Core maintenance kit item. Triggered by page count (100k–200k pages).',kit:true},{action:'Allow fuser to cool before servicing',note:'Safety: unplug and wait. Extremely hot during operation.',kit:false}],
+   tip:'<strong>★ EXAM TIP:</strong> Toner smears = FUSER. Always. #1 most tested. Also the hottest component.'},
+  {num:7,name:'Cleaning',tagline:'Drum resets for next page',color:'#80cbc4',flow:'Cleaning blade → scrapes drum → repeat',
+   what:'After toner transfers to paper, some always remains on the drum. The <strong>Cleaning Blade</strong> scrapes all residual toner off into a <strong>waste container</strong>. Charge resets. The cycle starts again. Laser printing is a <strong>continuous loop</strong> — the drum rotates and repeats all 7 stages for every page.',
+   comps:[{name:'Cleaning Blade',desc:'Rigid rubber blade. Scrapes residual toner off drum after each page cycle.',imgKey:'c-7-0'},{name:'Waste Toner Container',desc:'Collects scraped toner. Usually sealed inside the toner cartridge.',imgKey:'c-7-1'}],
+   defects:[{sym:'Ghost image on pages',why:'Cleaning blade failed — leftover toner from page 1 stays on drum, prints faintly on page 2.'},{sym:'Repeating faint pattern',why:'Same — drum not being cleared between cycles.'}],
+   maint:[{action:'Replace toner cartridge',note:'Cleaning blade usually built into cartridge. New cartridge = new blade.',kit:false},{action:'Replace drum unit',note:'On printers with separate drum. Lifespan ≈ 10,000–15,000 pages.',kit:false}],
+   tip:'<strong>★ EXAM TIP:</strong> Ghost image = cleaning blade / drum. Previous page bleeds through = cleaning stage failed.'},
+];
+
+function buildChain(){
+  const wrap=document.getElementById('chain-wrap'); if(!wrap||wrap.innerHTML.trim()) return;
+  STAGES.forEach((s,si)=>{
+    const div=document.createElement('div'); div.className='stage-item'; div.id='stage-'+si;
+    div.innerHTML=`
+      <div class="stage-hdr" style="border-left-color:${s.color}" onclick="toggleStage(${si})">
+        <div class="stage-num-badge" style="background:${s.color}">${s.num}</div>
+        <div style="flex:1"><div class="stage-lbl" style="color:${s.color}">${s.name}</div><div class="stage-tagline">${s.tagline}</div></div>
+        <div class="stage-flow">${s.flow}</div>
+        <span class="stage-chev">▼</span>
+      </div>
+      <div class="stage-body">
+        <div class="sub-sec" id="sub-what-${si}">
+          <div class="sub-hdr" onclick="toggleSub('what',${si})"><span>📖</span><span class="sub-title" style="color:${s.color}">What Happens</span><span class="sub-chev">▼</span></div>
+          <div class="sub-body"><div class="what-text">${s.what}</div></div>
+        </div>
+        <div class="sub-sec" id="sub-comp-${si}">
+          <div class="sub-hdr" onclick="toggleSub('comp',${si})"><span>⚙️</span><span class="sub-title" style="color:${s.color}">Components + Photos</span><span class="sub-chev">▼</span></div>
+          <div class="sub-body">
+            <div class="comp-list">
+              ${s.comps.map((c,ci)=>`
+                <div class="comp-item">
+                  <div class="comp-photo-wrap">
+                    <div class="comp-ph" id="cph-${si}-${ci}" onclick="document.getElementById('cinp-${si}-${ci}').click()">
+                      <div class="comp-ph-icon">📷</div><div class="comp-ph-txt">TAP TO ADD</div>
+                    </div>
+                    <input type="file" accept="image/*" style="display:none" id="cinp-${si}-${ci}" onchange="loadChainPhoto(${si},${ci},this)"/>
+                    <div class="comp-ph-label">${c.name.split(' ')[0]}</div>
+                  </div>
+                  <div class="comp-info-wrap">
+                    <div class="comp-name" style="color:${s.color}">${c.name}</div>
+                    <div class="comp-desc">${c.desc}</div>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div class="sub-sec" id="sub-defects-${si}">
+          <div class="sub-hdr" onclick="toggleSub('defects',${si})"><span>⚠️</span><span class="sub-title" style="color:var(--magenta)">Defects</span><span class="sub-chev">▼</span></div>
+          <div class="sub-body"><div class="defect-list">${s.defects.map(d=>`<div class="defect-item"><div class="defect-sym">${d.sym}</div><div class="defect-why">${d.why}</div></div>`).join('')}</div></div>
+        </div>
+        <div class="sub-sec" id="sub-maint-${si}">
+          <div class="sub-hdr" onclick="toggleSub('maint',${si})"><span>🔧</span><span class="sub-title" style="color:var(--mint)">Maintenance</span><span class="sub-chev">▼</span></div>
+          <div class="sub-body"><div class="maint-list">${s.maint.map(m=>`<div class="maint-item"><div class="maint-action">${m.action}</div><div class="maint-note">${m.note}</div>${m.kit?'<span class="kit-badge">🔧 MAINT KIT</span>':''}</div>`).join('')}</div></div>
+        </div>
+        <div class="exam-tip-strip">${s.tip}</div>
+      </div>`;
+    wrap.appendChild(div);
+    s.comps.forEach((_,ci)=>{ try{ const sv=localStorage.getItem(`cimg-${si}-${ci}`); if(sv){ const ph=document.getElementById(`cph-${si}-${ci}`); ph.innerHTML=`<img src="${sv}"/>`; }}catch(e){} });
+  });
+}
+function toggleStage(si){ const el=document.getElementById('stage-'+si); el.classList.toggle('open'); if(el.classList.contains('open')){ const f=el.querySelector('.sub-sec'); if(f) f.classList.add('open'); } updateEPProg(); }
+function toggleSub(t,si){ const el=document.getElementById(`sub-${t}-${si}`); if(el) el.classList.toggle('open'); }
+function expandAll(){ STAGES.forEach((_,si)=>{ document.getElementById('stage-'+si).classList.add('open'); ['what','comp','defects','maint'].forEach(t=>{ const s=document.getElementById(`sub-${t}-${si}`); if(s) s.classList.add('open'); }); }); updateEPProg(); }
+function collapseAll(){ STAGES.forEach((_,si)=>{ document.getElementById('stage-'+si).classList.remove('open'); }); }
+function expandSub(t){ STAGES.forEach((_,si)=>{ document.getElementById('stage-'+si).classList.add('open'); const s=document.getElementById(`sub-${t}-${si}`); if(s) s.classList.add('open'); }); updateEPProg(); }
+function updateEPProg(){ S.epProgress=Math.round((document.querySelectorAll('.stage-item.open').length/STAGES.length)*100); save(); }
+function loadChainPhoto(si,ci,inp){ const f=inp.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ const ph=document.getElementById(`cph-${si}-${ci}`); ph.innerHTML=`<img src="${e.target.result}"/>`; try{localStorage.setItem(`cimg-${si}-${ci}`,e.target.result);}catch(ex){}};r.readAsDataURL(f); }
+
+/* ═══════════ DIAGNOSTIC TRAINER DATA ═══════════ */
+const PATTERNS=[
+  {sym:'Smearing',fix:'Fuser',color:'var(--rose)'},{sym:'Faded',fix:'Toner',color:'var(--violet)'},
+  {sym:'Ghost Image',fix:'Drum/Blade',color:'var(--lavender)'},{sym:'Black Page',fix:'PCR',color:'var(--magenta)'},
+  {sym:'Blank Page',fix:'Transfer',color:'var(--amber)'},{sym:'Multi-feed',fix:'Rollers',color:'var(--mint)'},
+  {sym:'Garbled',fix:'Driver',color:'var(--dim2)'},{sym:'Queue Frozen',fix:'Spooler',color:'var(--violet)'},
+];
+
+const SCENARIOS=[
+  {symptom:'User cannot print. Output contains random symbols and garbled characters instead of document text.',
+   phases:[
+     {q:'What category does this problem fall into?',opts:['Hardware failure','Print job / Driver issue','Paper feed problem','Network connectivity'],answer:1,
+      studyNote:'Garbled symbols = the printer cannot interpret the data. This is always a software/driver issue, not hardware.',trap:null},
+     {q:'What is the most likely cause?',opts:['Transfer roller worn out','Fuser assembly failed','Wrong or corrupt printer driver installed','Toner cartridge is empty'],answer:2,
+      studyNote:'Wrong driver = printer receives data in a language it cannot understand. PCL driver sent to PostScript printer = symbols.',trap:'Toner and fuser cause print quality issues (fading, smearing) — not garbled characters.'},
+     {q:'What is the best fix?',opts:['Replace toner cartridge','Replace fuser assembly','Uninstall and reinstall the correct printer driver','Clean the pickup rollers'],answer:2,
+      studyNote:'Correct driver for correct printer model and language. PCL for most office printers, PostScript for graphics/professional.',trap:null},
+   ],chain:['Garbled Output','Print Job / Driver','Printer Driver','Reinstall Driver']},
+
+  {symptom:'Printed pages look fine but the toner smears and rubs off when you touch the output.',
+   phases:[
+     {q:'What category does this problem fall into?',opts:['Paper feed issue','Print quality — output problem','Network / connectivity','Driver issue'],answer:1,
+      studyNote:'Output is visible but not properly bonded = print quality issue. The toner reached the paper but was not permanently fixed.',trap:null},
+     {q:'Which EP stage is responsible for permanently bonding toner?',opts:['Stage 4: Developing','Stage 5: Transferring','Stage 6: Fusing','Stage 7: Cleaning'],answer:2,
+      studyNote:'Fusing stage uses heat and pressure to melt toner into paper fibers. Without fusing, toner remains as loose powder.',trap:'Transfer moves toner to paper. Fusing BONDS it permanently. These are different stages.'},
+     {q:'What is the correct fix?',opts:['Replace toner cartridge','Replace fuser assembly','Clean the imaging drum','Restart print spooler'],answer:1,
+      studyNote:'Replace fuser assembly. It is part of the maintenance kit. Unplug and let cool first — extremely hot.',trap:null},
+   ],chain:['Toner Smears','Print Quality','Stage 6: Fusing','Replace Fuser']},
+
+  {symptom:'Every page has a faint ghost of the previous page printed underneath the new content.',
+   phases:[
+     {q:'What category is this?',opts:['Paper feed issue','Network problem','Print quality — recurring pattern','Connectivity issue'],answer:2,
+      studyNote:'A repeating faint image = something from the previous cycle is carrying over. This is a print quality issue involving the EP cycle.',trap:null},
+     {q:'Which EP stage failed to clean the drum?',opts:['Stage 2: Charging','Stage 4: Developing','Stage 5: Transferring','Stage 7: Cleaning'],answer:3,
+      studyNote:'Cleaning stage scrapes residual toner off drum. If it fails, old toner stays and transfers to next page = ghost image.',trap:'Ghost image = cleaning failure, not transfer or fusing.'},
+     {q:'Best fix?',opts:['Replace transfer roller','Replace toner cartridge or drum unit','Update printer driver','Replace pickup rollers'],answer:1,
+      studyNote:'Cleaning blade is usually inside the toner cartridge. New cartridge = new blade. On printers with separate drum, replace drum unit.',trap:null},
+   ],chain:['Ghost Image','Print Quality','Stage 7: Cleaning','Replace Drum/Cartridge']},
+
+  {symptom:'The printer pulls two or three sheets of paper at the same time on every print job.',
+   phases:[
+     {q:'What category is this problem?',opts:['Print quality','Hardware — paper feed','Driver issue','Network connectivity'],answer:1,
+      studyNote:'Multi-feed is a mechanical paper handling issue. The physical mechanism that separates and feeds paper has failed.',trap:null},
+     {q:'Which component most likely failed?',opts:['Transfer roller','Fuser heat roller','Pickup roller and separation pad','Imaging drum'],answer:2,
+      studyNote:'Pickup roller grabs paper. Separation pad prevents multi-sheets. Both wear out and lose friction. Either or both can cause multi-feed.',trap:'Transfer roller and fuser affect print quality, not paper feeding.'},
+     {q:'What is the fix?',opts:['Replace toner cartridge','Replace fuser assembly','Replace pickup rollers and separation pad','Reinstall printer driver'],answer:2,
+      studyNote:'Pickup rollers and separation pad are part of the printer maintenance kit. Replace both together when this issue occurs.',trap:null},
+   ],chain:['Multi-feed','Hardware / Paper Feed','Pickup Rollers','Replace Roller Kit']},
+
+  {symptom:'All pages print completely black — solid black from top to bottom.',
+   phases:[
+     {q:'What category is this?',opts:['Paper feed issue','Print quality — toner coverage','Network problem','Driver issue'],answer:1,
+      studyNote:'Solid black page = too much toner everywhere, or drum never charged so toner sticks to all areas. Print quality / EP cycle issue.',trap:null},
+     {q:'Which component most likely failed?',opts:['Toner cartridge overfilled','Primary Charge Roller (PCR)','Transfer roller','Fuser assembly'],answer:1,
+      studyNote:'PCR applies uniform negative charge. Without that charge, toner sticks everywhere on the drum = solid black output.',trap:'Most students choose toner cartridge. Wrong. Too much toner = PCR, not the cartridge itself.'},
+     {q:'Best fix?',opts:['Replace toner cartridge (contains PCR)','Replace fuser assembly','Reinstall driver','Replace pickup rollers'],answer:0,
+      studyNote:'On most printers, the PCR is built into the toner cartridge. Replacing the cartridge replaces the PCR. On high-end printers, PCR is separate.',trap:null},
+   ],chain:['Black Page','Print Quality','Stage 2: PCR','Replace Cartridge/PCR']},
+
+  {symptom:'Print jobs build up in the Windows queue but nothing ever comes out of the printer. Printer shows as Ready.',
+   phases:[
+     {q:'What category is this?',opts:['Hardware failure','Print job / software issue','Paper feed problem','Print quality issue'],answer:1,
+      studyNote:'Printer ready + jobs stuck = software layer problem. Jobs queued but not processed = print spooler or driver issue.',trap:null},
+     {q:'Most likely cause?',opts:['Fuser assembly failed','Print spooler service crashed or hung','Transfer roller worn','Toner cartridge empty'],answer:1,
+      studyNote:'Print Spooler is a Windows service that manages print jobs. When it hangs, jobs stack up even with a ready printer.',trap:'Fuser and toner cause print quality problems, not queue issues.'},
+     {q:'Best fix?',opts:['Replace fuser assembly','Replace toner cartridge','Restart the Print Spooler service via services.msc','Replace transfer roller'],answer:2,
+      studyNote:'services.msc → Print Spooler → Restart. If still stuck, clear the spool folder at C:\\Windows\\System32\\spool\\printers',trap:null},
+   ],chain:['Queue Frozen','Print Job / Software','Print Spooler','Restart Spooler']},
+];
+
+let trainerState={idx:0,phase:0,mode:'study',answered:false,right:0,wrong:0};
+trainerState.scenarios=[...SCENARIOS];
+
+function buildPatternBar(){
+  const bar=document.getElementById('pattern-bar'); if(!bar||bar.innerHTML.trim()) return;
+  bar.innerHTML='<div class="pb-label">Quick Pattern Library — Know These Automatically</div>';
+  PATTERNS.forEach(p=>{ const s=document.createElement('div'); s.className='pat'; s.style.cssText=`color:${p.color};border-color:${p.color}40;background:${p.color}10;`; s.textContent=`${p.sym} → ${p.fix}`; bar.appendChild(s); });
+}
+
+function setTrainerMode(mode,btn){
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  trainerState.mode=mode;
+  document.getElementById('mode-desc').textContent=mode==='study'?'Study Mode: explanations shown after each answer':'Exam Mode: no hints — choose the best answer';
+  renderTrainer();
+}
+
+function renderTrainer(){
+  const card=document.getElementById('trainer-card'); if(!card) return;
+  if(trainerState.idx>=trainerState.scenarios.length){
+    const pct=Math.round((trainerState.right/(trainerState.right+trainerState.wrong||1))*100);
+    card.innerHTML=`<div class="scenario-card"><div class="sc-complete">
+      <div class="scc-title">ALL SCENARIOS COMPLETE</div>
+      <div class="scc-score">${pct}%</div>
+      <div class="scc-sub">${trainerState.right} correct · ${trainerState.wrong} wrong · ${trainerState.scenarios.length} scenarios × 3 phases</div>
+      <button class="scc-restart" onclick="restartTrainer()">RESTART</button>
+    </div></div>`; return;
+  }
+  const sc=trainerState.scenarios[trainerState.idx];
+  const ph=sc.phases[trainerState.phase];
+  const totalPh=sc.phases.length;
+  card.innerHTML=`<div class="scenario-card">
+    <div class="sc-score-row">
+      <div class="sc-score-item">Scenario <span>${trainerState.idx+1}</span>/${trainerState.scenarios.length}</div>
+      <div class="sc-score-item">✓ <span class="s-r">${trainerState.right}</span></div>
+      <div class="sc-score-item">✗ <span class="s-w">${trainerState.wrong}</span></div>
+    </div>
+    <div class="phase-steps">
+      ${['1. Category','2. Cause','3. Fix'].map((l,i)=>`<div class="phase-step ${i<trainerState.phase?'done':i===trainerState.phase?'active':''}"><div class="phase-step-num">${i+1}</div>${l}</div>`).join('<div style="color:var(--dim);font-size:0.7em;margin:0 2px;">→</div>')}
+    </div>
+    <div class="sc-report">
+      <div class="sc-report-label">User Report</div>
+      <div class="sc-report-text">${sc.symptom}</div>
+    </div>
+    <div class="sc-phase">Phase ${trainerState.phase+1} of ${totalPh} — ${['Identify Category','Identify Cause','Choose Fix'][trainerState.phase]}</div>
+    <div class="sc-question">${ph.q}</div>
+    <div class="sc-opts">
+      ${ph.opts.map((o,i)=>`<button class="sc-opt" id="topt-${i}" onclick="answerTrainer(${i})">${'ABCD'[i]}. <span class="opt-letter">${'ABCD'[i]}</span>${o}</button>`).join('')}
+    </div>
+    <div class="sc-feedback" id="sc-fb"></div>
+    <button class="sc-next-btn" id="sc-next" style="display:none" onclick="nextTrainerPhase()">
+      ${trainerState.phase<totalPh-1?'NEXT PHASE →':'NEXT SCENARIO →'}
+    </button>
+  </div>`;
+  trainerState.answered=false;
+}
+
+function answerTrainer(i){
+  if(trainerState.answered) return; trainerState.answered=true;
+  const sc=trainerState.scenarios[trainerState.idx]; const ph=sc.phases[trainerState.phase];
+  ph.opts.forEach((_,j)=>{ const b=document.getElementById('topt-'+j); b.classList.add('disabled'); if(j===ph.answer) b.classList.add('correct'); else if(j===i&&i!==ph.answer) b.classList.add('wrong'); });
+  const correct=i===ph.answer;
+  if(correct) trainerState.right++; else trainerState.wrong++;
+  S.trainerRight=trainerState.right; S.trainerWrong=trainerState.wrong;
+  S.trainerProgress=Math.round((trainerState.right/(trainerState.right+trainerState.wrong))*100);
+  save();
+  document.getElementById('sb-score').textContent=`Score: ${trainerState.right}/${trainerState.right+trainerState.wrong}`;
+
+  const fb=document.getElementById('sc-fb');
+  if(trainerState.mode==='study'){
+    let html=`<div class="fb-result ${correct?'win':'lose'}">${correct?'✅ Correct':'✗ Incorrect — correct: '+ph.opts[ph.answer]}</div>`;
+    html+=`<div class="fb-explain">${ph.studyNote}</div>`;
+    if(ph.trap) html+=`<div class="fb-hint"><strong>★ Exam Trap:</strong> ${ph.trap}</div>`;
+    if(!correct||trainerState.phase===sc.phases.length-1){
+      const ch=sc.chain;
+      html+=`<div style="margin-top:10px;"><div class="chain-trail">${ch.map((c,ci)=>`${ci>0?'<span class="chain-arr">→</span>':''}<span class="chain-tag" style="${chainStyle(ci)}">${c}</span>`).join('')}</div></div>`;
+    }
+    fb.innerHTML=html;
+  } else {
+    fb.innerHTML=`<div class="fb-result ${correct?'win':'lose'}">${correct?'✅ Correct':'✗ Incorrect — correct: '+ph.opts[ph.answer]}</div>`;
+  }
+  fb.classList.add('show');
+  document.getElementById('sc-next').style.display='';
+}
+
+function chainStyle(i){const s=['color:var(--magenta);border-color:rgba(217,70,168,0.3);background:rgba(217,70,168,0.07)','color:var(--lavender);border-color:rgba(196,181,253,0.3);background:rgba(196,181,253,0.07)','color:var(--violet);border-color:rgba(157,127,232,0.3);background:rgba(157,127,232,0.07)','color:var(--mint);border-color:rgba(78,204,163,0.3);background:rgba(78,204,163,0.07)'];return s[i%s.length];}
+
+function nextTrainerPhase(){
+  const sc=trainerState.scenarios[trainerState.idx];
+  if(trainerState.phase<sc.phases.length-1){ trainerState.phase++; renderTrainer(); }
+  else { trainerState.idx++; trainerState.phase=0; renderTrainer(); }
+}
+function restartTrainer(){ trainerState={idx:0,phase:0,mode:trainerState.mode,answered:false,right:0,wrong:0,scenarios:[...SCENARIOS]}; renderTrainer(); }
+
+/* ═══════════ PRINTER TYPES — FULL INTERACTIVE ═══════════ */
+
+/* --- Memory Hooks --- */
+const HOOKS=[
+  {key:'laser',emoji:'🖨',name:'LASER',color:'var(--violet)',anchor:'Toner + Fuser',use:'Office / High-volume',consumable:'Toner cartridge',heat:'Yes — Fuser 200°C',noise:'Quiet',multipart:'No',topDefect:'Toner smears → fuser',examTip:'Only printer with a maintenance kit (fuser + rollers). Prints full page at once — needs RAM.'},
+  {key:'inkjet',emoji:'💧',name:'INKJET',color:'var(--lavender)',anchor:'Ink + Nozzles',use:'Photos / Home',consumable:'Ink cartridges (C/M/Y/K)',heat:'No fuser',noise:'Quiet',multipart:'No',topDefect:'Lines → clogged nozzle',examTip:'No fuser. Prints line-by-line. Clogged nozzle = #1 issue. Can smear if paper is wrong.'},
+  {key:'thermal',emoji:'🌡',name:'THERMAL',color:'var(--rose)',anchor:'Heat + Special Paper',use:'Receipts / POS',consumable:'Thermal paper roll only',heat:'Yes — print head',noise:'Silent',multipart:'No',topDefect:'Blank/faint → wrong paper side',examTip:'No ink, no toner. Heat-sensitive paper only. Output FADES over time. POS = Thermal.'},
+  {key:'impact',emoji:'⚡',name:'IMPACT',color:'var(--amber)',anchor:'Pins + Ribbon',use:'Carbon-copy invoices / Forms',consumable:'Ink ribbon',heat:'No',noise:'LOUD',multipart:'YES — only type',topDefect:'Missing dots → broken pin',examTip:'ONLY printer for multi-part carbon-copy forms. Mechanical pins. Loudest. Slowest.'},
+];
+
+function buildHooks(){
+  const g=document.getElementById('hooks-grid'); if(!g||g.innerHTML.trim()) return;
+  HOOKS.forEach((h,i)=>{
+    const d=document.createElement('div'); d.className='hook-card'; d.onclick=()=>d.classList.toggle('expanded');
+    d.innerHTML=`<span class="hook-emoji">${h.emoji}</span>
+      <div class="hook-name" style="color:${h.color}">${h.name}</div>
+      <div class="hook-anchor" style="color:${h.color};border-color:${h.color}40;background:${h.color}10">${h.anchor}</div>
+      <div style="font-size:0.75em;color:var(--dim2);margin-bottom:4px">📍 ${h.use}</div>
+      <div style="font-size:0.7em;color:var(--dim);font-family:'DM Mono',monospace">tap to expand</div>
+      <div class="hook-detail">
+        <div class="hook-row"><span class="hook-lbl">CONSUMABLE</span><span class="hook-val"><strong>${h.consumable}</strong></span></div>
+        <div class="hook-row"><span class="hook-lbl">HEAT?</span><span class="hook-val">${h.heat}</span></div>
+        <div class="hook-row"><span class="hook-lbl">NOISE</span><span class="hook-val">${h.noise}</span></div>
+        <div class="hook-row"><span class="hook-lbl">MULTI-PART</span><span class="hook-val"><strong style="color:${h.multipart==='No'?'var(--dim2)':'var(--mint)'}">${h.multipart}</strong></span></div>
+        <div class="hook-row"><span class="hook-lbl">TOP DEFECT</span><span class="hook-val" style="color:var(--magenta)">${h.topDefect}</span></div>
+        <div style="margin-top:8px;padding:8px 10px;background:rgba(201,149,108,0.06);border:1px solid rgba(201,149,108,0.15);border-left:3px solid var(--rose);border-radius:6px;font-size:0.76em;color:#b8906a;line-height:1.5;"><strong style="color:var(--rose)">★ EXAM:</strong> ${h.examTip}</div>
+      </div>`;
+    g.appendChild(d);
+  });
+}
+
+/* --- Process Animations --- */
+const PROCS={
+  laser:{color:'var(--violet)',steps:[
+    {icon:'⚡',title:'Stage 1 — Processing',desc:'Controller board converts document to full-page raster bitmap. Stored in RAM. Full page must be ready before printing starts.',c:'rgba(157,127,232,0.2)',bc:'rgba(157,127,232,0.5)'},
+    {icon:'🔋',title:'Stage 2 — Charging',desc:'Primary Charge Roller (PCR) applies uniform −600V across entire drum surface. Drum is now a blank charged slate.',c:'rgba(255,140,0,0.15)',bc:'rgba(255,140,0,0.4)'},
+    {icon:'🔵',title:'Stage 3 — Exposing',desc:'Laser beam (guided by rotation mirror) neutralizes charged drum areas to −100V. Creates invisible latent image.',c:'rgba(0,216,255,0.12)',bc:'rgba(0,216,255,0.4)'},
+    {icon:'⚫',title:'Stage 4 — Developing',desc:'Developer roller applies negatively charged toner. Toner sticks ONLY to neutralized −100V areas. Image now visible on drum.',c:'rgba(78,204,163,0.12)',bc:'rgba(78,204,163,0.4)'},
+    {icon:'📄',title:'Stage 5 — Transferring',desc:'Transfer roller gives paper a positive (+) charge. Toner jumps from drum to paper. Image is now on paper — but still loose powder.',c:'rgba(196,181,253,0.12)',bc:'rgba(196,181,253,0.4)'},
+    {icon:'🔥',title:'Stage 6 — Fusing',desc:'Fuser heat roller (200°C) melts toner. Pressure roller bonds it permanently into paper fibers. Page exits warm.',c:'rgba(217,70,168,0.12)',bc:'rgba(217,70,168,0.4)'},
+    {icon:'🧹',title:'Stage 7 — Cleaning',desc:'Cleaning blade scrapes residual toner off drum. Drum resets. Cycle repeats for next page.',c:'rgba(128,203,196,0.12)',bc:'rgba(128,203,196,0.4)'},
+  ]},
+  inkjet:{color:'var(--lavender)',steps:[
+    {icon:'🖱',title:'Step 1 — Data Received',desc:'Driver converts document to print commands. Sent to print head controller line by line (unlike laser which does full page).',c:'rgba(196,181,253,0.12)',bc:'rgba(196,181,253,0.4)'},
+    {icon:'🚗',title:'Step 2 — Carriage Moves',desc:'Print head carriage moves left to right across the page on a rail. One pass = one strip of the image.',c:'rgba(196,181,253,0.12)',bc:'rgba(196,181,253,0.4)'},
+    {icon:'💧',title:'Step 3 — Ink Fired',desc:'Microscopic nozzles heat tiny ink chambers. Expanding vapor pushes ink droplet onto paper. Thousands of dots per inch.',c:'rgba(196,181,253,0.12)',bc:'rgba(196,181,253,0.4)'},
+    {icon:'📄',title:'Step 4 — Paper Advances',desc:'Feed rollers advance paper by one strip width. Carriage makes another pass. Repeats until page complete.',c:'rgba(196,181,253,0.12)',bc:'rgba(196,181,253,0.4)'},
+    {icon:'🌬',title:'Step 5 — Ink Dries',desc:'No heat required. Ink air-dries on paper surface. Can smear if handled too quickly or wrong paper used.',c:'rgba(196,181,253,0.12)',bc:'rgba(196,181,253,0.4)'},
+  ]},
+  thermal:{color:'var(--rose)',steps:[
+    {icon:'📜',title:'Step 1 — Thermal Paper Loaded',desc:'Special heat-sensitive paper is loaded. The coating contains chemicals that darken when heated. NO ink or toner required.',c:'rgba(201,149,108,0.12)',bc:'rgba(201,149,108,0.4)'},
+    {icon:'🔥',title:'Step 2 — Print Head Heats',desc:'Thermal print head contains tiny heating elements arranged in a row matching paper width.',c:'rgba(201,149,108,0.12)',bc:'rgba(201,149,108,0.4)'},
+    {icon:'⬛',title:'Step 3 — Paper Darkens',desc:'Selected heating elements activate. Paper darkens only where heated. No transfer, no drying — instant output.',c:'rgba(201,149,108,0.12)',bc:'rgba(201,149,108,0.4)'},
+    {icon:'🧾',title:'Step 4 — Receipt Exits',desc:'Paper advances continuously as elements fire. Common at POS terminals, ATMs, label printers. Output fades over time with heat/light exposure.',c:'rgba(201,149,108,0.12)',bc:'rgba(201,149,108,0.4)'},
+  ]},
+  impact:{color:'var(--amber)',steps:[
+    {icon:'📜',title:'Step 1 — Multi-part Paper Loaded',desc:'Multiple paper layers with carbon/carbonless coating loaded. This is what makes impact unique — only printer that can do this.',c:'rgba(240,165,0,0.12)',bc:'rgba(240,165,0,0.4)'},
+    {icon:'🎀',title:'Step 2 — Ribbon in Place',desc:'Ink-saturated ribbon sits between print head and paper. Print head moves horizontally on a carriage.',c:'rgba(240,165,0,0.12)',bc:'rgba(240,165,0,0.4)'},
+    {icon:'⚙',title:'Step 3 — Pins Strike',desc:'Selected pins in print head fire forward at high speed, striking ribbon. Force transfers ink through ribbon to paper.',c:'rgba(240,165,0,0.12)',bc:'rgba(240,165,0,0.4)'},
+    {icon:'📋',title:'Step 4 — All Copies Imprinted',desc:'Physical impact drives through all paper layers simultaneously. Customer copy + business copy + archive = one pass.',c:'rgba(240,165,0,0.12)',bc:'rgba(240,165,0,0.4)'},
+  ]},
+};
+
+let procState={laser:0,inkjet:0,thermal:0,impact:0,current:'laser',timer:null};
+
+function buildProcContainer(key){
+  const p=PROCS[key]; const s=procState[key];
+  const c=document.getElementById('proc-container'); if(!c) return;
+  c.innerHTML=`<div class="proc-card">
+    <div class="proc-steps" id="proc-steps">
+      ${p.steps.map((st,i)=>`<div class="proc-step ${i<=s?'lit':''}" id="pst-${i}" style="color:${i<=s?p.color:'var(--dim)'}">
+        <div class="proc-icon" style="color:${p.color};background:${st.c};border-color:${st.bc}">${st.icon}</div>
+        <div class="proc-content">
+          <div class="proc-step-title">${st.title}</div>
+          <div class="proc-step-desc">${st.desc}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="proc-controls">
+      <button class="proc-btn" onclick="procStep(-1)">&larr; Back</button>
+      <button class="proc-btn" onclick="procStep(1)">Next &rarr;</button>
+      <button class="proc-btn" onclick="procPlay()">▶ Auto</button>
+      <button class="proc-btn" onclick="procReset()">↺ Reset</button>
+      <span class="proc-progress">Step ${s+1} / ${p.steps.length}</span>
+    </div>
+  </div>`;
+}
+
+function switchProc(key,btn){
+  document.querySelectorAll('.proc-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  procState.current=key; if(procState.timer){clearInterval(procState.timer);procState.timer=null;}
+  buildProcContainer(key);
+}
+function procStep(dir){
+  const key=procState.current; const p=PROCS[key]; const max=p.steps.length-1;
+  procState[key]=Math.max(0,Math.min(max,procState[key]+dir));
+  buildProcContainer(key);
+}
+function procReset(){ const key=procState.current; procState[key]=0; if(procState.timer){clearInterval(procState.timer);procState.timer=null;} buildProcContainer(key); }
+function procPlay(){
+  const key=procState.current; const max=PROCS[key].steps.length-1;
+  if(procState.timer){clearInterval(procState.timer);procState.timer=null;return;}
+  procState.timer=setInterval(()=>{ if(procState[key]>=max){clearInterval(procState.timer);procState.timer=null;return;} procState[key]++; buildProcContainer(key); },1600);
+}
+
+/* --- Identify Drill --- */
+const DRILL_QS=[
+  {scenario:'A grocery store checkout counter prints customer receipts. The receipts sometimes fade after a few months in sunlight.',opts:['Laser','Inkjet','Thermal','Impact'],answer:2,reason:'Thermal printers use heat-sensitive paper with no ink or toner. Output fades over time with heat and light — classic thermal characteristic.',hook:'POS receipt = Thermal. Fades = Thermal.'},
+  {scenario:'A professional photography studio needs to print high-resolution color portraits on glossy paper.',opts:['Laser','Inkjet','Thermal','Impact'],answer:1,reason:'Inkjet excels at photo-quality output with rich color gradients. Uses liquid ink sprayed at microscopic droplet sizes onto photo paper.',hook:'Photos = Inkjet. Liquid ink = fine detail.'},
+  {scenario:'A busy law firm needs to print 500 double-sided documents per day quickly and cost-effectively.',opts:['Laser','Inkjet','Thermal','Impact'],answer:0,reason:'Laser printers are the fastest for high-volume office printing. Toner is cheaper per page than ink. Built for sustained bulk output.',hook:'Office + high volume = Laser. Toner = cheaper per page.'},
+  {scenario:'A shipping warehouse needs to print shipping labels with barcodes. No ink cartridges or toner are available on-site.',opts:['Laser','Inkjet','Thermal','Impact'],answer:2,reason:'Thermal label printers require only special label stock — no ink, no toner. Shipping labels and barcodes are a classic thermal use case.',hook:'Labels + no ink/toner = Thermal.'},
+  {scenario:'A hospital billing department prints multi-part patient forms where one copy goes to the patient and one stays in the file.',opts:['Laser','Inkjet','Thermal','Impact'],answer:3,reason:'Impact (dot matrix) is the ONLY printer type that can print multi-part carbon-copy forms. Physical pins drive through all layers simultaneously.',hook:'Multi-part / carbon copy = Impact. Only type that can do this.'},
+  {scenario:'A technician notices the printer output has random missing dots throughout every line of text.',opts:['Laser','Inkjet','Thermal','Impact'],answer:3,reason:'Missing dots = broken or stuck pins in an impact/dot matrix print head. Each dot in the output corresponds to a physical pin strike.',hook:'Missing dots = Impact printer + broken pin.'},
+  {scenario:'Printed pages smear and the toner rubs off when you touch them. The printer uses powder-based print media.',opts:['Laser (fuser failed)','Inkjet (nozzle clogged)','Thermal (wrong paper)','Impact (ribbon worn)'],answer:0,reason:'Powder = toner = laser printer. Toner rubs off = fuser not melting toner into paper = fuser assembly failure.',hook:'Toner smears = Laser + fuser failure.'},
+  {scenario:'An ATM machine dispenses transaction receipts automatically. The mechanism has no ink cartridges to replace.',opts:['Laser','Inkjet','Thermal','Impact'],answer:2,reason:'ATM receipt printers are thermal. Heat-sensitive roll paper is activated by the print head. No consumables except paper rolls.',hook:'ATM receipt = Thermal. No ink needed.'},
+  {scenario:'The printed output shows thin horizontal lines through text and images, as if certain rows were not printed.',opts:['Laser (drum)','Inkjet (clogged nozzle)','Thermal (paper)','Impact (ribbon)'],answer:1,reason:'Horizontal lines through inkjet output = clogged nozzle(s). Individual nozzles fire per row. A blocked nozzle = missing line.',hook:'Lines through inkjet = clogged nozzle. Run head cleaning.'},
+  {scenario:'A restaurant prints order tickets in its kitchen. The printer is very loud and the tickets use a carbon-copy format.',opts:['Laser','Inkjet','Thermal','Impact'],answer:3,reason:'Loud + carbon copy = impact dot matrix. The mechanical pins striking the ribbon create the noise. Carbon copies require physical impact.',hook:'Loud + carbon copy = Impact. Always.'},
+  {scenario:'Which printer type will produce the fastest high-volume output with the lowest per-page cost?',opts:['Inkjet','Thermal','Laser','Impact'],answer:2,reason:'Laser printers print at the fastest PPM for sustained bulk jobs. Toner cost per page is significantly lower than ink cartridges.',hook:'Fastest + cheapest per page = Laser.'},
+  {scenario:'A printer output is completely blank even though the paper loads and feeds correctly. The printer uses special paper with no ink or toner.',opts:['Laser — transfer roller failed','Inkjet — nozzles clogged','Thermal — wrong paper loaded','Impact — ribbon worn out'],answer:2,reason:'Thermal printers require specific heat-sensitive paper. If standard paper is loaded (or thermal paper is loaded upside down), output is blank because regular paper does not react to heat.',hook:'Blank thermal output = wrong paper or wrong side up.'},
+];
+
+let drillState={idx:0,right:0,wrong:0,answered:false,shuffled:[]};
+
+function initDrill(){drillState.shuffled=[...DRILL_QS].sort(()=>Math.random()-0.5);drillState.idx=0;drillState.right=0;drillState.wrong=0;drillState.answered=false;renderDrill();}
+
+function renderDrill(){
+  const c=document.getElementById('pt-drill-card'); if(!c) return;
+  if(drillState.idx>=drillState.shuffled.length){
+    const pct=Math.round((drillState.right/(drillState.right+drillState.wrong))*100);
+    c.innerHTML=`<div style="text-align:center;padding:40px 20px;">
+      <div style="font-family:'Orbitron',sans-serif;font-size:1.3em;font-weight:800;color:var(--lavender);margin-bottom:8px;">ALL QUESTIONS COMPLETE</div>
+      <div style="font-size:3em;font-weight:700;color:var(--mint);font-family:'Orbitron',sans-serif;margin:12px 0;">${pct}%</div>
+      <div style="font-size:0.9em;color:var(--dim2);margin-bottom:20px;">${drillState.right} correct · ${drillState.wrong} wrong</div>
+      <button class="pt-next-btn" onclick="initDrill()">RESTART DRILL</button>
+    </div>`; return;
+  }
+  const q=drillState.shuffled[drillState.idx];
+  c.innerHTML=`<div class="pt-drill-score">
+    <div class="pt-drill-score-item">Question <span>${drillState.idx+1}</span>/${drillState.shuffled.length}</div>
+    <div class="pt-drill-score-item">✓ <span style="color:var(--mint)">${drillState.right}</span></div>
+    <div class="pt-drill-score-item">✗ <span style="color:var(--magenta)">${drillState.wrong}</span></div>
+  </div>
+  <div class="pt-scenario"><div class="pt-scenario-label">Scenario</div>${q.scenario}</div>
+  <div style="font-family:'Orbitron',sans-serif;font-size:0.78em;font-weight:700;letter-spacing:1px;color:var(--lavender);margin-bottom:10px;">Which printer type?</div>
+  <div class="pt-opts">${q.opts.map((o,i)=>`<button class="pt-opt" id="dopt-${i}" onclick="answerDrill(${i})">
+    <div class="pt-opt-letter">${'ABCD'[i]}</div>
+    <div class="pt-opt-icon">${['🖨','💧','🌡','⚡'][i]}</div>${o}
+  </button>`).join('')}</div>
+  <div class="pt-feedback" id="pt-fb"></div>
+  <button class="pt-next-btn" id="dt-next" style="display:none" onclick="nextDrill()">NEXT →</button>`;
+  drillState.answered=false;
+}
+
+function answerDrill(i){
+  if(drillState.answered) return; drillState.answered=true;
+  const q=drillState.shuffled[drillState.idx]; const correct=i===q.answer;
+  if(correct) drillState.right++; else drillState.wrong++;
+  q.opts.forEach((_,j)=>{const b=document.getElementById('dopt-'+j);b.classList.add('disabled');if(j===q.answer)b.classList.add('correct');else if(j===i)b.classList.add('wrong');});
+  const fb=document.getElementById('pt-fb');
+  fb.innerHTML=`<div class="pt-fb-result ${correct?'win':'lose'}">${correct?'✅ Correct!':'✗ Incorrect — correct: '+q.opts[q.answer]}</div>
+    <div class="pt-fb-reason">${q.reason}</div>
+    <div class="pt-fb-hook">🧠 ${q.hook}</div>`;
+  fb.classList.add('show');
+  document.getElementById('dt-next').style.display='';
+}
+function nextDrill(){drillState.idx++;renderDrill();}
+
+/* --- Speed Test --- */
+const SPEED_QS=[
+  {q:'Receipts at a POS terminal?',opts:['Laser','Inkjet','Thermal','Impact'],answer:2},
+  {q:'Carbon-copy multi-part forms?',opts:['Laser','Inkjet','Thermal','Impact'],answer:3},
+  {q:'High-volume office printing?',opts:['Laser','Inkjet','Thermal','Impact'],answer:0},
+  {q:'Professional photo printing?',opts:['Laser','Inkjet','Thermal','Impact'],answer:1},
+  {q:'Uses a fuser assembly?',opts:['Laser','Inkjet','Thermal','Impact'],answer:0},
+  {q:'Output fades over time?',opts:['Laser','Inkjet','Thermal','Impact'],answer:2},
+  {q:'LOUDEST printer type?',opts:['Laser','Inkjet','Thermal','Impact'],answer:3},
+  {q:'Clogged nozzle is top defect?',opts:['Laser','Inkjet','Thermal','Impact'],answer:1},
+  {q:'Uses ink ribbon?',opts:['Laser','Inkjet','Thermal','Impact'],answer:3},
+  {q:'No ink AND no toner?',opts:['Laser','Inkjet','Thermal','Impact'],answer:2},
+  {q:'ATM transaction receipt?',opts:['Laser','Inkjet','Thermal','Impact'],answer:2},
+  {q:'Toner smear = fuser failure?',opts:['Laser','Inkjet','Thermal','Impact'],answer:0},
+  {q:'Has a maintenance kit?',opts:['Laser','Inkjet','Thermal','Impact'],answer:0},
+  {q:'Prints line by line?',opts:['Laser','Inkjet','Thermal','Impact'],answer:1},
+  {q:'Shipping label printer, no ink?',opts:['Laser','Inkjet','Thermal','Impact'],answer:2},
+];
+
+const SPEED_TIME=10;
+let speedState={idx:0,right:0,wrong:0,answered:false,timeLeft:SPEED_TIME,timer:null,shuffled:[]};
+
+function initSpeed(){speedState.shuffled=[...SPEED_QS].sort(()=>Math.random()-0.5);speedState.idx=0;speedState.right=0;speedState.wrong=0;speedState.answered=false;if(speedState.timer)clearInterval(speedState.timer);renderSpeed();}
+
+function renderSpeed(){
+  const c=document.getElementById('speed-card'); if(!c) return;
+  if(speedState.idx>=speedState.shuffled.length){
+    const pct=Math.round((speedState.right/(speedState.right+speedState.wrong||1))*100);
+    c.innerHTML=`<div class="speed-complete">
+      <div class="speed-complete-title">⚡ SPEED DRILL COMPLETE</div>
+      <div class="speed-complete-score">${pct}%</div>
+      <div style="font-size:0.9em;color:var(--dim2);margin-bottom:8px;">${speedState.right} correct · ${speedState.wrong} wrong · ${speedState.shuffled.length} questions</div>
+      <button class="speed-restart" onclick="initSpeed()">RESTART</button>
+    </div>`; return;
+  }
+  const q=speedState.shuffled[speedState.idx];
+  speedState.answered=false; speedState.timeLeft=SPEED_TIME;
+  if(speedState.timer) clearInterval(speedState.timer);
+  c.innerHTML=`<div style="font-family:'DM Mono',monospace;font-size:0.62em;letter-spacing:3px;color:var(--dim);margin-bottom:6px;text-transform:uppercase;">Question ${speedState.idx+1} of ${speedState.shuffled.length}</div>
+    <div class="speed-timer" id="speed-timer">10</div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.58em;letter-spacing:2px;color:var(--dim);margin-bottom:10px;">SECONDS</div>
+    <div class="speed-q">${q.q}</div>
+    <div class="speed-opts">${q.opts.map((o,i)=>`<button class="speed-opt" id="sopt-${i}" onclick="answerSpeed(${i})">${o}</button>`).join('')}</div>
+    <div class="speed-result" id="speed-result"></div>
+    <div class="speed-score-bar"><span>✓ <span style="color:var(--mint)">${speedState.right}</span></span><span>✗ <span style="color:var(--magenta)">${speedState.wrong}</span></span></div>`;
+  speedState.timer=setInterval(()=>{
+    speedState.timeLeft--;
+    const el=document.getElementById('speed-timer'); if(!el){clearInterval(speedState.timer);return;}
+    el.textContent=speedState.timeLeft;
+    if(speedState.timeLeft<=3) el.className='speed-timer danger';
+    else if(speedState.timeLeft<=6) el.className='speed-timer warning';
+    if(speedState.timeLeft<=0&&!speedState.answered){clearInterval(speedState.timer);speedState.answered=true;speedState.wrong++;showSpeedResult(false,q);setTimeout(()=>{speedState.idx++;renderSpeed();},1600);}
+  },1000);
+}
+
+function answerSpeed(i){
+  if(speedState.answered) return; speedState.answered=true;
+  clearInterval(speedState.timer);
+  const q=speedState.shuffled[speedState.idx]; const correct=i===q.answer;
+  if(correct) speedState.right++; else speedState.wrong++;
+  q.opts.forEach((_,j)=>{const b=document.getElementById('sopt-'+j);if(b){b.classList.add('disabled');if(j===q.answer)b.classList.add('correct');else if(j===i)b.classList.add('wrong');}});
+  showSpeedResult(correct,q);
+  setTimeout(()=>{speedState.idx++;renderSpeed();},1500);
+}
+
+function showSpeedResult(correct,q){
+  const r=document.getElementById('speed-result'); if(!r) return;
+  r.className=`speed-result ${correct?'win':'lose'}`;
+  r.textContent=correct?'✅ Correct!':'✗ '+q.opts[q.answer];
+}
+
+/* --- Sub-mode switcher --- */
+function switchPTMode(mode,btn){
+  document.querySelectorAll('.pt-mode-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.pt-sub-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pt-'+mode).classList.add('active');
+  if(mode==='drill'&&drillState.shuffled.length===0) initDrill();
+  if(mode==='speed'&&speedState.shuffled.length===0) initSpeed();
+  if(mode==='process') buildProcContainer('laser');
+}
+
+function buildTypes(){
+  buildHooks();
+  buildProcContainer('laser');
+  initDrill();
+  initSpeed();
+}
+
+/* ═══════════ PROGRESS ═══════════ */
+const TRAPS=[
+  {trap:'Entire page prints black',wrong:'Toner cartridge',correct:'PCR (Primary Charge Roller)',why:'Too much toner everywhere = drum never charged = PCR failed'},
+  {trap:'Toner smears when touched',wrong:'Transfer roller',correct:'Fuser Assembly',why:'Smearing = not melted = fusing stage failed'},
+  {trap:'Ghost image on page',wrong:'Low toner',correct:'Cleaning blade / drum',why:'Previous page image = drum not cleared = cleaning stage'},
+  {trap:'Blank page (no image)',wrong:'Empty toner',correct:'Transfer roller',why:'Toner on drum but not on paper = transfer stage failed'},
+  {trap:'Half page prints',wrong:'Fuser failure',correct:'Insufficient printer RAM',why:'Laser must hold full page in RAM before printing'},
+  {trap:'Garbled symbols output',wrong:'PCR failure',correct:'Wrong printer driver',why:'Driver translates to printer language. Wrong driver = gibberish'},
+];
+function buildProgress(){
+  const wrap=document.getElementById('progress-wrap'); if(!wrap||wrap.innerHTML.trim()) return;
+  const items=[{label:'EP Chain',val:S.epProgress,color:'var(--lavender)'},{label:'Trainer',val:S.trainerProgress,color:'var(--mint)'}];
+  const overall=Math.round(items.reduce((a,it)=>a+it.val,0)/items.length);
+  wrap.innerHTML=`<div class="progress-big-card"><div class="pb-title">Overall Mastery — ${overall}%</div>
+    ${items.map(it=>{ const pct=it.val||0; const s=pct>=80?['STRONG','var(--mint)']:pct>=50?['REVIEW','var(--rose)']:['WEAK','var(--magenta)']; return `<div class="pb-row"><div class="pb-label" style="color:${it.color}">${it.label}</div><div class="pb-track"><div class="pb-fill" style="width:${pct}%;background:${it.color}"></div></div><div class="pb-pct" style="color:${it.color}">${pct}%</div><div class="pb-status" style="color:${s[1]};border-color:${s[1]}40">${s[0]}</div></div>`;}).join('')}
+    <div style="font-family:'DM Mono',monospace;font-size:0.62em;letter-spacing:2px;color:var(--dim2);margin-top:12px;">Trainer: <strong style="color:var(--mint)">${trainerState.right}</strong> correct · <strong style="color:var(--magenta)">${trainerState.wrong}</strong> wrong</div>
+  </div>
+  <div style="margin-top:16px;"><div style="font-family:'Orbitron',sans-serif;font-size:0.75em;font-weight:700;letter-spacing:2px;color:var(--rose);text-transform:uppercase;margin-bottom:12px;">★ Exam Trap Cards</div>
+  <div class="exam-tips-grid">${TRAPS.map(t=>`<div class="et-card"><div class="et-trap">EXAM TRAP</div><div class="et-symptom">${t.trap}</div><div class="et-wrong">✗ Most pick: ${t.wrong}</div><div class="et-correct">✓ Correct: ${t.correct}</div><div class="et-why">${t.why}</div></div>`).join('')}</div></div>`;
+}
+
+/* ═══════════ INIT ═══════════ */
+buildChain();
+buildPatternBar();
+buildTypes();
+buildProgress();
+renderTrainer();
+for(let i=0;i<4;i++) setTimeout(()=>buildSB('sb-'+i),300);
+</script>
+</body>
+</html>
